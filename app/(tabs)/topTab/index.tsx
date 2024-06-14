@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
+import { Link } from "expo-router";
 
 const index = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -78,6 +79,7 @@ const index = () => {
           value={isEnabled}
         />
       </View>
+      {/* <Link href='/order/payment' style={{ fontSize: 40 }}>Payment</Link> */}
     </>
   );
 };

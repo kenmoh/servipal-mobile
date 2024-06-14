@@ -6,6 +6,7 @@ import { Pressable } from "react-native";
 import AppHeader from "@/components/AppHeader";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+import { useAuth } from "@/auth/authContext";
 
 const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
   return (
@@ -25,6 +26,7 @@ const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
 };
 
 export default function TabLayout() {
+  const { user } = useAuth();
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
@@ -58,7 +60,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="order"
         options={{
-          title: "New Order",
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Entypo name="add-to-list" size={size} color={color} />
           ),

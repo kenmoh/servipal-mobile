@@ -29,6 +29,7 @@ export type OrderType = {
   order_status?: OrderStatus;
   deduction: number;
   payment_status: PaymentStatus;
+  payment_url: string;
 };
 
 export type CreateOrderType = {

@@ -1,17 +1,30 @@
+import { useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Stack } from "expo-router";
+import { Colors } from "@/constants/Colors";
+import { ThemeContext } from "@/context/themeContext";
 
 const OrderLayout = () => {
+  const { theme } = useContext(ThemeContext);
+  let activeColor = Colors[theme.mode];
   return (
     <Stack
       screenOptions={{
         animation: "fade_from_bottom",
         headerTitleAlign: "center",
         headerShadowVisible: false,
-        headerTransparent: true,
+        headerTintColor: activeColor.text,
+        headerStyle: {
+          backgroundColor: activeColor.background
+        }
       }}
     >
-      <Stack.Screen name="index" options={{ title: "" }} />
+      <Stack.Screen name="index" options={{
+        title: "New order",
+      }} />
+      <Stack.Screen name="payment" options={{
+        title: "Make Payment"
+      }} />
     </Stack>
   );
 };

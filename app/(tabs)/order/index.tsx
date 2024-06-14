@@ -9,23 +9,23 @@ import { Colors, themeMode } from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { orderValidationSchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
-import orderApi from '@/api/orders'
+import orderApi from "@/api/orders";
 
 import { ThemeContext } from "@/context/themeContext";
 import { useContext } from "react";
-import { CreateOrderType } from "@/utils/types";
+import { CreateOrderType, OrderType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
+import TitleText from "@/components/TitleText";
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-  const { error, isSuccess, mutate, isPending, data } = useMutation({
+  const { error, isSuccess, mutate, isPending, data } = useMutation<OrderType>({
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
   });
-
 
   if (error) {
     showMessage({
@@ -35,10 +35,9 @@ export default function HomeScreen() {
         alignItems: "center",
       },
     });
-    router.push("/order/index");
+    router.push("/order");
   }
   if (isSuccess) {
-
     showMessage({
       message: "Order added successfully.",
       type: "success",
@@ -46,22 +45,27 @@ export default function HomeScreen() {
         alignItems: "center",
       },
     });
-    router.push("(tabs)/topTab");
+    router.push({
+      pathname: "/order/payment",
+      params: { paymentUrl: data?.payment_url, id: data?.id, totalCost: data?.total_cost },
+    });
   }
 
-  console.log(data)
+  console.log(data);
   return (
     <View
       style={{
         backgroundColor: activeColor.background,
         flex: 1,
         justifyContent: "center",
+
       }}
     >
       <CustomActivityIndicator visible={isPending} />
       <StatusBar style="inverted" />
       <View style={styles.mainContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
+
           <Formik
             initialValues={{
               name: "",
@@ -163,7 +167,7 @@ export default function HomeScreen() {
           </Formik>
         </ScrollView>
       </View>
-    </View>
+    </View >
   );
 }
 
