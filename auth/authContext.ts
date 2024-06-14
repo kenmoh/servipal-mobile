@@ -1,17 +1,12 @@
 import { router, useSegments } from "expo-router";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
+import { UserReturn } from "@/utils/types";
 type AuthContextType = {
   signIn: () => {} | void;
   signOut: () => void;
   setUser: (user: {} | null) => void;
-  user?: {} | null;
+  user?: UserReturn | null;
 };
 export const AuthContext = createContext<AuthContextType>({
   signIn: () => {},
@@ -31,15 +26,15 @@ export function useProtectedRoute(user: {} | null) {
   const segments = useSegments();
 
   // Retrieving a value
-  //   const getValue = async () => {
-  //     const value = await SecureStore.getItemAsync("alreadyLaunch");
-  //     if (value === "" || null || undefined) {
-  //       storeValue("alreadyLaunch", "true");
-  //       setIsFirstLuanch(true);
-  //     } else {
-  //       setIsFirstLuanch(false);
-  //     }
-  //   };
+  // const getValue = async () => {
+  //   const value = await SecureStore.getItemAsync("alreadyLaunch");
+  //   if (value === "" || null || undefined) {
+  //     storeValue("alreadyLaunch", "true");
+  //     setIsFirstLuanch(true);
+  //   } else {
+  //     setIsFirstLuanch(false);
+  //   }
+  // };
 
   useEffect(() => {
     // getValue();

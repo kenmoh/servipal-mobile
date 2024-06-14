@@ -1,5 +1,6 @@
 import { StyleSheet, ScrollView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
 import ImagePickerForm from "@/components/ImageFormPicker";
 
@@ -8,13 +9,47 @@ import { Colors, themeMode } from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { orderValidationSchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
+import orderApi from '@/api/orders'
 
 import { ThemeContext } from "@/context/themeContext";
 import { useContext } from "react";
+import { CreateOrderType } from "@/utils/types";
+import { showMessage } from "react-native-flash-message";
+import { router } from "expo-router";
+import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+
+  const { error, isSuccess, mutate, isPending, data } = useMutation({
+    mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
+  });
+
+
+  if (error) {
+    showMessage({
+      message: error.message,
+      type: "danger",
+      style: {
+        alignItems: "center",
+      },
+    });
+    router.push("/order/index");
+  }
+  if (isSuccess) {
+
+    showMessage({
+      message: "Order added successfully.",
+      type: "success",
+      style: {
+        alignItems: "center",
+      },
+    });
+    router.push("(tabs)/topTab");
+  }
+
+  console.log(data)
   return (
     <View
       style={{
@@ -23,6 +58,7 @@ export default function HomeScreen() {
         justifyContent: "center",
       }}
     >
+      <CustomActivityIndicator visible={isPending} />
       <StatusBar style="inverted" />
       <View style={styles.mainContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -35,7 +71,7 @@ export default function HomeScreen() {
               distance: "",
               orderPhotoUrl: "",
             }}
-            onSubmit={() => {}}
+            onSubmit={mutate}
             validationSchema={orderValidationSchema}
           >
             {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -72,7 +108,7 @@ export default function HomeScreen() {
                       labelColor={activeColor.text}
                       label="Distance"
                       hasBorder={theme.mode !== "dark"}
-                      editable={false}
+                      // editable={false}
                       inputBackgroundColor={activeColor.inputBackground}
                       inputTextColor={activeColor.text}
                     />

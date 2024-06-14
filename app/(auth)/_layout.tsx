@@ -31,6 +31,7 @@ const AuthLayout = () => {
           headerShown: false,
         }}
       />
+
     </Stack>
   );
 };

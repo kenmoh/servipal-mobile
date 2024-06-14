@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { Link } from "expo-router";
+import dayjs from "dayjs";
 
 import { Colors, themeMode } from "@/constants/Colors";
 import { EvilIcons, MaterialIcons } from "@expo/vector-icons";
@@ -46,7 +47,7 @@ const OrderCard = ({ order }: { order: OrderType }) => {
             >
               <MaterialIcons
                 name="trip-origin"
-                size={20}
+                size={15}
                 color={activeColor.icon}
               />
               <Text style={[styles.textStyle, { color: activeColor.text }]}>
@@ -60,7 +61,7 @@ const OrderCard = ({ order }: { order: OrderType }) => {
                 gap: 7.5,
               }}
             >
-              <EvilIcons name="location" size={20} color={activeColor.icon} />
+              <EvilIcons name="location" size={15} color={activeColor.icon} />
               <Text style={[styles.textStyle, { color: activeColor.text }]}>
                 {order?.destination}
               </Text>
@@ -94,7 +95,7 @@ const OrderCard = ({ order }: { order: OrderType }) => {
                   { color: activeColor.tabIconDefault },
                 ]}
               >
-                28-05-2024
+                {order?.created_at}
               </Text>
             </View>
           </View>

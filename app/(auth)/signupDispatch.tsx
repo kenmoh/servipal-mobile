@@ -34,7 +34,8 @@ const SignUpDispatch = () => {
         alignItems: "center",
       },
     });
-    return;
+    router.replace('signupDispatch')
+
   }
 
   if (isSuccess) {

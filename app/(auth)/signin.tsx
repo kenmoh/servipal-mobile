@@ -3,6 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
 
 import AccountLinkText from "@/components/AcountLink";
 import CustomBtn from "@/components/CustomBtn";
@@ -12,49 +13,26 @@ import usersApi from "@/api/users";
 import authApi from "@/api/auth";
 import { Login } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { loginValidationSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
+import { useAuth } from "@/auth/authContext";
+import authStorage from '@/auth/storage'
 
-const Sign = () => {
+const SignIn = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  // const [isLoading, setIsLoading] = useState(false);
-
-  // const handleSignIn = async ({
-  //   username,
-  //   password,
-  // }: {
-  //   username: string;
-  //   password: string;
-  // }) => {
-  //   setIsLoading(true);
-
-  //   const result = await usersApi.loginApi(username, password);
-
-  //   setIsLoading(false);
-  //   if (!result.ok) {
-  //     showMessage({
-  //       message: result.data.detail[0].msg,
-  //       type: "danger",
-  //       style: {
-  //         alignItems: "center",
-  //       },
-  //     });
-
-  //     return;
-  //   }
-  // };
+  const authContext = useAuth();
 
   const { error, isSuccess, mutate, isPending, data } = useMutation({
-    mutationFn: (user: Login) => usersApi.loginApi(user),
+    mutationFn: ({ username, password }: Login) => authApi.loginApi(username, password),
   });
 
-  console.log(data);
+
 
   if (error) {
     showMessage({
@@ -65,9 +43,12 @@ const Sign = () => {
       },
     });
     router.replace("signin");
-    return;
+
   }
   if (isSuccess) {
+    const user = jwtDecode(data?.access_token);
+    authContext.setUser(user);
+    authStorage.storeToken(data.access_token);
     showMessage({
       message: "Login Successful.",
       type: "success",
@@ -75,7 +56,7 @@ const Sign = () => {
         alignItems: "center",
       },
     });
-    router.replace("(tabs)");
+    router.replace("(tabs)/topTab");
     return;
   }
 
@@ -138,7 +119,7 @@ const Sign = () => {
                   <View style={{ marginVertical: 25 }}>
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
-                      label="Sign Up"
+                      label="Login"
                       btnBorderRadius={10}
                       onPress={handleSubmit}
                     />
@@ -147,7 +128,6 @@ const Sign = () => {
               </>
             )}
           </Formik>
-
           <AccountLinkText
             isLoginSreen={true}
             question="Sign up as a "
@@ -157,12 +137,15 @@ const Sign = () => {
             riderLabel="Rider"
           />
         </View>
+
       </View>
       <StatusBar style="light" backgroundColor={activeColor.background} />
     </SafeAreaView>
   );
 };
 
-export default Sign;
+export default SignIn;
 
 const styles = StyleSheet.create({});
+
+

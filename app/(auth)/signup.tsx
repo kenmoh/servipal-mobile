@@ -36,7 +36,7 @@ const SenderSignup = () => {
         alignItems: "center",
       },
     });
-    return;
+    router.replace('signup');
   }
 
   if (isSuccess) {
@@ -88,6 +88,7 @@ const SenderSignup = () => {
                   <CustomTextInput
                     label="Email"
                     hasBorder={theme.mode !== "dark"}
+                    autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={handleChange("email")}
                     labelColor={activeColor.text}

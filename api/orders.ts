@@ -1,12 +1,80 @@
-import client from '@/api/client'
+import client from "@/api/client";
+import { CreateOrderType, OrderType } from "@/utils/types";
 
 const endpoint = "/orders";
+
+// Get all orders
 const getListings = async () => await client.get(`${endpoint}`);
 
-const orderDetails = async(orderId: string) => await client.get(`${endpoint}/${orderId}`);
+// Get order by Sender
+const getVendorListings = async () =>
+  await client.get(`${endpoint}/vendor-orders`);
 
+// Get order by Dispatch
+const getUserListings = () => client.get(`${endpoint}/user-orders`);
+
+const orderDetails = async (orderId: string) =>
+  await client.get(`${endpoint}/${orderId}`);
+
+// Pickup order by dispatch/rider
+const pickUpOrder = (order_id: string) =>
+  client.put(`${endpoint}/${order_id}/pick-up-order`);
+
+// Mark order as delivered [dispatch/rider users only]
+const orderDelievered = (order_id: string) =>
+  client.put(`${endpoint}/${order_id}/order-is-delivered`);
+
+// Cancel picked up order [dispatch/rider users only]
+const cancelOrder = (order_id: string) =>
+  client.put(`${endpoint}/${order_id}/cancel-order`);
+
+// Cancel picked up order [dispatch/rider users only]
+const cancelOrderByVendor = (order_id: string) =>
+  client.patch(`${endpoint}/${order_id}/vendor-cancel-order`);
+
+// Cancel picked up order [dispatch/rider users only]
+const relistOrderByVendor = (order_id: string) =>
+  client.patch(`${endpoint}/${order_id}/vendor-relist-order`);
+
+// Mark order as received [vendor users only]
+const orderReceived = (order_id: string) =>
+  client.put(`${endpoint}/${order_id}/order-received`);
+
+// create new order
+const createOrder = async (item: CreateOrderType) => {
+  const data = new FormData();
+  data.append("name", item.name);
+  data.append("description", item.description);
+  data.append("origin", item.origin);
+  data.append("destination", item.destination);
+  data.append("distance", item.distance);
+  data.append("image", {
+    type: "image/jpeg",
+    uri: item.orderPhotoUrl,
+    name: item.orderPhotoUrl.split("/").slice(-1)[0],
+  });
+
+  const response = await client.post(endpoint, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  return response.data;
+};
 
 export default {
-    getListings,
-    orderDetails
-}
+  getListings,
+  orderDetails,
+  createOrder,
+  getVendorListings,
+  getUserListings,
+  pickUpOrder,
+  orderDelievered,
+  cancelOrder,
+  cancelOrderByVendor,
+  orderReceived,
+  relistOrderByVendor,
+};
