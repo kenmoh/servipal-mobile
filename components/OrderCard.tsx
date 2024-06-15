@@ -8,6 +8,7 @@ import { EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { OrderType } from "@/utils/types";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+import Status from "./Status";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -30,18 +31,45 @@ const OrderCard = ({ order }: { order: OrderType }) => {
           </View>
 
           <View style={{ flex: 4 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "600",
-                marginBottom: 5,
-                fontFamily: "Poppins-Bold",
-                letterSpacing: 1.2,
-                color: activeColor.text,
-              }}
-            >
-              {order?.name}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: "Poppins-SemiBold",
+                  color: activeColor.text,
+                }}
+              >
+                {order?.name}
+              </Text>
+              {order?.payment_status != 'paid' ? (<Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: "Poppins-Light",
+                  color: activeColor.icon,
+                }}
+              >
+                Make Payment
+              </Text>) : <Status pillWidth={100}
+                pVertical={2}
+                pHorizontal={10}
+                text={order?.order_status!}
+                backgroundColor={`${order?.order_status === "Received"
+                  ? "success"
+                  : order?.order_status === "Picked up"
+                    ? Colors.pickUpColor
+                    : order?.order_status === "Delivered"
+                      ? Colors.delivered
+                      : Colors.pendingColor
+                  }`}
+                textColor={`${order?.order_status === "Pending"
+                  ? "#c8553d"
+                  : order?.order_status === "Received"
+                    ? "#25a18e"
+                    : order?.order_status === "Delivered"
+                      ? "#27187e"
+                      : "#e8ac65"
+                  }`} />}
+            </View>
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 7.5 }}
             >
@@ -90,10 +118,10 @@ const OrderCard = ({ order }: { order: OrderType }) => {
                 </Text>
               </View>
               <Text
-                style={[
-                  styles.textStyle,
-                  { color: activeColor.tabIconDefault },
-                ]}
+                style={{
+                  color: activeColor.icon, fontSize: 12,
+                  fontFamily: "Poppins-Light",
+                }}
               >
                 {order?.created_at}
               </Text>
@@ -125,7 +153,7 @@ const styles = StyleSheet.create({
 
   textStyle: {
     fontFamily: "Poppins-Regular",
-    letterSpacing: 1,
+
   },
   image: {
     height: 65,

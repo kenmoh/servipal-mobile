@@ -28,6 +28,7 @@ const index = () => {
     queryFn: ordersApi.getListings,
   });
 
+  console.log(order?.data)
   const toggleSwitch = () => {
     toggleTheme({ newTheme: { mode: theme.mode } }),
       setIsEnabled((previousState) => !previousState);

@@ -108,10 +108,10 @@ export default function HomeScreen() {
                   order?.order_status === "Delivered"
                     ? Colors.delivered
                     : order.order_status === "Pickedup"
-                    ? Colors.pickUpColor
-                    : order.order_status === "Received"
-                    ? Colors.success
-                    : Colors.pendingColor
+                      ? Colors.pickUpColor
+                      : order.order_status === "Received"
+                        ? Colors.success
+                        : Colors.pendingColor
                 }
                 pillWidth={90}
                 pVertical={5}
@@ -120,10 +120,10 @@ export default function HomeScreen() {
                   order?.order_status === "Pending"
                     ? "#c8553d"
                     : order?.order_status === "Received"
-                    ? "#25a18e"
-                    : order?.order_status === "Delivered"
-                    ? "#27187e"
-                    : "#e8ac65"
+                      ? "#25a18e"
+                      : order?.order_status === "Delivered"
+                        ? "#27187e"
+                        : "#e8ac65"
                 }
               />
               <TouchableOpacity
@@ -227,7 +227,7 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-          <View style={styles.container}>
+          {order.order_status === 'Picked up' && (<View style={styles.container}>
             <View style={{ alignItems: "center" }}>
               <MaterialCommunityIcons name="bike-fast" size={30} color="grey" />
               <Divider />
@@ -250,16 +250,27 @@ export default function HomeScreen() {
                 value={order?.dispatch_company_phone_numer || ""}
               />
             </View>
-          </View>
+          </View>)}
         </ScrollView>
       </View>
       <View style={styles.btnContainer}>
-        <CustomBtn
-          btnBorderRadius={5}
-          btnColor="orange"
-          label="Pickup"
-          onPress={() => {}}
-        />
+        <View style={{ flex: 1 }}>
+          <CustomBtn
+            btnBorderRadius={5}
+            btnColor={Colors.btnPrimaryColor}
+            label="Pickup"
+            onPress={() => { }}
+          />
+        </View>
+
+        {order?.payment_status != 'paid' && (<View style={{ width: 100 }}>
+          <CustomBtn
+            btnBorderRadius={5}
+            btnColor={Colors.primaryBtnColor}
+            label="Pay"
+            onPress={() => { }}
+          />
+        </View>)}
       </View>
     </View>
   );
@@ -288,6 +299,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 10,
+    flexDirection: 'row',
+    gap: 10
+
   },
   image: {
     height: IMG_HEIGHT,

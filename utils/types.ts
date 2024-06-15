@@ -1,6 +1,6 @@
 type OrderStatus =
   | "Pending"
-  | "Pickedup"
+  | "Picked up"
   | "Delivered"
   | "Received"
   | "Cancelled";
