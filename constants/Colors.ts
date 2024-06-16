@@ -9,6 +9,7 @@ type ThemeProps = {
   tabIconDefault: string;
   tabIconSelected: string;
   inputBackground: string;
+  profileCard: string;
   borderolor: string;
 };
 
@@ -30,6 +31,7 @@ export const Colors: ColorProps = {
   primaryBtnColor: tintColorLight,
   secondaryBtnColor: tintColorDark,
   blackBtnColor: tintColorDark,
+
   pickUpColor: "#f1dca7",
   error: "#ff5e5b",
   pendingColor: "#fae1dd",
@@ -44,6 +46,7 @@ export const Colors: ColorProps = {
     tabIconSelected: tintColorLight,
     inputBackground: "#fff",
     borderolor: "#eee",
+    profileCard: "#f9f9f9",
   },
   dark: {
     text: "#fff",
@@ -52,6 +55,7 @@ export const Colors: ColorProps = {
     tabIconDefault: "#ddd",
     tabIconSelected: tintColorDark,
     inputBackground: "#0c1821",
+    profileCard: "#0c1821",
     borderolor: "#2f4550",
   },
 };

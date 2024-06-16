@@ -256,7 +256,7 @@ export default function HomeScreen() {
       <View style={styles.btnContainer}>
         <View style={{ flex: 1 }}>
           <CustomBtn
-            btnBorderRadius={5}
+            btnBorderRadius={50}
             btnColor={Colors.btnPrimaryColor}
             label="Pickup"
             onPress={() => { }}
@@ -265,7 +265,7 @@ export default function HomeScreen() {
 
         {order?.payment_status != 'paid' && (<View style={{ width: 100 }}>
           <CustomBtn
-            btnBorderRadius={5}
+            btnBorderRadius={50}
             btnColor={Colors.primaryBtnColor}
             label="Pay"
             onPress={() => { }}

@@ -13,10 +13,11 @@ import {
 import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { Link } from "expo-router";
+import HDivider from "@/components/HDivider";
 
 const index = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const [isEnabled, setIsEnabled] = useState(theme.mode === "dark");
+  const [isHomeScreen, setIsHomeScreen] = useState(true)
   let activeColor = Colors[theme.mode];
   const {
     data: order,
@@ -28,11 +29,8 @@ const index = () => {
     queryFn: ordersApi.getListings,
   });
 
-  console.log(order?.data)
-  const toggleSwitch = () => {
-    toggleTheme({ newTheme: { mode: theme.mode } }),
-      setIsEnabled((previousState) => !previousState);
-  };
+
+
 
   if (isLoading || isFetching) {
     return (
@@ -67,18 +65,15 @@ const index = () => {
         <FlatList
           data={order?.data}
           keyExtractor={(item) => item?.id.toString()}
-          renderItem={({ item }) => <OrderCard order={item} />}
+          renderItem={({ item }) => item.order_status === "Pending" &&
+            item.payment_status === "paid" && (<OrderCard order={item} isHomeScreen={isHomeScreen} />)}
           estimatedItemSize={200}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           vertical
+
         />
-        <Switch
-          thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
+
       </View>
       {/* <Link href='/order/payment' style={{ fontSize: 40 }}>Payment</Link> */}
     </>

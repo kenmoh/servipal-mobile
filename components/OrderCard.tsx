@@ -9,11 +9,12 @@ import { OrderType } from "@/utils/types";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
+import HDivider from "./HDivider";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-const OrderCard = ({ order }: { order: OrderType }) => {
+const OrderCard = ({ order, isHomeScreen }: { order: OrderType, isHomeScreen?: boolean }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
@@ -35,23 +36,14 @@ const OrderCard = ({ order }: { order: OrderType }) => {
               <Text
                 style={{
                   fontSize: 14,
-                  fontFamily: "Poppins-SemiBold",
+                  fontFamily: "Poppins-Light",
                   color: activeColor.text,
                 }}
               >
                 {order?.name}
               </Text>
-              {order?.payment_status != 'paid' ? (<Text
-                style={{
-                  fontSize: 12,
-                  fontFamily: "Poppins-Light",
-                  color: activeColor.icon,
-                }}
-              >
-                Make Payment
-              </Text>) : <Status pillWidth={100}
-                pVertical={2}
-                pHorizontal={10}
+              {!isHomeScreen && (<Status
+
                 text={order?.order_status!}
                 backgroundColor={`${order?.order_status === "Received"
                   ? "success"
@@ -68,7 +60,9 @@ const OrderCard = ({ order }: { order: OrderType }) => {
                     : order?.order_status === "Delivered"
                       ? "#27187e"
                       : "#e8ac65"
-                  }`} />}
+                  }`} />)}
+
+
             </View>
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 7.5 }}
@@ -78,7 +72,7 @@ const OrderCard = ({ order }: { order: OrderType }) => {
                 size={15}
                 color={activeColor.icon}
               />
-              <Text style={[styles.textStyle, { color: activeColor.text }]}>
+              <Text style={[styles.textStyle, { color: activeColor.text, fontSize: 12 }]}>
                 {order?.origin}
               </Text>
             </View>
@@ -90,7 +84,7 @@ const OrderCard = ({ order }: { order: OrderType }) => {
               }}
             >
               <EvilIcons name="location" size={15} color={activeColor.icon} />
-              <Text style={[styles.textStyle, { color: activeColor.text }]}>
+              <Text style={[styles.textStyle, { color: activeColor.text, fontSize: 12 }]}>
                 {order?.destination}
               </Text>
             </View>
@@ -117,6 +111,16 @@ const OrderCard = ({ order }: { order: OrderType }) => {
                   {order?.total_cost}
                 </Text>
               </View>
+              {order?.payment_status != 'paid' && <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: "Poppins-SemiBold",
+                  color: Colors.btnPrimaryColor,
+                }}
+              >
+                PAY
+              </Text>
+              }
               <Text
                 style={{
                   color: activeColor.icon, fontSize: 12,
@@ -128,13 +132,8 @@ const OrderCard = ({ order }: { order: OrderType }) => {
             </View>
           </View>
         </View>
-        <View
-          style={{
-            borderWidth: StyleSheet.hairlineWidth,
-            borderColor: activeColor.borderolor,
-            marginVertical: 10,
-          }}
-        />
+        <HDivider />
+
       </TouchableOpacity>
     </Link>
   );

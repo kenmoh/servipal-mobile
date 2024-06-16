@@ -2,18 +2,13 @@ import { StyleSheet, Text, View } from "react-native";
 
 type StatusProps = {
   text: string;
-  pillWidth: number;
-  pVertical: number;
-  pHorizontal: number;
   textColor: string;
   backgroundColor: string;
 };
 
 const Status = ({
   backgroundColor,
-  pHorizontal,
-  pVertical,
-  pillWidth,
+
   textColor,
   text,
 }: StatusProps) => {
@@ -23,9 +18,8 @@ const Status = ({
         styles.container,
         {
           backgroundColor,
-          width: pillWidth,
-          paddingHorizontal: pHorizontal,
-          paddingVertical: pVertical,
+
+
         },
       ]}
     >
@@ -43,5 +37,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 500,
+    paddingHorizontal: 10,
+    paddingVertical: 2
   },
 });

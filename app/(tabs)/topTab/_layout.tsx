@@ -30,10 +30,7 @@ const TopTabLayout = () => {
     >
       <TopTabBar.Screen name="index" options={{ title: "Orders" }} />
       <TopTabBar.Screen name="myOrder" options={{ title: "My Orders" }} />
-      <TopTabBar.Screen
-        name="completedOrder"
-        options={{ title: "Delivered" }}
-      />
+
     </TopTabBar>
   );
 };

@@ -1,16 +1,15 @@
-import { StyleSheet, Text, View, FlatList, ListRenderItem } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import React, { useContext } from "react";
 
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import OrderCard from "@/components/OrderCard";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import orderApi from "@/api/orders";
-import { showMessage } from "react-native-flash-message";
-import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { useQuery } from "@tanstack/react-query";
 import { OrderType } from "@/utils/types";
+import HDivider from "@/components/HDivider";
 
 const myOrder = () => {
   const { theme } = useContext(ThemeContext);
@@ -45,6 +44,7 @@ const myOrder = () => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           vertical
+
         />
       </View>
     </>
