@@ -1,5 +1,5 @@
 import { showMessage } from 'react-native-flash-message';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react'
 import CustomActivityIndicator from '@/components/CustomActivityIndicator';
@@ -7,7 +7,18 @@ import { WebView } from 'react-native-webview';
 import Constants from 'expo-constants';
 import { Colors } from '@/constants/Colors';
 import { ThemeContext } from '@/context/themeContext';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import transfer from '@/api/transfer';
+
+interface TransferDetailResponse {
+    data: {
+        transfer_reference: string;
+        account_number: string;
+        bank_name: string;
+        amount: number;
+        mode: string;
+    };
+}
+
 
 const payment = () => {
     const { theme } = useContext(ThemeContext);
@@ -18,27 +29,42 @@ const payment = () => {
     const params = useLocalSearchParams();
     const { paymentUrl, totalCost, id } = params;
 
-    console.log(paymentUrl, redirectedUrl)
 
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
-    console.log('REDIRECT: ', redirectedUrl?.url)
-    console.log('WEBVIEW: ', showWebView)
-
     const handleOpenWebView = () => {
+        if (!paymentUrl) {
+            return;
+        }
         setShowWebView(true);
+    };
+
+
+    const handleGetTransferDetails = async () => {
+        setIsLoading(true);
+        const result = await transfer.transferPaymentDetail(id as string) as TransferDetailResponse;
+        setIsLoading(false);
+        router.push({
+            pathname: '/order/transferDetail', params: {
+                transfer_reference: result.data.transfer_reference,
+                account_number: result.data.account_number,
+                bank_name: result.data.bank_name,
+                amount: result.data.amount,
+                mode: result.data.mode,
+            }
+        });
     };
 
     useEffect(() => {
         if (status?.[0] === "status=successful") {
-            router.push("/order/index");
+            router.push("topTab/myOrder");
             showMessage({
                 message: "Payment Successful!",
                 type: "success",
             });
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
-            router.push("/order/index");
+            router.push("topTab/myOrder");
             showMessage({
                 message: "Payment failed to complete!",
                 type: "danger",
@@ -71,6 +97,24 @@ const payment = () => {
                             </Text>
                         </TouchableOpacity>
 
+                        <Text
+                            style={{
+                                color: activeColor.text,
+                                textAlign: "center",
+                                fontFamily: 'Poppins-SemiBold',
+                                marginVertical: 15
+                            }}
+                        >
+                            OR
+                        </Text>
+
+                        <TouchableOpacity onPress={handleGetTransferDetails} style={styles.transferBtn}>
+                            <Text style={[styles.btnText, { color: activeColor.text }]}>
+                                BANK TRANSFER
+                            </Text>
+                        </TouchableOpacity>
+
+
 
                     </>
                 )}
@@ -87,25 +131,37 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: 'center',
         flex: 1,
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
 
     },
     container: {
         flex: 1,
+        marginTop: Constants.statusBarHeight,
+        width: Dimensions.get('screen').width
     },
     button: {
         width: '100%',
-        borderRadius: 25,
+        borderRadius: 50,
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: Colors.btnPrimaryColor,
-        paddingVertical: 15,
+        paddingVertical: 7,
         alignSelf: "center",
+    },
+    transferBtn: {
+        width: '100%',
+        borderRadius: 50,
+        justifyContent: "center",
+        alignItems: "center",
+        borderColor: Colors.primaryBtnColor,
+        paddingVertical: 7,
+        alignSelf: "center",
+        borderWidth: 2
     },
 
     btnText: {
-        fontFamily: 'Poppins-Bold',
-        fontSize: 22
+        fontFamily: 'Poppins-SemiBold',
+        fontSize: 18
     }
 
 })

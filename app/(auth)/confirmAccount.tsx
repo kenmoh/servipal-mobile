@@ -1,0 +1,141 @@
+import { useContext, useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useMutation } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
+
+import AccountLinkText from "@/components/AcountLink";
+import CustomBtn from "@/components/CustomBtn";
+import CustomTextInput from "@/components/CustomTextInput";
+import TitleText from "@/components/TitleText";
+import authApi from "@/api/auth";
+import { ConfirmAccount } from "@/utils/types";
+import { showMessage } from "react-native-flash-message";
+import { router } from "expo-router";
+import { Formik } from "formik";
+import CustomActivityIndicator from "@/components/CustomActivityIndicator";
+import { accountValidationSchema } from "@/utils/validations";
+import InputErrorMessage from "@/components/InputErrorMessage";
+import { Colors } from "@/constants/Colors";
+import { ThemeContext } from "@/context/themeContext";
+import { useAuth } from "@/auth/authContext";
+import authStorage from '@/auth/storage'
+
+const confirmAccount = () => {
+    const { theme } = useContext(ThemeContext);
+    let activeColor = Colors[theme.mode];
+    const authContext = useAuth();
+
+    const { error, isSuccess, mutate, isPending, data } = useMutation({
+        mutationFn: ({ emailCode, phoneCode }: ConfirmAccount) => authApi.loginApi(emailCode, phoneCode),
+    });
+
+
+
+    // if (error) {
+    //     showMessage({
+    //         message: error.message,
+    //         type: "danger",
+    //         style: {
+    //             alignItems: "center",
+    //         },
+    //     });
+    //     router.replace("signin");
+
+    // }
+    // if (isSuccess) {
+    //     const user = jwtDecode(data?.access_token);
+    //     authContext.setUser(user);
+    //     authStorage.storeToken(data.access_token);
+    //     showMessage({
+    //         message: "Login Successful.",
+    //         type: "success",
+    //         style: {
+    //             alignItems: "center",
+    //         },
+    //     });
+    //     router.replace("(tabs)/topTab");
+    //     return;
+    // }
+
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <View
+                style={{
+                    backgroundColor: activeColor.background,
+                    flex: 1,
+                    alignItems: "center",
+                }}
+            >
+                <CustomActivityIndicator visible={isPending} />
+                <View
+                    style={{
+                        flex: 1,
+                        width: "100%",
+                        borderRadius: 10,
+                        padding: 20,
+                        backgroundColor: activeColor.background,
+                    }}
+                >
+                    <TitleText label="Confirm Account" textColor={activeColor.text} />
+                    <Formik
+                        initialValues={{ emailCode: "", phoneCode: "" }}
+                        validationSchema={accountValidationSchema}
+                        onSubmit={mutate}
+                    >
+                        {({ handleChange, handleSubmit, values, errors, touched }) => (
+                            <>
+                                <View>
+                                    <CustomTextInput
+                                        label="Email Code"
+                                        hasBorder={theme.mode !== "dark"}
+                                        autoCapitalize="none"
+                                        keyboardType="email-address"
+                                        onChangeText={handleChange("emailCode")}
+                                        value={values.emailCode}
+                                        labelColor={activeColor.text}
+                                        inputBackgroundColor={activeColor.inputBackground}
+                                        inputTextColor={activeColor.text}
+                                    />
+                                    {touched.emailCode && errors.emailCode && (
+                                        <InputErrorMessage error={errors.emailCode} />
+                                    )}
+                                    <CustomTextInput
+                                        label="Phone Code"
+                                        hasBorder={theme.mode !== "dark"}
+                                        autoCapitalize="none"
+                                        onChangeText={handleChange("phoneCode")}
+                                        value={values.phoneCode}
+                                        labelColor={activeColor.text}
+                                        inputBackgroundColor={activeColor.inputBackground}
+                                        inputTextColor={activeColor.text}
+                                    />
+                                    {touched.phoneCode && errors.phoneCode && (
+                                        <InputErrorMessage error={errors.phoneCode} />
+                                    )}
+                                    <View style={{ marginVertical: 25 }}>
+                                        <CustomBtn
+                                            btnColor={Colors.btnPrimaryColor}
+                                            label="Send"
+                                            btnBorderRadius={10}
+                                            onPress={handleSubmit}
+                                        />
+                                    </View>
+                                </View>
+                            </>
+                        )}
+                    </Formik>
+                </View>
+
+            </View>
+            <StatusBar style="light" backgroundColor={activeColor.background} />
+        </SafeAreaView>
+    );
+};
+
+export default confirmAccount;
+
+const styles = StyleSheet.create({});
+
+

@@ -1,6 +1,5 @@
 import { Link, Tabs } from "expo-router";
-import { Entypo, AntDesign } from "@expo/vector-icons";
-
+import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { Pressable } from "react-native";
 import AppHeader from "@/components/AppHeader";
@@ -57,15 +56,19 @@ export default function TabLayout() {
           headerTitle: () => <AppHeader />,
         }}
       />
+
+
       <Tabs.Screen
-        name="order"
+        name="food"
         options={{
+          title: 'Food',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Entypo name="add-to-list" size={size} color={color} />
+            <MaterialIcons name="restaurant" size={size} color={color} />
           ),
         }}
       />
+
 
       <Tabs.Screen
         name="wallet"
@@ -79,6 +82,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          title: 'Profile',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="user" size={size} color={color} />

@@ -35,7 +35,7 @@ export default function RootLayout() {
   const toggleTheme = ({ newTheme }: { newTheme: { mode: ThemeModeType } }) => {
     let mode: ThemeModeType;
     if (newTheme) {
-      mode = theme.mode === "dark" ? "light" : "dark";
+      mode = theme.mode === "light" ? "dark" : "light";
       newTheme = { mode };
     }
     setTheme(newTheme);
@@ -80,11 +80,7 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(orderDetail)"
-                options={{
-                  headerShown: false,
-                }}
+              <Stack.Screen name="(order)" options={{ headerShown: false }}
               />
             </Stack>
           </AuthProvider>

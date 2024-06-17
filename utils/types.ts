@@ -74,7 +74,7 @@ type Wallet = {
   balance: string;
 };
 
-type Role = "admin" | "vendor" | "dispatch" | "rider" | "staff";
+type Role = "admin" | "vendor" | "dispatcher" | "rider" | "staff";
 export type UserReturn = {
   id: string;
   dispatch_id: string;
@@ -127,4 +127,8 @@ export type UpdateRider = {
 export type Login = {
   username: string;
   password: string;
+};
+export type ConfirmAccount = {
+  emailCode: string;
+  phoneCode: string;
 };

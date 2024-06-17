@@ -12,6 +12,15 @@ const OrderDetailLayout = () => {
     <Stack>
       <Stack.Screen name="[id]" options={{ headerShown: false }} />
       <Stack.Screen name="orderMap" options={{ title: "Order MAP SCREEN" }} />
+      <Stack.Screen name="index" options={{
+        title: "New order",
+      }} />
+      <Stack.Screen name="payment" options={{
+        title: "Make Payment"
+      }} />
+      <Stack.Screen name="transferDetail" options={{
+        title: "Bank Transfer"
+      }} />
     </Stack>
   );
 };

@@ -9,10 +9,11 @@ import { Feather } from "@expo/vector-icons";
 type ProfileCardType = {
     label: string;
     onPress: () => void,
-    icon: ReactNode
+    icon?: ReactNode
+    icon2?: 'chevron-right'
 };
 
-const LinkCard = ({ icon, label, onPress }: ProfileCardType) => {
+const LinkCard = ({ icon, label, onPress, icon2 }: ProfileCardType) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
@@ -37,7 +38,7 @@ const LinkCard = ({ icon, label, onPress }: ProfileCardType) => {
 
                 </View>
 
-                <Feather name="chevron-right" size={15} color={activeColor.icon} />
+                <Feather name={icon2} size={15} color={activeColor.icon} />
 
             </TouchableOpacity>
 

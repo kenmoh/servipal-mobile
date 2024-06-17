@@ -1,8 +1,7 @@
-import * as Yup from 'yup'
+import * as Yup from "yup";
 
-
-const phoneRegEx = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
+const phoneRegEx =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 export const vendorValidationSchema = Yup.object().shape({
   email: Yup.string().email().trim().required().label("Email"),
@@ -45,4 +44,9 @@ export const dispatchValidationSchema = Yup.object().shape({
 export const loginValidationSchema = Yup.object().shape({
   username: Yup.string().email().trim().required().label("Email"),
   password: Yup.string().required().label("Password"),
+});
+
+export const accountValidationSchema = Yup.object().shape({
+  emailCode: Yup.string().required().min(6).max(6).label("Email Code"),
+  phoneCode: Yup.string().required().min(6).max(6).label("Phone Code"),
 });

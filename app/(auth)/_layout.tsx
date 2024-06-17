@@ -5,33 +5,14 @@ const AuthLayout = () => {
     <Stack
       screenOptions={{
         animation: "slide_from_bottom",
+        headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="signin"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="signup"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="authNav"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="signupDispatch"
-        options={{
-          headerShown: false,
-        }}
-      />
-
+      <Stack.Screen name="signin" />
+      <Stack.Screen name="signup" />
+      <Stack.Screen name="authNav" />
+      <Stack.Screen name="signupDispatch" />
+      <Stack.Screen name="confirmAccount" />
     </Stack>
   );
 };

@@ -19,12 +19,7 @@ const OrderLayout = () => {
         }
       }}
     >
-      <Stack.Screen name="index" options={{
-        title: "New order",
-      }} />
-      <Stack.Screen name="payment" options={{
-        title: "Make Payment"
-      }} />
+
     </Stack>
   );
 };

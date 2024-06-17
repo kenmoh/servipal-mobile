@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import dayjs from "dayjs";
 
 import { Colors, themeMode } from "@/constants/Colors";
@@ -111,15 +111,21 @@ const OrderCard = ({ order, isHomeScreen }: { order: OrderType, isHomeScreen?: b
                   {order?.total_cost}
                 </Text>
               </View>
-              {order?.payment_status != 'paid' && <Text
-                style={{
-                  fontSize: 15,
-                  fontFamily: "Poppins-SemiBold",
-                  color: Colors.btnPrimaryColor,
-                }}
-              >
-                PAY
-              </Text>
+              {order?.payment_status != 'paid' &&
+                <TouchableOpacity onPress={() => router.push({
+                  pathname: "/order/payment",
+                  params: { paymentUrl: order?.payment_url, id: order?.id, totalCost: order?.total_cost },
+                })}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontFamily: "Poppins-SemiBold",
+                      color: Colors.btnPrimaryColor,
+                    }}
+                  >
+                    PAY
+                  </Text>
+                </TouchableOpacity>
               }
               <Text
                 style={{

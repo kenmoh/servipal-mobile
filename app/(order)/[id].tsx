@@ -268,7 +268,12 @@ export default function HomeScreen() {
             btnBorderRadius={50}
             btnColor={Colors.primaryBtnColor}
             label="Pay"
-            onPress={() => { }}
+            onPress={
+              () => router.push({
+                pathname: "/order/payment",
+                params: { paymentUrl: order?.payment_url, id: order?.id, totalCost: order?.total_cost },
+              })
+            }
           />
         </View>)}
       </View>

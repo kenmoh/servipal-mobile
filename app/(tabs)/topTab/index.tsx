@@ -1,22 +1,26 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import OrderCard from "@/components/OrderCard";
 import { Colors, themeMode } from "@/constants/Colors";
-import { useQuery } from "@tanstack/react-query";
+import { focusManager, useQuery } from "@tanstack/react-query";
 import {
   StyleSheet,
   Text,
   View,
   FlatList,
   ActivityIndicator,
-  Switch,
+  Platform,
+  AppStateStatus,
+  AppState,
 } from "react-native";
 import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
-import { Link } from "expo-router";
-import HDivider from "@/components/HDivider";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useAuth } from "@/auth/authContext";
+
 
 const index = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { user } = useAuth()
+  const { theme } = useContext(ThemeContext);
   const [isHomeScreen, setIsHomeScreen] = useState(true)
   let activeColor = Colors[theme.mode];
   const {
@@ -24,10 +28,29 @@ const index = () => {
     error,
     isLoading,
     isFetching,
+    refetch
   } = useQuery({
     queryKey: ["orders"],
     queryFn: ordersApi.getListings,
   });
+
+
+  function onAppStateChange(status: AppStateStatus) {
+    if (Platform.OS !== 'web') {
+      focusManager.setFocused(status === 'active')
+    }
+  }
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', onAppStateChange)
+
+    return () => subscription.remove()
+  }, [])
+
+
+  const handleRefresch = () => refetch()
+
+  useRefreshOnFocus(refetch)
 
 
 
@@ -71,6 +94,9 @@ const index = () => {
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           vertical
+          refreshing={isFetching}
+          onRefresh={handleRefresch}
+
 
         />
 
