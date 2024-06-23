@@ -25,7 +25,7 @@ const SignUpDispatch = () => {
   const { error, isSuccess, mutate, isPending } = useMutation({
     mutationFn: (user: CreateDispatch) => usersApi.createDispatch(user),
   });
-  console.log(error?.message);
+
   if (error) {
     showMessage({
       message: error.message,
@@ -46,7 +46,7 @@ const SignUpDispatch = () => {
         alignItems: "center",
       },
     });
-    router.replace("signin");
+    router.replace("confirmAccount");
   }
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -166,7 +166,7 @@ const SignUpDispatch = () => {
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
                       label="Sign Up"
-                      btnBorderRadius={10}
+                      btnBorderRadius={5}
                       onPress={handleSubmit}
                     />
                   </View>

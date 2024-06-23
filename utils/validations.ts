@@ -41,12 +41,35 @@ export const dispatchValidationSchema = Yup.object().shape({
     .label("Confirm Password"),
 });
 
+export const riderValidationSchema = Yup.object().shape({
+  email: Yup.string().email().trim().required().label("Email"),
+  username: Yup.string().required().label("Username"),
+  plateNumber: Yup.string().required().label("Plate number is required"),
+  location: Yup.string().required().label("Location is required"),
+  fullName: Yup.string().required().label("Full Name is required"),
+  profilePhoto: Yup.string().required().label("Profile image is required"),
+  phoneNumber: Yup.string()
+    .required()
+    .matches(phoneRegEx, "Enter a valid phone number")
+    .max(11)
+    .min(10)
+    .label("Phone Number"),
+  password: Yup.string().required().label("Password"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null!], "Passwords must match")
+    .required()
+    .label("Confirm Password"),
+});
+
 export const loginValidationSchema = Yup.object().shape({
   username: Yup.string().email().trim().required().label("Email"),
   password: Yup.string().required().label("Password"),
 });
+export const emailValidationSchema = Yup.object().shape({
+  email: Yup.string().email().trim().required().label("Email"),
+});
 
 export const accountValidationSchema = Yup.object().shape({
-  emailCode: Yup.string().required().min(6).max(6).label("Email Code"),
-  phoneCode: Yup.string().required().min(6).max(6).label("Phone Code"),
+  emailCode: Yup.string().required().min(5).max(6).label("Email Code"),
+  phoneCode: Yup.string().required().min(5).max(6).label("Phone Code"),
 });

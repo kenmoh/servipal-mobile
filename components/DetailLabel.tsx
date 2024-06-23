@@ -36,8 +36,9 @@ export default DetailLabel;
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 16,
-    marginVertical: 7.5,
+    fontSize: 13,
+    marginVertical: 3.5,
     textTransform: "capitalize",
+    fontFamily: 'Poppins-SemiBold'
   },
 });

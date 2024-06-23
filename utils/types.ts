@@ -63,7 +63,10 @@ export type CreateRider = {
   email: string;
   username: string;
   phoneNumber: string;
+  profileImage: string;
+  plateNumber: string;
   password: string;
+  location: string;
   confirmPassword: string;
 };
 

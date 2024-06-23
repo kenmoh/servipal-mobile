@@ -10,10 +10,11 @@ type ProfileCardType = {
     image?: string;
     name?: string;
     email?: string;
+    phoneNumber?: string
     onPress?: () => void,
 };
 
-const ProfileCard = ({ image, name, email, onPress }: ProfileCardType) => {
+const ProfileCard = ({ image, name, email, phoneNumber, onPress }: ProfileCardType) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
@@ -38,7 +39,7 @@ const ProfileCard = ({ image, name, email, onPress }: ProfileCardType) => {
                             fontSize: 14,
                         }}
                     >
-                        {name}
+                        {name} | {phoneNumber || ''}
                     </Text>
                     <Text
                         style={{

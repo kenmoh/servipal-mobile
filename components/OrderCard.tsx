@@ -18,7 +18,7 @@ const OrderCard = ({ order, isHomeScreen }: { order: OrderType, isHomeScreen?: b
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
-    <Link href={`(orderDetail)/${order?.id}`} asChild>
+    <Link href={`(order)/${order?.id}`} asChild>
       <TouchableOpacity>
         <View style={[styles.container]}>
           <View style={{ flex: 1 }}>

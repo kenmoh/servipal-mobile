@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,7 +11,7 @@ import CustomTextInput from "@/components/CustomTextInput";
 import TitleText from "@/components/TitleText";
 import usersApi from "@/api/users";
 import authApi from "@/api/auth";
-import { Login } from "@/utils/types";
+import { Login, UserReturn } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { Link, router } from "expo-router";
 import { Formik } from "formik";
@@ -22,6 +22,8 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import authStorage from '@/auth/storage'
+import Select from "@/components/Select";
+import { locations } from "@/constants/locations";
 
 const SignIn = () => {
   const { theme } = useContext(ThemeContext);
@@ -33,32 +35,51 @@ const SignIn = () => {
   });
 
 
+  useEffect(() => {
+    if (error) {
+      showMessage({
+        message: error.message,
+        type: "danger",
+        style: {
+          alignItems: "center",
+        },
+      });
+      router.replace("signin");
 
-  if (error) {
-    showMessage({
-      message: error.message,
-      type: "danger",
-      style: {
-        alignItems: "center",
-      },
-    });
-    router.replace("signin");
+    }
+  }, [error])
 
-  }
-  if (isSuccess) {
-    const user = jwtDecode(data?.access_token);
-    authContext.setUser(user);
-    authStorage.storeToken(data.access_token);
-    showMessage({
-      message: "Login Successful.",
-      type: "success",
-      style: {
-        alignItems: "center",
-      },
-    });
-    router.replace("(tabs)/topTab");
-    return;
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      const user = jwtDecode(data?.access_token) as UserReturn;
+      console.log(user?.account_status)
+      if (user?.account_status === 'confirmed') {
+        authContext.setUser(user);
+        authStorage.storeToken(data.access_token);
+      }
+      if (user?.account_status === 'pending') {
+        showMessage({
+          message: "Please verify your email and phone number.",
+          type: "danger",
+          style: {
+            alignItems: "center",
+          },
+        });
+        router.replace("confirmAccount");
+        return;
+      }
+      showMessage({
+        message: "Login Successful.",
+        type: "success",
+        style: {
+          alignItems: "center",
+        },
+      });
+      router.replace("(tabs)/topTab");
+      return;
+    }
+  }, [isSuccess, data])
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -116,11 +137,13 @@ const SignIn = () => {
                   {touched.password && errors.password && (
                     <InputErrorMessage error={errors.password} />
                   )}
+
                   <View style={{ marginVertical: 25 }}>
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
                       label="Login"
-                      btnBorderRadius={10}
+                      btnBorderRadius={5}
+
                       onPress={handleSubmit}
                     />
                   </View>

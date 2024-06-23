@@ -13,6 +13,7 @@ const AuthLayout = () => {
       <Stack.Screen name="authNav" />
       <Stack.Screen name="signupDispatch" />
       <Stack.Screen name="confirmAccount" />
+
     </Stack>
   );
 };

@@ -12,23 +12,22 @@ import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import { accountValidationSchema } from "@/utils/validations";
+import { emailValidationSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
-import { useAuth } from "@/auth/authContext";
 import userApi from '@/api/users'
 
 const confirmAccount = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
-        mutationFn: ({ emailCode, phoneCode }: ConfirmAccount) => userApi.confirmAccount(emailCode, phoneCode),
+    const { error, isSuccess, mutate, isPending } = useMutation({
+        mutationFn: (email: string) => userApi.recoverPassword(email),
     });
 
 
-    console.log(data, error)
+
     useEffect(() => {
         if (error) {
             showMessage({
@@ -79,8 +78,8 @@ const confirmAccount = () => {
                 >
                     <TitleText label="Confirm Account" textColor={activeColor.text} />
                     <Formik
-                        initialValues={{ emailCode: "", phoneCode: "" }}
-                        validationSchema={accountValidationSchema}
+                        initialValues={{ email: "" }}
+                        validationSchema={emailValidationSchema}
                         onSubmit={mutate}
                     >
                         {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -89,30 +88,18 @@ const confirmAccount = () => {
                                     <CustomTextInput
                                         label="Email Code"
                                         hasBorder={theme.mode !== "dark"}
-                                        keyboardType="number-pad"
-                                        onChangeText={handleChange("emailCode")}
-                                        value={values.emailCode}
+                                        autoCapitalize="none"
+                                        keyboardType="email-address"
+                                        onChangeText={handleChange("email")}
+                                        value={values.email}
                                         labelColor={activeColor.text}
                                         inputBackgroundColor={activeColor.inputBackground}
                                         inputTextColor={activeColor.text}
                                     />
-                                    {touched.emailCode && errors.emailCode && (
-                                        <InputErrorMessage error={errors.emailCode} />
+                                    {touched.email && errors.email && (
+                                        <InputErrorMessage error={errors.email} />
                                     )}
-                                    <CustomTextInput
-                                        label="Phone Code"
-                                        hasBorder={theme.mode !== "dark"}
-                                        keyboardType="number-pad"
 
-                                        onChangeText={handleChange("phoneCode")}
-                                        value={values.phoneCode}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                    />
-                                    {touched.phoneCode && errors.phoneCode && (
-                                        <InputErrorMessage error={errors.phoneCode} />
-                                    )}
                                     <View style={{ marginVertical: 25 }}>
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}

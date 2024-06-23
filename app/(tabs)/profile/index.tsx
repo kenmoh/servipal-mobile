@@ -1,14 +1,13 @@
-import { ScrollView, StyleSheet, Switch, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import ProfileCard from "@/components/ProfileCard";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import React, { useContext, useState } from "react";
 import LinkCard from "@/components/LinkCard";
 import ProfileContainer from "@/components/ProfileContainer";
 import HDivider from "@/components/HDivider";
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/auth/authContext";
 
 const imageUrl =
@@ -28,7 +27,22 @@ const index = () => {
     {
       screen: () => router.push('/profile/changePassword'),
       label: 'Change Password',
-      icon: <Feather name="lock" color={activeColor.icon} size={15} />
+      icon: <Feather name="lock" color={activeColor.icon} size={18} />
+    },
+    {
+      screen: () => router.push('/profile/changePassword'),
+      label: 'Customer Support',
+      icon: <MaterialIcons name="support-agent" size={18} color={activeColor.icon} />
+    },
+    {
+      screen: () => router.push('/profile/changePassword'),
+      label: 'FAQs',
+      icon: <AntDesign name="questioncircleo" size={18} color={activeColor.icon} />
+    },
+    {
+      screen: () => router.push('/profile/changePassword'),
+      label: 'About QP',
+      icon: <Feather name="lock" color={activeColor.icon} size={18} />
     },
 
 
@@ -41,110 +55,95 @@ const index = () => {
   };
   return (
     <>
-      <SafeAreaView style={[
-        styles.container,
-        { backgroundColor: activeColor.background },
-      ]}>
-        <ScrollView
+
+      <ScrollView
+        style={[
+          styles.container,
+          { backgroundColor: activeColor.background },
+        ]}
+      >
+        <View
           style={[
-            styles.container,
-            { backgroundColor: activeColor.background },
+            {
+              flex: 1,
+              paddingHorizontal: 10,
+              alignItems: "center",
+              justifyContent: 'center'
+            },
           ]}
         >
-          <View
-            style={[
-              {
-                flex: 1,
-                paddingHorizontal: 10,
-                alignItems: "center",
-                justifyContent: 'center'
-              },
-            ]}
-          >
-            <ProfileCard
-              image={imageUrl}
-              email={user?.email}
-              name={user?.company_name || user?.username}
-              onPress={() => { }}
-            />
-            <ProfileContainer>
-
-              {user?.user_type === 'dispatcher' && (<>
-                <LinkCard
-                  onPress={() => router.push('/profile/addRider')}
-                  icon={<Feather name="user-plus" color={activeColor.icon} size={15} />}
-                  label="Add Rider"
-                  icon2="chevron-right"
-                />
-
-                <HDivider />
-                <LinkCard
-                  onPress={() => router.push('/profile/riders')}
-                  icon={<Feather name="users" color={activeColor.icon} size={15} />}
-                  label="Riders"
-                  icon2="chevron-right"
-                />
-                <HDivider />
-              </>
-              )}
-
-              {
-                linkArray.map((link, index) => (
-                  <React.Fragment key={index}>
-                    <LinkCard
-
-                      onPress={link.screen}
-                      icon={link.icon}
-                      label={link.label}
-                      icon2="chevron-right"
-                    />
-
-                    {(index < linkArray.length - 1) && <HDivider />}
-
-                  </React.Fragment>
-                ))
-              }
-
-
-
-              {
-                user?.account_status === 'pending' && (
-                  <>
-                    <HDivider />
-                    <LinkCard
-                      onPress={() => router.push('confirmAccount')}
-                      icon={<Feather name="check-circle" color={activeColor.icon} size={15} />}
-                      label="Confirm Account"
-                      icon2="chevron-right"
-                    />
-                  </>
-                )
-              }
-
-            </ProfileContainer>
-            <ProfileContainer>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Light', fontSize: 14 }}>Dark Mode</Text>
-                <Switch
-                  thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
-                  value={isEnabled}
-                />
-              </View>
-            </ProfileContainer>
-          </View>
-        </ScrollView>
-        <View style={{ bottom: 0, left: 0 }}>
+          <ProfileCard
+            image={imageUrl}
+            email={user?.email}
+            name={user?.company_name || user?.username}
+            onPress={() => { }}
+            phoneNumber={user?.phone_number}
+          />
           <ProfileContainer>
-            <LinkCard
-              onPress={() => setUser(null)}
-              icon={<Feather name="log-out" color={activeColor.icon} size={15} />}
-              label="Logout"
-            />
+
+            {user?.user_type === 'dispatcher' && (<>
+              <LinkCard
+                onPress={() => router.push('/profile/addRider')}
+                icon={<Feather name="user-plus" color={activeColor.icon} size={15} />}
+                label="Add Rider"
+                icon2="chevron-right"
+              />
+
+              <HDivider />
+              <LinkCard
+                onPress={() => router.push('/profile/riders')}
+                icon={<Feather name="users" color={activeColor.icon} size={15} />}
+                label="Riders"
+                icon2="chevron-right"
+              />
+              <HDivider />
+            </>
+            )}
+
+            {
+              linkArray.map((link, index) => (
+                <React.Fragment key={index}>
+                  <LinkCard
+
+                    onPress={link.screen}
+                    icon={link.icon}
+                    label={link.label}
+                    icon2="chevron-right"
+                  />
+
+                  {(index < linkArray.length - 1) && <HDivider />}
+
+                </React.Fragment>
+              ))
+            }
+
+          </ProfileContainer>
+
+          <ProfileContainer>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Light', fontSize: 14 }}>Dark Mode</Text>
+              <Switch
+                thumbColor={isEnabled ? "teal" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+            </View>
           </ProfileContainer>
         </View>
-      </SafeAreaView>
+      </ScrollView>
+      <View style={{ bottom: 0, left: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
+        <TouchableOpacity onPress={() => setUser(null)} style={styles.accountContainer}>
+          <Feather name="log-out" color={Colors.error} size={18} />
+          <Text style={{ color: Colors.error }}>Logout</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => console.log('Account Deleted!')} style={styles.accountContainer}>
+          <Feather name="trash-2" color={Colors.error} size={18} />
+          <Text style={{ color: Colors.error }}>Delete Accout</Text>
+        </TouchableOpacity>
+
+      </View>
+
     </>
   );
 };
@@ -155,4 +154,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  accountContainer: {
+    gap: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
 });

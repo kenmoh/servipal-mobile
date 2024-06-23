@@ -10,10 +10,11 @@ type ProfileCardType = {
     label: string;
     onPress: () => void,
     icon?: ReactNode
-    icon2?: 'chevron-right'
+    icon2?: 'chevron-right',
+    color?: string
 };
 
-const LinkCard = ({ icon, label, onPress, icon2 }: ProfileCardType) => {
+const LinkCard = ({ icon, label, onPress, icon2, color }: ProfileCardType) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
@@ -23,12 +24,12 @@ const LinkCard = ({ icon, label, onPress, icon2 }: ProfileCardType) => {
                 style={styles.contentContainer}
             >
                 <View
-                    style={{ flex: 1, flexDirection: "row", gap: 10, }}
+                    style={{ flex: 1, flexDirection: "row", gap: 10, alignItems: 'center' }}
                 >
                     {icon}
                     <Text
                         style={{
-                            color: activeColor.text,
+                            color: color || activeColor.text,
                             fontFamily: "Poppins-Light",
                             fontSize: 14,
                         }}
@@ -54,7 +55,8 @@ const styles = StyleSheet.create({
         marginVertical: 6,
         justifyContent: 'space-between',
         paddingVertical: 5,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        alignItems: 'center'
 
     },
     image: {

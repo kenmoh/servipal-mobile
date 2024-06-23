@@ -45,7 +45,7 @@ const payment = () => {
         const result = await transfer.transferPaymentDetail(id as string) as TransferDetailResponse;
         setIsLoading(false);
         router.push({
-            pathname: '/order/transferDetail', params: {
+            pathname: '/transferDetail', params: {
                 transfer_reference: result.data.transfer_reference,
                 account_number: result.data.account_number,
                 bank_name: result.data.bank_name,
@@ -57,14 +57,14 @@ const payment = () => {
 
     useEffect(() => {
         if (status?.[0] === "status=successful") {
-            router.push("topTab/myOrder");
+            router.push("/paymentSuccess");
             showMessage({
                 message: "Payment Successful!",
                 type: "success",
             });
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
-            router.push("topTab/myOrder");
+            router.push("/paymentFailed");
             showMessage({
                 message: "Payment failed to complete!",
                 type: "danger",
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        marginTop: Constants.statusBarHeight,
+        // marginTop: Constants.statusBarHeight,
         width: Dimensions.get('screen').width
     },
     button: {

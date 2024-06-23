@@ -27,10 +27,10 @@ const SenderSignup = () => {
   const { error, isSuccess, mutate, isPending, data } = useMutation({
     mutationFn: (user: CreateUser) => usersApi.createUser(user),
   });
-  console.log(data);
-  if (error?.message == "409") {
+
+  if (error) {
     showMessage({
-      message: "data.detail[0].msg",
+      message: error.message,
       type: "danger",
       style: {
         alignItems: "center",
@@ -47,7 +47,7 @@ const SenderSignup = () => {
         alignItems: "center",
       },
     });
-    router.replace("signin");
+    router.replace("confirmAccount");
   }
 
   return (
@@ -154,7 +154,7 @@ const SenderSignup = () => {
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
                       label="Sign Up"
-                      btnBorderRadius={10}
+                      btnBorderRadius={5}
                       onPress={handleSubmit}
                     />
                   </View>

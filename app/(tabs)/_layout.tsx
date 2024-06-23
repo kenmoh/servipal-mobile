@@ -1,7 +1,7 @@
 import { Link, Tabs } from "expo-router";
 import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { Pressable } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import AppHeader from "@/components/AppHeader";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
@@ -32,18 +32,17 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+
         tabBarActiveTintColor: activeColor.text,
         headerTitleAlign: "center",
         headerTintColor: activeColor.text,
         tabBarStyle: {
+          borderBottomColor: activeColor.borderolor,
+          borderBottomWidth: StyleSheet.hairlineWidth,
           backgroundColor: activeColor.background,
         },
-        headerStyle: {
-          borderBottomColor: "#aaa",
-          elevation: 0,
-          shadowOpacity: 0,
-          backgroundColor: activeColor.background,
-        },
+
+
       }}
     >
       <Tabs.Screen
@@ -74,9 +73,18 @@ export default function TabLayout() {
         name="wallet"
         options={{
           title: "Wallet",
+          headerStyle: {
+            backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderBottomColor: activeColor.borderolor
+          },
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="wallet" size={size} color={color} />
           ),
+
+
         }}
       />
       <Tabs.Screen
@@ -87,8 +95,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="user" size={size} color={color} />
           ),
+          headerStyle: {
+            backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderBottomColor: 'red'
+
+          },
         }}
       />
+
     </Tabs>
   );
 }

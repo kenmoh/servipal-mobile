@@ -101,7 +101,7 @@ const index = () => {
         />
 
       </View>
-      {/* <Link href='/order/payment' style={{ fontSize: 40 }}>Payment</Link> */}
+
     </>
   );
 };

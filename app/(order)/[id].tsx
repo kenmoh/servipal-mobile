@@ -270,7 +270,7 @@ export default function HomeScreen() {
             label="Pay"
             onPress={
               () => router.push({
-                pathname: "/order/payment",
+                pathname: "/payment",
                 params: { paymentUrl: order?.payment_url, id: order?.id, totalCost: order?.total_cost },
               })
             }
