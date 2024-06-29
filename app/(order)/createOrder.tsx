@@ -17,7 +17,7 @@ import { CreateOrderType, OrderType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import TitleText from "@/components/TitleText";
+
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);

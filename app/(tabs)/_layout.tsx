@@ -5,7 +5,7 @@ import { Pressable, StyleSheet } from "react-native";
 import AppHeader from "@/components/AppHeader";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
-import { useAuth } from "@/auth/authContext";
+
 
 const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
   return (
@@ -25,7 +25,7 @@ const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
 };
 
 export default function TabLayout() {
-  const { user } = useAuth();
+
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
@@ -53,7 +53,16 @@ export default function TabLayout() {
             <AntDesign name="home" size={size} color={color} />
           ),
           headerTitle: () => <AppHeader />,
+          headerStyle: {
+            backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderBottomColor: activeColor.borderolor
+
+          }
         }}
+
       />
 
 
@@ -65,14 +74,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="restaurant" size={size} color={color} />
           ),
+
         }}
       />
 
 
       <Tabs.Screen
         name="wallet"
+
         options={{
           title: "Wallet",
+
           headerStyle: {
             backgroundColor: activeColor.background,
             elevation: 0,
@@ -81,7 +93,7 @@ export default function TabLayout() {
             borderBottomColor: activeColor.borderolor
           },
           tabBarIcon: ({ color, size }) => (
-            <AntDesign name="wallet" size={size} color={color} />
+            <Entypo name="wallet" size={size} color={color} />
           ),
 
 

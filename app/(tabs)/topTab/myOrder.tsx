@@ -1,4 +1,4 @@
-import { StyleSheet, View, FlatList, Platform, AppState, ActivityIndicator } from "react-native";
+import { StyleSheet, View, FlatList, Platform, AppState, ActivityIndicator, Text } from "react-native";
 import React, { useContext, useEffect } from "react";
 import type { AppStateStatus } from 'react-native'
 import { focusManager } from '@tanstack/react-query'
@@ -12,6 +12,7 @@ import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { useQuery } from "@tanstack/react-query";
 import { OrderType } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { Link } from "expo-router";
 
 
 const myOrder = () => {
@@ -72,6 +73,7 @@ const myOrder = () => {
   return (
     <>
       <CustomActivityIndicator visible={isPending} />
+
       <View
         style={[styles.container, { backgroundColor: activeColor.background }]}
       >

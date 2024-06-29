@@ -4,10 +4,11 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React, { useContext, useEffect, useState } from 'react'
 import CustomActivityIndicator from '@/components/CustomActivityIndicator';
 import { WebView } from 'react-native-webview';
-import Constants from 'expo-constants';
 import { Colors } from '@/constants/Colors';
 import { ThemeContext } from '@/context/themeContext';
 import transfer from '@/api/transfer';
+import client from "@/api/client";
+
 
 interface TransferDetailResponse {
     data: {
@@ -32,12 +33,52 @@ const payment = () => {
 
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
+
     const handleOpenWebView = () => {
         if (!paymentUrl) {
             return;
         }
         setShowWebView(true);
     };
+
+
+    const handlePayWithWallet = async (orderId: string) => {
+        setIsLoading(true);
+        const response = await client.post(`${orderId}/pay-with-wallet`)
+
+        setIsLoading(false);
+
+        if (!response.ok) {
+            router.push("/paymentFailed");
+            showMessage({
+                message: response.data?.detail,
+                type: "danger",
+                textStyle: {
+                    textAlign: 'center'
+                }
+            });
+            setTimeout(() => {
+                router.push("/(tabs)/topTab/myOrder");
+            }, 5000);
+        }
+        if (response.ok) {
+            router.push("/paymentSuccess");
+            showMessage({
+                message: response.data?.message,
+                type: "success",
+                textStyle: {
+                    textAlign: 'center'
+                }
+            });
+
+            setTimeout(() => {
+                router.push("/(tabs)/topTab/myOrder");
+            }, 5000);
+        }
+
+
+    };
+
 
 
     const handleGetTransferDetails = async () => {
@@ -93,7 +134,12 @@ const payment = () => {
                     <>
                         <TouchableOpacity onPress={handleOpenWebView} style={styles.button}>
                             <Text style={[styles.btnText, { color: activeColor.text }]}>
-                                PAY ₦ {totalCost}
+                                PAY WITH CARD ₦ {totalCost}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handlePayWithWallet(id as string)} style={styles.button}>
+                            <Text style={[styles.btnText, { color: activeColor.text }]}>
+                                PAY WITH WALLET ₦ {totalCost}
                             </Text>
                         </TouchableOpacity>
 

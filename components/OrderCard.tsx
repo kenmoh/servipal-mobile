@@ -113,7 +113,7 @@ const OrderCard = ({ order, isHomeScreen }: { order: OrderType, isHomeScreen?: b
               </View>
               {order?.payment_status != 'paid' &&
                 <TouchableOpacity onPress={() => router.push({
-                  pathname: "/order/payment",
+                  pathname: "/(order)/payment",
                   params: { paymentUrl: order?.payment_url, id: order?.id, totalCost: order?.total_cost },
                 })}>
                   <Text
