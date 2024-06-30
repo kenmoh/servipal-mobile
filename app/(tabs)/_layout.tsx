@@ -83,20 +83,20 @@ export default function TabLayout() {
         name="wallet"
 
         options={{
-          title: "Wallet",
+          // title: "Wallet",
 
-          headerStyle: {
-            backgroundColor: activeColor.background,
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: activeColor.borderolor
-          },
+          // headerStyle: {
+          //   backgroundColor: activeColor.background,
+          //   elevation: 0,
+          //   shadowOpacity: 0,
+          //   borderBottomWidth: StyleSheet.hairlineWidth,
+          //   borderBottomColor: activeColor.borderolor
+          // },
           tabBarIcon: ({ color, size }) => (
             <Entypo name="wallet" size={size} color={color} />
           ),
 
-
+          headerShown: false
         }}
       />
       <Tabs.Screen

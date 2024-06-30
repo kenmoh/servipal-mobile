@@ -80,15 +80,17 @@ const myOrder = () => {
         <FlatList
           data={order?.data}
           keyExtractor={(item: OrderType) => item?.id?.toString()}
-          renderItem={({ item }) =>
-            item.vendor_username === user?.username ? (
-              <OrderCard order={item} />
+          renderItem={({ item, index }) => {
+            const isLastOrder = index === order?.data.length - 1
+            return (item.vendor_username === user?.username ? (
+              <OrderCard order={item} isLastOrder={isLastOrder} />
             ) : item.dispatch_company_name === user?.company_name ? (
-              <OrderCard order={item} />
+              <OrderCard order={item} isLastOrder={isLastOrder} />
             ) : (
               item.rider_phone_number === user?.phone_number &&
               item.dispatch_company_name === user?.dispatch && <OrderCard order={item} isHomeScreen={false} />
-            )
+            ))
+          }
           }
           estimatedItemSize={200}
           showsHorizontalScrollIndicator={false}

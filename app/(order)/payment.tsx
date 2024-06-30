@@ -1,14 +1,48 @@
-import { showMessage } from 'react-native-flash-message';
-import { StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
-import { router, useLocalSearchParams } from 'expo-router';
-import React, { useContext, useEffect, useState } from 'react'
-import CustomActivityIndicator from '@/components/CustomActivityIndicator';
-import { WebView } from 'react-native-webview';
-import { Colors } from '@/constants/Colors';
-import { ThemeContext } from '@/context/themeContext';
-import transfer from '@/api/transfer';
+import { showMessage } from "react-native-flash-message";
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    Dimensions,
+} from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import CustomActivityIndicator from "@/components/CustomActivityIndicator";
+import { WebView } from "react-native-webview";
+import { Colors } from "@/constants/Colors";
+import { ThemeContext } from "@/context/themeContext";
+import transfer from "@/api/transfer";
 import client from "@/api/client";
+import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 
+const TIME_OUT = 300
+
+type TransferBtnType = {
+    onPress: () => void;
+    label: string;
+    color: string;
+    backgroundColor: string;
+    icon: ReactNode;
+};
+
+const TransferBtn = ({
+    onPress,
+    icon,
+    label,
+    color,
+    backgroundColor,
+}: TransferBtnType) => {
+    return (
+        <TouchableOpacity
+            onPress={onPress}
+            style={[styles.button, { backgroundColor }]}
+        >
+            {icon}
+            <Text style={[styles.btnText, { color }]}>{label}</Text>
+        </TouchableOpacity>
+    );
+};
 
 interface TransferDetailResponse {
     data: {
@@ -20,7 +54,6 @@ interface TransferDetailResponse {
     };
 }
 
-
 const payment = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
@@ -30,9 +63,7 @@ const payment = () => {
     const params = useLocalSearchParams();
     const { paymentUrl, totalCost, id } = params;
 
-
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
-
 
     const handleOpenWebView = () => {
         if (!paymentUrl) {
@@ -41,10 +72,9 @@ const payment = () => {
         setShowWebView(true);
     };
 
-
     const handlePayWithWallet = async (orderId: string) => {
         setIsLoading(true);
-        const response = await client.post(`${orderId}/pay-with-wallet`)
+        const response = await client.post(`${orderId}/pay-with-wallet`);
 
         setIsLoading(false);
 
@@ -54,12 +84,12 @@ const payment = () => {
                 message: response.data?.detail,
                 type: "danger",
                 textStyle: {
-                    textAlign: 'center'
-                }
+                    textAlign: "center",
+                },
             });
             setTimeout(() => {
                 router.push("/(tabs)/topTab/myOrder");
-            }, 5000);
+            }, TIME_OUT);
         }
         if (response.ok) {
             router.push("/paymentSuccess");
@@ -67,32 +97,31 @@ const payment = () => {
                 message: response.data?.message,
                 type: "success",
                 textStyle: {
-                    textAlign: 'center'
-                }
+                    textAlign: "center",
+                },
             });
 
             setTimeout(() => {
                 router.push("/(tabs)/topTab/myOrder");
-            }, 5000);
+            }, TIME_OUT);
         }
-
-
     };
-
-
 
     const handleGetTransferDetails = async () => {
         setIsLoading(true);
-        const result = await transfer.transferPaymentDetail(id as string) as TransferDetailResponse;
+        const result = (await transfer.transferPaymentDetail(
+            id as string
+        )) as TransferDetailResponse;
         setIsLoading(false);
         router.push({
-            pathname: '/transferDetail', params: {
+            pathname: "/transferDetail",
+            params: {
                 transfer_reference: result.data.transfer_reference,
                 account_number: result.data.account_number,
                 bank_name: result.data.bank_name,
                 amount: result.data.amount,
                 mode: result.data.mode,
-            }
+            },
         });
     };
 
@@ -103,6 +132,10 @@ const payment = () => {
                 message: "Payment Successful!",
                 type: "success",
             });
+            setTimeout(() => {
+                router.push("/(tabs)/topTab/myOrder");
+            }, TIME_OUT);
+
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
             router.push("/paymentFailed");
@@ -110,13 +143,18 @@ const payment = () => {
                 message: "Payment failed to complete!",
                 type: "danger",
             });
+            setTimeout(() => {
+                router.push("/(tabs)/topTab/myOrder");
+            }, TIME_OUT);
         }
     }, [status]);
 
     return (
         <>
             <CustomActivityIndicator visible={isLoading} />
-            <View style={[styles.wrapper, { backgroundColor: activeColor.background }]}>
+            <View
+                style={[styles.wrapper, { backgroundColor: activeColor.background }]}
+            >
                 {showWebView ? (
                     <>
                         <WebView
@@ -127,87 +165,70 @@ const payment = () => {
                             }}
                             onLoadStart={() => setIsLoading(true)}
                             onLoadEnd={() => setIsLoading(false)}
-
                         />
                     </>
                 ) : (
                     <>
-                        <TouchableOpacity onPress={handleOpenWebView} style={styles.button}>
-                            <Text style={[styles.btnText, { color: activeColor.text }]}>
-                                PAY WITH CARD ₦ {totalCost}
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handlePayWithWallet(id as string)} style={styles.button}>
-                            <Text style={[styles.btnText, { color: activeColor.text }]}>
-                                PAY WITH WALLET ₦ {totalCost}
-                            </Text>
-                        </TouchableOpacity>
-
-                        <Text
-                            style={{
-                                color: activeColor.text,
-                                textAlign: "center",
-                                fontFamily: 'Poppins-SemiBold',
-                                marginVertical: 15
-                            }}
-                        >
-                            OR
+                        <Text style={[styles.btnText, { color: activeColor.text }]}>
+                            TOTAL: ₦{totalCost}
                         </Text>
+                        <TransferBtn
+                            icon={<AntDesign name="creditcard" size={24} color={activeColor.icon} />}
+                            label="CARD"
+                            color={activeColor.text}
+                            backgroundColor={activeColor.profileCard}
+                            onPress={handleOpenWebView}
 
-                        <TouchableOpacity onPress={handleGetTransferDetails} style={styles.transferBtn}>
-                            <Text style={[styles.btnText, { color: activeColor.text }]}>
-                                BANK TRANSFER
-                            </Text>
-                        </TouchableOpacity>
+                        />
+                        <TransferBtn
+                            icon={<Entypo name="wallet" size={24} color={activeColor.icon} />}
+                            label="WALLET"
+                            color={activeColor.text}
+                            backgroundColor={activeColor.profileCard}
+                            onPress={() => handlePayWithWallet(id as string)}
 
+                        />
+                        <TransferBtn
+                            icon={<MaterialCommunityIcons name="bank-transfer" size={24} color={activeColor.icon} />}
+                            label="BANK TRANSFER"
+                            color={activeColor.text}
+                            backgroundColor={activeColor.profileCard}
+                            onPress={handleGetTransferDetails}
 
+                        />
 
                     </>
                 )}
             </View>
-
         </>
-    )
-}
+    );
+};
 
-export default payment
+export default payment;
 
 const styles = StyleSheet.create({
     wrapper: {
         justifyContent: "center",
-        alignItems: 'center',
+        alignItems: "center",
         flex: 1,
-        paddingHorizontal: 20,
-
+        paddingHorizontal: 25,
+        gap: 25
     },
     container: {
         flex: 1,
-        // marginTop: Constants.statusBarHeight,
-        width: Dimensions.get('screen').width
+        width: Dimensions.get("screen").width,
     },
     button: {
-        width: '100%',
-        borderRadius: 50,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: Colors.btnPrimaryColor,
-        paddingVertical: 7,
-        alignSelf: "center",
-    },
-    transferBtn: {
-        width: '100%',
-        borderRadius: 50,
-        justifyContent: "center",
-        alignItems: "center",
-        borderColor: Colors.primaryBtnColor,
-        paddingVertical: 7,
-        alignSelf: "center",
-        borderWidth: 2
+        width: "100%",
+        borderRadius: 10,
+        padding: 15,
+
+        flexDirection: "row",
+        gap: 10,
     },
 
     btnText: {
-        fontFamily: 'Poppins-SemiBold',
-        fontSize: 18
-    }
-
-})
+        fontFamily: "Poppins-SemiBold",
+        fontSize: 18,
+    },
+});

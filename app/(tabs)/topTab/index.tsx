@@ -85,11 +85,13 @@ const index = () => {
         <FlatList
           data={order?.data}
           keyExtractor={(item) => item?.id.toString()}
-          renderItem={({ item }) =>
-            item.order_status === "Pending" &&
-            item.payment_status === "paid" && (
-              <OrderCard order={item} isHomeScreen={isHomeScreen} />
-            )
+          renderItem={({ item, index }) => {
+            const isLastOrder = index === order?.data.length - 1
+            return (item.order_status === "Pending" &&
+              item.payment_status === "paid" && (
+                <OrderCard order={item} isHomeScreen={isHomeScreen} isLastOrder={isLastOrder} />
+              ))
+          }
           }
           estimatedItemSize={200}
           showsHorizontalScrollIndicator={false}
@@ -107,7 +109,7 @@ const index = () => {
           }}>
 
             <FloatingActionButton
-              icon={<AntDesign name="pluscircleo" color={"#fff"} size={32} />}
+              icon={<AntDesign name="pluscircleo" color={"#fff"} size={30} />}
               onPress={() => router.push("/(order)/createOrder")}
             />
           </View>

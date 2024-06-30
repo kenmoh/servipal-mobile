@@ -35,7 +35,7 @@ export default function HomeScreen() {
         alignItems: "center",
       },
     });
-    router.push("/order");
+    router.push("/(order)/createOrder");
   }
   if (isSuccess) {
     showMessage({
@@ -46,7 +46,7 @@ export default function HomeScreen() {
       },
     });
     router.push({
-      pathname: "/order/payment",
+      pathname: "/(order)/payment",
       params: { paymentUrl: data?.payment_url, id: data?.id, totalCost: data?.total_cost },
     });
   }

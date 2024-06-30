@@ -70,11 +70,31 @@ export type CreateRider = {
   confirmPassword: string;
 };
 
-type Wallet = {
+type TransactionType = "deposit" | "withdrawal" | string;
+type PaymentTransactionType = "pay_with_wallet" | "fund_wallet" | string;
+
+type Deposits = {
+  id: string;
+  username: string;
+  amount: string;
+  transaction_type: TransactionType;
+  payment_transaction_type: TransactionType;
+  created_at: string;
+};
+export type Transaction = {
+  id: string;
+  amount: string;
+  username: string;
+  transaction_type: TransactionType;
+  payment_transaction_type: PaymentTransactionType;
+  created_at: string;
+};
+
+export type Transactions = {
   user_id: string;
-  company_name: string;
-  vendor_username: string;
+  id: string;
   balance: string;
+  transactions: Transaction[];
 };
 
 type Role = "admin" | "vendor" | "dispatcher" | "rider" | "staff";
@@ -98,7 +118,7 @@ export type UserReturn = {
   account_status: AccountStatus;
   confirm_email: number;
   confirm_phone_number: number;
-  wallet: Wallet;
+  // wallet: Wallet;
   created_at: string;
   updated_at: string;
   dispatch: string;

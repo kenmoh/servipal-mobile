@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View, StatusBar } from "react-native";
 import ProfileCard from "@/components/ProfileCard";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
@@ -68,7 +68,8 @@ const index = () => {
               flex: 1,
               paddingHorizontal: 10,
               alignItems: "center",
-              justifyContent: 'center'
+              justifyContent: 'center',
+              paddingTop: StatusBar.currentHeight
             },
           ]}
         >

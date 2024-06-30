@@ -14,13 +14,13 @@ import HDivider from "./HDivider";
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
-const OrderCard = ({ order, isHomeScreen }: { order: OrderType, isHomeScreen?: boolean }) => {
+const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isHomeScreen?: boolean, isLastOrder: boolean }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
     <Link href={`(order)/${order?.id}`} asChild>
       <TouchableOpacity>
-        <View style={[styles.container]}>
+        <View style={[styles.container, { marginBottom: isLastOrder ? 35 : 0 }]}>
           <View style={{ flex: 1 }}>
             <Image
               source={order?.order_photo_url}

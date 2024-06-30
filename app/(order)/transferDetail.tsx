@@ -85,7 +85,7 @@ const transferDetail = () => {
             </ProfileContainer>
 
             <TouchableOpacity style={styles.back} onPress={handleGoBack}>
-                <Text style={{ color: activeColor.text }}>Go Back</Text>
+                <Text style={{ color: '#fff' }}>Go Back</Text>
             </TouchableOpacity>
         </View>
     )
