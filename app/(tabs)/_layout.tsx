@@ -5,6 +5,7 @@ import { Pressable, StyleSheet } from "react-native";
 import AppHeader from "@/components/AppHeader";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+import { useAuth } from "@/auth/authContext";
 
 
 const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
@@ -28,11 +29,11 @@ export default function TabLayout() {
 
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+  const { user } = useAuth()
 
   return (
     <Tabs
       screenOptions={{
-
         tabBarActiveTintColor: activeColor.text,
         headerTitleAlign: "center",
         headerTintColor: activeColor.text,
@@ -41,7 +42,6 @@ export default function TabLayout() {
           borderBottomWidth: StyleSheet.hairlineWidth,
           backgroundColor: activeColor.background,
         },
-
 
       }}
     >
@@ -81,24 +81,16 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="wallet"
-
         options={{
-          // title: "Wallet",
-
-          // headerStyle: {
-          //   backgroundColor: activeColor.background,
-          //   elevation: 0,
-          //   shadowOpacity: 0,
-          //   borderBottomWidth: StyleSheet.hairlineWidth,
-          //   borderBottomColor: activeColor.borderolor
-          // },
+          title: '',
+          href: (user?.user_type === 'dispatcher' || user?.user_type === 'vendor' ? undefined : null),
           tabBarIcon: ({ color, size }) => (
             <Entypo name="wallet" size={size} color={color} />
           ),
-
           headerShown: false
         }}
       />
+
       <Tabs.Screen
         name="profile"
         options={{

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
@@ -22,8 +22,7 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import authStorage from '@/auth/storage'
-import Select from "@/components/Select";
-import { locations } from "@/constants/locations";
+
 
 const SignIn = () => {
   const { theme } = useContext(ThemeContext);
@@ -52,7 +51,7 @@ const SignIn = () => {
   useEffect(() => {
     if (isSuccess) {
       const user = jwtDecode(data?.access_token) as UserReturn;
-      console.log(user?.account_status)
+
       if (user?.account_status === 'confirmed') {
         authContext.setUser(user);
         authStorage.storeToken(data.access_token);
@@ -137,7 +136,9 @@ const SignIn = () => {
                   {touched.password && errors.password && (
                     <InputErrorMessage error={errors.password} />
                   )}
-
+                  <Link href={'resetPasswordLink'} style={{ alignSelf: 'flex-end', color: activeColor.icon }}>
+                    Forgot Password?
+                  </Link>
                   <View style={{ marginVertical: 25 }}>
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}

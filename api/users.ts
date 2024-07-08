@@ -1,5 +1,5 @@
 import client from "@/api/client";
-import { CreateDispatch, CreateRider, CreateUser, Login } from "@/utils/types";
+import { CreateDispatch, CreateRider, CreateUser } from "@/utils/types";
 
 const dispatchEndpoint = "/users/register-dispatch";
 const riderEndpoint = "/users/register-rider";
@@ -41,32 +41,20 @@ const createDispatch = async (user: CreateDispatch) => {
   if (!result.ok) throw new Error(result.data.detail);
   return result.data;
 };
+const vendorAddRider = async (rider: CreateRider) => {
+  const riderData = {
+    email: rider.email.toLowerCase().trim(),
+    phone_number: rider.phoneNumber,
+    plate_number: rider.plateNumber,
+    full_name: rider.fullName,
+    location: rider.location,
+    password: rider.password,
+  };
 
-const createRider = async (user: CreateRider) => {
-  const data = new FormData();
-  data.append("email", user.email);
-  data.append("username", user.username);
-  data.append("full_name", user.fullName);
-  data.append("phone_number", user.phoneNumber);
-  data.append("password", user.password);
-  data.append("plate_number", user.plateNumber);
-  data.append("location", user.location);
-  data.append("image", {
-    type: "image/jpeg",
-    uri: user.profileImage,
-    name: user.profileImage.split("/").slice(-1)[0],
-  });
+  const result = await client.post(riderEndpoint, riderData);
 
-  const response = await client.post(riderEndpoint, data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  if (!response.ok) {
-    throw new Error(response.data?.detail);
-  }
-  console.log(response.problem, response.status, response.originalError);
-  return response.data;
+  if (!result.ok) throw new Error(result.data.detail);
+  return result.data;
 };
 
 const confirmAccount = async (emailCode: string, phoneCode: string) => {
@@ -92,12 +80,22 @@ const recoverPassword = async (email: string) => {
   return result.data;
 };
 
+const fundWallet = async ({ amount }: { amount: number }) => {
+  const reqData = { amount: amount };
+
+  const result = await client.post("/top-up", reqData);
+
+  if (!result.ok) throw new Error(result.data.detail);
+  return result.data;
+};
+
 export default {
   getDispatchRiders,
   createUser,
   createDispatch,
   confirmAccount,
   recoverPassword,
-  createRider,
   dispatchSuspenRider,
+  fundWallet,
+  vendorAddRider,
 };

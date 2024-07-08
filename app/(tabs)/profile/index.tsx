@@ -30,17 +30,17 @@ const index = () => {
       icon: <Feather name="lock" color={activeColor.icon} size={18} />
     },
     {
-      screen: () => router.push('/profile/changePassword'),
+      screen: () => router.push('/profile/support'),
       label: 'Customer Support',
       icon: <MaterialIcons name="support-agent" size={18} color={activeColor.icon} />
     },
     {
-      screen: () => router.push('/profile/changePassword'),
+      screen: () => router.push('/profile/faqs'),
       label: 'FAQs',
       icon: <AntDesign name="questioncircleo" size={18} color={activeColor.icon} />
     },
     {
-      screen: () => router.push('/profile/changePassword'),
+      screen: () => router.push('/profile/qp_about'),
       label: 'About QP',
       icon: <Feather name="lock" color={activeColor.icon} size={18} />
     },
@@ -133,16 +133,20 @@ const index = () => {
           </ProfileContainer>
         </View>
       </ScrollView>
-      <View style={{ bottom: 0, left: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
-        <TouchableOpacity onPress={() => setUser(null)} style={styles.accountContainer}>
-          <Feather name="log-out" color={Colors.error} size={18} />
-          <Text style={{ color: Colors.error }}>Logout</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => console.log('Account Deleted!')} style={styles.accountContainer}>
-          <Feather name="trash-2" color={Colors.error} size={18} />
-          <Text style={{ color: Colors.error }}>Delete Accout</Text>
-        </TouchableOpacity>
+      <View style={{ paddingHorizontal: 10, marginBottom: 5 }}>
+        <ProfileContainer>
+          <View style={{ bottom: 0, left: 0, flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
+            <TouchableOpacity onPress={() => setUser(null)} style={styles.accountContainer}>
+              <Feather name="log-out" color={Colors.error} size={18} />
+              <Text style={{ color: Colors.error }}>Logout</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => console.log('Account Deleted!')} style={styles.accountContainer}>
+              <Feather name="trash-2" color={Colors.error} size={18} />
+              <Text style={{ color: Colors.error }}>Delete Accout</Text>
+            </TouchableOpacity>
 
+          </View>
+        </ProfileContainer>
       </View>
 
     </>

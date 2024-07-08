@@ -1,4 +1,4 @@
-import { StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { Image } from "expo-image";
 import { Colors } from "@/constants/Colors";
@@ -7,6 +7,7 @@ import { UserReturn } from "@/utils/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/auth/authContext";
 import userApi from '@/api/users'
+import Status from "./Status";
 
 
 
@@ -23,21 +24,23 @@ const RiderCard = ({ rider }: { rider: UserReturn }) => {
 
     const blockRider = async () => {
         const response = await userApi.dispatchSuspenRider(rider?.id)
-        console.log(response.data)
         return response.data
 
     };
 
-    console.log(rider.id)
     return (
-        <TouchableOpacity style={{ paddingVertical: 10, paddingHorizontal: 20 }} onPress={() => { }}>
+        <ScrollView style={{ paddingVertical: 10, paddingHorizontal: 20 }} showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-                <Image
+                {rider.photo_url ? <Image
                     source={rider.photo_url}
                     style={{ height: 75, width: 75, borderRadius: 10 }}
-                />
+                /> :
+                    <Image
+                        source={require('../assets/images/profile.jpg')}
+                        style={{ height: 75, width: 75, borderRadius: 10 }}
+                    />}
                 <View>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", }}>
                         <Text
                             style={{
                                 color: activeColor.icon,
@@ -57,7 +60,7 @@ const RiderCard = ({ rider }: { rider: UserReturn }) => {
                 </View>
             </View>
             <View style={[styles.container, { borderBottomColor: activeColor.borderolor }]}>
-                <View style={{ flexDirection: "row", gap: 20, alignItems: "center" }}>
+                <View style={{ flexDirection: "row", gap: 20, alignItems: "center", marginBottom: 5 }}>
                     <View style={styles.headerContainer}>
                         <Text style={[styles.headerText, { color: activeColor.icon }]}>
                             30
@@ -75,20 +78,20 @@ const RiderCard = ({ rider }: { rider: UserReturn }) => {
                         </Text>
                     </View>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                    <Text style={[styles.text, { color: activeColor.icon }]}>
-                        {rider.is_suspended ? 'Unblock' : 'Block'}
+                <Status
+                    onPress={blockRider}
+                    text={rider?.is_suspended ? 'Unblock' : 'Block'}
+                    backgroundColor={rider?.is_suspended ? Colors.error : Colors.success
 
-                    </Text>
-                    <Switch
-                        thumbColor={rider.is_suspended ? "teal" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={blockRider}
-                        value={rider.is_suspended}
-                    />
-                </View>
+                    }
+                    pillWidth={90}
+                    pVertical={5}
+                    pHorizontal={6}
+                    textColor={rider?.is_suspended ? "#c8553d" : "#25a18e"}
+                />
+
             </View>
-        </TouchableOpacity>
+        </ScrollView>
     );
 };
 
@@ -113,5 +116,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "baseline",
         borderBottomWidth: StyleSheet.hairlineWidth,
+
     },
 });

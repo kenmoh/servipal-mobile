@@ -5,15 +5,17 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import FloatingActionButton from "./FloatingActionBtn";
 import { UserReturn, Transactions } from "@/utils/types";
+import { router } from "expo-router";
 
 
 
 const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    console.log(wallet)
     return (
         <View
-            style={[styles.container, { backgroundColor: activeColor.profileCard }]}
+            style={[styles.container, { backgroundColor: activeColor.background }]}
         >
             <Text
                 style={{
@@ -44,7 +46,7 @@ const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }
                         height={35}
                         color={activeColor.text}
                         backgroundColor={activeColor.borderolor}
-                        onPress={() => { }}
+                        onPress={() => router.push('/wallet/fundWallet')}
                     />
                 }
                 <FloatingActionButton
@@ -68,9 +70,9 @@ export default WalletCard;
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: 15,
-        paddingHorizontal: 35,
-        borderRadius: 10,
-        marginVertical: 25
+        // paddingVertical: 35,
+        padding: 35,
+        // borderRadius: 10,
+        marginBottom: 25
     },
 });

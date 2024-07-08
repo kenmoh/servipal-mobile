@@ -28,6 +28,7 @@ const ProfileLayout = () => {
         }}
 
       />
+
       <Stack.Screen
         name="addRider"
         options={{
@@ -45,6 +46,22 @@ const ProfileLayout = () => {
         options={{
 
           title: "Change Password",
+
+        }}
+      />
+      <Stack.Screen
+        name="support"
+        options={{
+
+          title: "Contact Support",
+
+        }}
+      />
+      <Stack.Screen
+        name="faqs"
+        options={{
+
+          title: "FAQs",
 
         }}
       />

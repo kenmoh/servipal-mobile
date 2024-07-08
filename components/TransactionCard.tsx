@@ -44,7 +44,8 @@ const TransactionCard = ({
                                 color: activeColor.text,
                             }}
                         >
-                            {transaction.created_at.split("T")[0]}
+                            {transaction.created_at.split("T")[0]} {" "}
+                            {transaction.created_at.split("T")[1].split('.')[0]}
                         </Text>
                     </View>
                 </View>

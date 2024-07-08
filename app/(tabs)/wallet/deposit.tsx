@@ -54,58 +54,27 @@ interface TransferDetailResponse {
     };
 }
 
-const payment = () => {
+const deposit = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [showWebView, setShowWebView] = useState(false);
     const [redirectedUrl, setRedirectedUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const params = useLocalSearchParams();
-    const { paymentUrl, totalCost, id } = params;
+    const { depositUrl, amount, id } = params;
+
+    console.log(amount, id, depositUrl)
 
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
     const handleOpenWebView = () => {
-        if (!paymentUrl) {
+        if (!depositUrl) {
             return;
         }
         setShowWebView(true);
     };
 
-    const handlePayWithWallet = async (orderId: string) => {
-        setIsLoading(true);
-        const response = await client.post(`${orderId}/pay-with-wallet`);
 
-        setIsLoading(false);
-
-        if (!response.ok) {
-            router.push("/paymentFailed");
-            showMessage({
-                message: response.data?.detail,
-                type: "danger",
-                textStyle: {
-                    alignItems: "center",
-                },
-            });
-            setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
-            }, TIME_OUT);
-        }
-        if (response.ok) {
-            router.push("/paymentSuccess");
-            showMessage({
-                message: response.data?.message,
-                type: "success",
-                textStyle: {
-                    alignItems: "center",
-                },
-            });
-
-            setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
-            }, TIME_OUT);
-        }
-    };
 
     const handleGetTransferDetails = async () => {
         setIsLoading(true);
@@ -129,22 +98,22 @@ const payment = () => {
         if (status?.[0] === "status=successful") {
             router.push("/paymentSuccess");
             showMessage({
-                message: "Payment Successful!",
+                message: "Top up Successful!",
                 type: "success",
             });
             setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
+                router.push("/(tabs)/wallet");
             }, TIME_OUT);
 
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
             router.push("/paymentFailed");
             showMessage({
-                message: "Payment failed to complete!",
+                message: "Failed to complete!",
                 type: "danger",
             });
             setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
+                router.push("/(tabs)/wallet");
             }, TIME_OUT);
         }
     }, [status]);
@@ -159,7 +128,7 @@ const payment = () => {
                     <>
                         <WebView
                             style={styles.container}
-                            source={{ uri: paymentUrl }}
+                            source={{ uri: depositUrl }}
                             onNavigationStateChange={(navState) => {
                                 setRedirectedUrl(navState);
                             }}
@@ -170,7 +139,7 @@ const payment = () => {
                 ) : (
                     <>
                         <Text style={[styles.btnText, { color: activeColor.text }]}>
-                            TOTAL: ₦{totalCost}
+                            TOTAL: ₦{amount}
                         </Text>
                         <TransferBtn
                             icon={<AntDesign name="creditcard" size={24} color={activeColor.icon} />}
@@ -178,14 +147,6 @@ const payment = () => {
                             color={activeColor.text}
                             backgroundColor={activeColor.profileCard}
                             onPress={handleOpenWebView}
-
-                        />
-                        <TransferBtn
-                            icon={<Entypo name="wallet" size={24} color={activeColor.icon} />}
-                            label="WALLET"
-                            color={activeColor.text}
-                            backgroundColor={activeColor.profileCard}
-                            onPress={() => handlePayWithWallet(id as string)}
 
                         />
                         <TransferBtn
@@ -197,6 +158,7 @@ const payment = () => {
 
                         />
 
+
                     </>
                 )}
             </View>
@@ -204,7 +166,7 @@ const payment = () => {
     );
 };
 
-export default payment;
+export default deposit;
 
 const styles = StyleSheet.create({
     wrapper: {

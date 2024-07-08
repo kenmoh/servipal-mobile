@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
 import { Link, router } from "expo-router";
+import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from "dayjs";
 
 import { Colors, themeMode } from "@/constants/Colors";
@@ -13,6 +14,8 @@ import HDivider from "./HDivider";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+
+dayjs.extend(relativeTime)
 
 const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isHomeScreen?: boolean, isLastOrder: boolean }) => {
   const { theme } = useContext(ThemeContext);
@@ -133,7 +136,7 @@ const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isH
                   fontFamily: "Poppins-Light",
                 }}
               >
-                {order?.created_at}
+                {dayjs().to(dayjs(order?.created_at?.split('T')[0]))}
               </Text>
             </View>
           </View>

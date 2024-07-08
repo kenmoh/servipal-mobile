@@ -35,6 +35,8 @@ const riders = () => {
         queryFn: userApi.getDispatchRiders,
     });
 
+    console.log(riders)
+
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== 'web') {
             focusManager.setFocused(status === 'active')
@@ -89,7 +91,7 @@ const riders = () => {
             <View style={{ flex: 1, backgroundColor: activeColor.background }}>
                 <FlatList
                     data={riders?.data}
-                    keyExtractor={(item: UserReturn) => item?.id.toString()}
+                    keyExtractor={(item: UserReturn) => item?.id?.toString()}
                     renderItem={({ item }) => (<RiderCard rider={item} />)}
                     estimatedItemSize={200}
                     showsHorizontalScrollIndicator={false}

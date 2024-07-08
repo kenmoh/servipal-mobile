@@ -61,9 +61,7 @@ export type CreateUser = {
 export type CreateRider = {
   fullName: string;
   email: string;
-  username: string;
   phoneNumber: string;
-  profileImage: string;
   plateNumber: string;
   password: string;
   location: string;

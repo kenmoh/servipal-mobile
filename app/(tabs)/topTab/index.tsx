@@ -78,13 +78,26 @@ const index = () => {
       <Text>Something went wrong!</Text>
     </View>;
   }
+  if (!order?.data) {
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: activeColor.background,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Text>No Order yet</Text>
+    </View>;
+  }
+
 
   return (
     <>
       <View style={{ flex: 1, backgroundColor: activeColor.background }}>
         <FlatList
           data={order?.data}
-          keyExtractor={(item) => item?.id.toString()}
+          keyExtractor={(item) => item?.id?.toString()}
           renderItem={({ item, index }) => {
             const isLastOrder = index === order?.data.length - 1
             return (item.order_status === "Pending" &&

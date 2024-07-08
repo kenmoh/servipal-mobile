@@ -24,6 +24,8 @@ const wallet = () => {
 
   const walletData: Transactions[] = data?.data?.transactions;
 
+
+
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
       focusManager.setFocused(status === "active");
@@ -89,6 +91,8 @@ const wallet = () => {
           showsVerticalScrollIndicator={false}
           refreshing={isFetching}
           onRefresh={handleRefresch}
+          stickyHeaderIndices={[0]}
+          contentContainerStyle={{ paddingHorizontal: 15 }}
         />
       </View>
     </SafeAreaView>
@@ -100,6 +104,6 @@ export default wallet;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15
   },
 });

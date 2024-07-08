@@ -5,14 +5,14 @@ import { Formik } from "formik";
 import ImagePickerForm from "@/components/ImageFormPicker";
 
 import CustomBtn from "@/components/CustomBtn";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { orderValidationSchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import orderApi from "@/api/orders";
 
 import { ThemeContext } from "@/context/themeContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CreateOrderType, OrderType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
@@ -27,31 +27,32 @@ export default function HomeScreen() {
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
   });
 
-  if (error) {
-    showMessage({
-      message: error.message,
-      type: "danger",
-      style: {
-        alignItems: "center",
-      },
-    });
-    router.push("/(order)/createOrder");
-  }
-  if (isSuccess) {
-    showMessage({
-      message: "Order added successfully.",
-      type: "success",
-      style: {
-        alignItems: "center",
-      },
-    });
-    router.push({
-      pathname: "/(order)/payment",
-      params: { paymentUrl: data?.payment_url, id: data?.id, totalCost: data?.total_cost },
-    });
-  }
+  useEffect(() => {
 
-  console.log(data);
+    if (error) {
+      showMessage({
+        message: error.message,
+        type: "danger",
+        style: {
+          alignItems: "center",
+        },
+      });
+      router.push("/(order)/createOrder");
+    }
+    if (isSuccess) {
+      showMessage({
+        message: "Order added successfully.",
+        type: "success",
+        style: {
+          alignItems: "center",
+        },
+      });
+      router.push({
+        pathname: "/(order)/payment",
+        params: { paymentUrl: data?.payment_url, id: data?.id, totalCost: data?.total_cost },
+      });
+    }
+  }, [error, isSuccess])
   return (
     <View
       style={{

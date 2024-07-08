@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import FlashMessage from "react-native-flash-message";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { ThemeContext, ThemeModeType } from "@/context/themeContext";
 import { getTheme, storeTheme } from "@/auth/storage";
 import AuthProvider from "@/components/AuthProvider";
@@ -15,21 +14,16 @@ import AuthProvider from "@/components/AuthProvider";
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
+export const unstable_settings = {
+  initialRouteName: '/(tabs)',
+};
+
 type ThemeMode = {
   mode: "dark" | "light";
 };
 
 export default function RootLayout() {
   const [theme, setTheme] = useState<ThemeMode>({ mode: "light" });
-
-  const MyTheme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: 'rgb(255, 45, 85)',
-      background: 'red'
-    },
-  };
 
   const [loaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
@@ -84,12 +78,14 @@ export default function RootLayout() {
   }
 
   return (
+
     <>
       <QueryClientProvider client={queryClient}>
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
 
           <AuthProvider>
-            <Stack>
+            <Stack screenOptions={{ contentStyle: { backgroundColor: theme.mode === 'dark' ? '#14202B' : 'white' } }}>
+              <Stack.Screen name="index" options={{ headerShown: false, }} />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
               <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
               <Stack.Screen name="(order)" options={{ headerShown: false }}

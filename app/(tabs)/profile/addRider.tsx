@@ -1,16 +1,12 @@
-import { useContext } from "react";
-import AccountLinkText from "@/components/AcountLink";
+import { useContext, useEffect } from "react";
 import CustomBtn from "@/components/CustomBtn";
-import CustomTextInput from "@/components/CustomTextInput";
-import TitleText from "@/components/TitleText";
+import CustomTextInput from "@/components/CustomTextInput";;
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { showMessage } from "react-native-flash-message";
 import { useMutation } from "@tanstack/react-query";
 
 import {
-    dispatchValidationSchema,
     riderValidationSchema,
 } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
@@ -22,37 +18,44 @@ import { Formik } from "formik";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { locations } from "@/constants/locations";
-import ImagePickerForm from "@/components/ImageFormPicker";
 import LocationPickerForm from "@/components/LocationPickerForm";
 
 const addRider = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { error, isSuccess, mutate, isPending } = useMutation({
-        mutationFn: (user: CreateRider) => usersApi.createRider(user),
+
+
+    const { error, isSuccess, mutate, isPending, data } = useMutation({
+        mutationFn: (rider: CreateRider) => usersApi.vendorAddRider(rider),
     });
 
-    if (error) {
-        showMessage({
-            message: error.message,
-            type: "danger",
-            style: {
-                alignItems: "center",
-            },
-        });
-        router.push("/profile/addRider");
-    }
+    console.log('ERROR FROM RESPONSE', error)
+    console.log('DATA FROM RESPONSE', data)
 
-    if (isSuccess) {
-        showMessage({
-            message: "Rider Added.",
-            type: "success",
-            style: {
-                alignItems: "center",
-            },
-        });
-        router.push("/profile/index");
-    }
+    useEffect(() => {
+        if (error) {
+            showMessage({
+                message: error.message,
+                type: "danger",
+                style: {
+                    alignItems: "center",
+                },
+            });
+            router.push("/profile/addRider");
+        }
+
+        if (isSuccess) {
+            showMessage({
+                message: "Rider Added.",
+                type: "success",
+                style: {
+                    alignItems: "center",
+                },
+            });
+            router.push("/profile");
+        }
+    }, [error, isSuccess]);
+
     return (
         < >
             <View
@@ -67,26 +70,23 @@ const addRider = () => {
                     style={{
                         flex: 1,
                         width: "100%",
-
                         backgroundColor: activeColor.background,
                     }}
                 >
                     <Formik
                         initialValues={{
-                            username: "",
                             email: "",
                             phoneNumber: "",
                             fullName: "",
                             confirmPassword: "",
                             location: "",
-                            profileImage: "",
                             plateNumber: "",
                             password: "",
                         }}
                         validationSchema={riderValidationSchema}
                         onSubmit={mutate}
                     >
-                        {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
+                        {({ handleChange, handleSubmit, values, errors, touched }) => (
                             <>
                                 <CustomActivityIndicator visible={isPending} />
                                 <View style={{ paddingHorizontal: 20 }}>
@@ -120,6 +120,7 @@ const addRider = () => {
                                     <CustomTextInput
                                         label="Full Name"
                                         hasBorder={theme.mode !== "dark"}
+                                        autoCapitalize="words"
                                         onChangeText={handleChange("fullName")}
                                         labelColor={activeColor.text}
                                         inputBackgroundColor={activeColor.inputBackground}
@@ -130,20 +131,9 @@ const addRider = () => {
                                         <InputErrorMessage error={errors.fullName} />
                                     )}
                                     <CustomTextInput
-                                        label="Username"
-                                        hasBorder={theme.mode !== "dark"}
-                                        onChangeText={handleChange("username")}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                        value={values.username}
-                                    />
-                                    {touched.username && errors.username && (
-                                        <InputErrorMessage error={errors.username} />
-                                    )}
-                                    <CustomTextInput
                                         label="Plate Number"
                                         hasBorder={theme.mode !== "dark"}
+                                        autoCapitalize="characters"
                                         onChangeText={handleChange("plateNumber")}
                                         labelColor={activeColor.text}
                                         inputBackgroundColor={activeColor.inputBackground}
@@ -182,11 +172,11 @@ const addRider = () => {
                                     {touched.confirmPassword && errors.confirmPassword && (
                                         <InputErrorMessage error={errors.confirmPassword} />
                                     )}
-                                    <ImagePickerForm field={"profilePhoto"} />
+
                                     <View style={{ marginVertical: 20 }}>
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
-                                            label="Sign Up"
+                                            label="Add Rider"
                                             btnBorderRadius={5}
                                             onPress={handleSubmit}
                                         />

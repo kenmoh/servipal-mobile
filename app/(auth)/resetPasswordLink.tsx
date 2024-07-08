@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,20 +12,20 @@ import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import { accountValidationSchema } from "@/utils/validations";
+import { emailValidationSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
-import { useAuth } from "@/auth/authContext";
 import userApi from '@/api/users'
 
-const confirmAccount = () => {
+const resetPasswordLink = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
-        mutationFn: ({ emailCode, phoneCode }: ConfirmAccount) => userApi.confirmAccount(emailCode, phoneCode),
+    const { error, isSuccess, mutate, isPending } = useMutation({
+        mutationFn: (email: string) => userApi.recoverPassword(email),
     });
+
 
 
     useEffect(() => {
@@ -37,7 +37,7 @@ const confirmAccount = () => {
                     alignItems: "center",
                 },
             });
-            router.replace("confirmAccount");
+            router.replace("signin");
             return
         }
     }, [error])
@@ -46,7 +46,7 @@ const confirmAccount = () => {
         if (isSuccess) {
 
             showMessage({
-                message: "Congratulation!",
+                message: "Link sent to email@email.com !",
                 type: "success",
                 style: {
                     alignItems: "center",
@@ -58,7 +58,7 @@ const confirmAccount = () => {
     }, [isSuccess])
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        < >
             <View
                 style={{
                     backgroundColor: activeColor.background,
@@ -76,10 +76,10 @@ const confirmAccount = () => {
                         backgroundColor: activeColor.background,
                     }}
                 >
-                    <TitleText label="Confirm Account" textColor={activeColor.text} />
+
                     <Formik
-                        initialValues={{ emailCode: "", phoneCode: "" }}
-                        validationSchema={accountValidationSchema}
+                        initialValues={{ email: "" }}
+                        validationSchema={emailValidationSchema}
                         onSubmit={mutate}
                     >
                         {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -88,30 +88,18 @@ const confirmAccount = () => {
                                     <CustomTextInput
                                         label="Email Code"
                                         hasBorder={theme.mode !== "dark"}
-                                        keyboardType="number-pad"
-                                        onChangeText={handleChange("emailCode")}
-                                        value={values.emailCode}
+                                        autoCapitalize="none"
+                                        keyboardType="email-address"
+                                        onChangeText={handleChange("email")}
+                                        value={values.email}
                                         labelColor={activeColor.text}
                                         inputBackgroundColor={activeColor.inputBackground}
                                         inputTextColor={activeColor.text}
                                     />
-                                    {touched.emailCode && errors.emailCode && (
-                                        <InputErrorMessage error={errors.emailCode} />
+                                    {touched.email && errors.email && (
+                                        <InputErrorMessage error={errors.email} />
                                     )}
-                                    <CustomTextInput
-                                        label="Phone Code"
-                                        hasBorder={theme.mode !== "dark"}
-                                        keyboardType="number-pad"
 
-                                        onChangeText={handleChange("phoneCode")}
-                                        value={values.phoneCode}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                    />
-                                    {touched.phoneCode && errors.phoneCode && (
-                                        <InputErrorMessage error={errors.phoneCode} />
-                                    )}
                                     <View style={{ marginVertical: 25 }}>
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
@@ -128,11 +116,11 @@ const confirmAccount = () => {
 
             </View>
             <StatusBar style="light" backgroundColor={activeColor.background} />
-        </SafeAreaView>
+        </>
     );
 };
 
-export default confirmAccount;
+export default resetPasswordLink;
 
 const styles = StyleSheet.create({});
 

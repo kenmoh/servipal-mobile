@@ -1,19 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type StatusProps = {
   text: string;
   textColor: string;
   backgroundColor: string;
+  onPress?: () => void
 };
 
 const Status = ({
   backgroundColor,
-
   textColor,
   text,
+  onPress
 }: StatusProps) => {
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={[
         styles.container,
         {
@@ -26,7 +28,7 @@ const Status = ({
       <Text style={{ color: textColor, textTransform: "capitalize" }}>
         {text}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -4,6 +4,7 @@ import { Redirect } from "expo-router";
 const welcome = () => {
   return (
     <View style={styles.container}>
+      <Text style={styles.text}>Welcome</Text>
       <Redirect href={"(tabs)/topTab"} />
     </View>
   );

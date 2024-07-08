@@ -43,11 +43,9 @@ export const dispatchValidationSchema = Yup.object().shape({
 
 export const riderValidationSchema = Yup.object().shape({
   email: Yup.string().email().trim().required().label("Email"),
-  username: Yup.string().required().label("Username"),
   plateNumber: Yup.string().required().label("Plate number is required"),
   location: Yup.string().required().label("Location is required"),
   fullName: Yup.string().required().label("Full Name is required"),
-  profilePhoto: Yup.string().required().label("Profile image is required"),
   phoneNumber: Yup.string()
     .required()
     .matches(phoneRegEx, "Enter a valid phone number")
@@ -65,8 +63,19 @@ export const loginValidationSchema = Yup.object().shape({
   username: Yup.string().email().trim().required().label("Email"),
   password: Yup.string().required().label("Password"),
 });
+export const changePasswordSchema = Yup.object().shape({
+  oldPassword: Yup.string().required().label("Old Password"),
+  newPassword: Yup.string().required().label("New Password"),
+  confirmNewPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword"), null!], "Passwords must match")
+    .required()
+    .label("Confirm New Password"),
+});
 export const emailValidationSchema = Yup.object().shape({
   email: Yup.string().email().trim().required().label("Email"),
+});
+export const walletValidationSchema = Yup.object().shape({
+  amount: Yup.number().required().min(1000).label("Amount"),
 });
 
 export const accountValidationSchema = Yup.object().shape({
