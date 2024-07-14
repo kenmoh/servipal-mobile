@@ -1,5 +1,10 @@
 import client from "@/api/client";
-import { CreateDispatch, CreateRider, CreateUser } from "@/utils/types";
+import {
+  CreateDispatch,
+  CreateRider,
+  CreateUser,
+  UpdateProfileImage,
+} from "@/utils/types";
 
 const dispatchEndpoint = "/users/register-dispatch";
 const riderEndpoint = "/users/register-rider";
@@ -41,6 +46,8 @@ const createDispatch = async (user: CreateDispatch) => {
   if (!result.ok) throw new Error(result.data.detail);
   return result.data;
 };
+
+// Vendor add new rider
 const vendorAddRider = async (rider: CreateRider) => {
   const riderData = {
     email: rider.email.toLowerCase().trim(),
@@ -57,6 +64,7 @@ const vendorAddRider = async (rider: CreateRider) => {
   return result.data;
 };
 
+// Confirm Account
 const confirmAccount = async (emailCode: string, phoneCode: string) => {
   const data = {
     email_code: emailCode.trim(),
@@ -69,6 +77,28 @@ const confirmAccount = async (emailCode: string, phoneCode: string) => {
   return result.data;
 };
 
+// Update Profile Image
+const updateProfileImage = async (img: UpdateProfileImage) => {
+  const data = new FormData();
+
+  data.append("image", {
+    type: "image/jpeg",
+    uri: img.profileImageUrl,
+    name: img.profileImageUrl.split("/").slice(-1)[0],
+  });
+
+  const response = await client.post(`${user}/update-profile-image`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  return response.data;
+};
+
+// Recover Password
 const recoverPassword = async (email: string) => {
   const data = {
     email: email,
@@ -80,6 +110,7 @@ const recoverPassword = async (email: string) => {
   return result.data;
 };
 
+// Fund Wallet
 const fundWallet = async ({ amount }: { amount: number }) => {
   const reqData = { amount: amount };
 
@@ -98,4 +129,5 @@ export default {
   dispatchSuspenRider,
   fundWallet,
   vendorAddRider,
+  updateProfileImage,
 };

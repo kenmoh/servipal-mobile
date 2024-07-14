@@ -100,6 +100,17 @@ const index = () => {
               <HDivider />
             </>
             )}
+            {
+              user?.account_status !== 'confirmed' && <>
+                <LinkCard
+                  onPress={() => router.push('/(auth)/confirmAccount')}
+                  icon={<Feather name="users" color={activeColor.icon} size={15} />}
+                  label="Confirm Account"
+                  icon2="chevron-right"
+                />
+                <HDivider />
+              </>
+            }
 
             {
               linkArray.map((link, index) => (

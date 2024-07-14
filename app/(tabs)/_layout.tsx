@@ -1,11 +1,16 @@
-import { Link, Tabs } from "expo-router";
-import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
+import { useContext, useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
+import { Link, router, Tabs } from "expo-router";
+import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import { Constants } from "expo-constants";
+
+import { Colors } from "@/constants/Colors";
 import AppHeader from "@/components/AppHeader";
-import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
+import { registerNotification } from "@/api/notification";
 
 
 const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
@@ -30,6 +35,43 @@ export default function TabLayout() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   const { user } = useAuth()
+
+
+  const registerForPushNotification = async () => {
+    if (Device.isDevice) {
+      try {
+        const { status: existingStatus } =
+          await Notifications.getPermissionsAsync();
+
+        let finalStatus = existingStatus;
+
+        if (existingStatus !== "granted") {
+          const { status } = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+
+        if (finalStatus !== "granted") {
+          alert("Failed to get push token for push notification!");
+          return;
+        }
+        const token = await Notifications.getExpoPushTokenAsync(
+          {
+            projectId: "53677c06-debc-41e7-9bdc-4280d6622175"
+          }
+        );
+        registerNotification(token.data);
+      } catch (error) {
+        console.log("Error getting notification token", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    registerForPushNotification();
+    Notifications.addNotificationResponseReceivedListener((notification) =>
+      router.replace("/(tabs)")
+    );
+  }, []);
 
   return (
     <Tabs

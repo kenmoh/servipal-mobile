@@ -67,6 +67,9 @@ export type CreateRider = {
   location: string;
   confirmPassword: string;
 };
+export type UpdateProfileImage = {
+  profileImageUrl: string;
+};
 
 type TransactionType = "deposit" | "withdrawal" | string;
 type PaymentTransactionType = "pay_with_wallet" | "fund_wallet" | string;

@@ -1,8 +1,8 @@
 import {
+  ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
-  Dimensions,
 } from "react-native";
 
 type CustomBtnProps = {
@@ -10,23 +10,23 @@ type CustomBtnProps = {
   btnColor: string;
   label: string;
   btnHeight?: number;
-  // btnWidth?: number;
   onPress: () => void;
+  disabled?: boolean
 };
 
-const { width } = Dimensions.get("window");
 
 const CustomBtn = ({
   btnBorderRadius,
   btnColor,
   label,
   btnHeight = 45,
-  // btnWidth = width * (90 / 100),
-  onPress = () => {},
+  disabled = false,
+  onPress = () => { },
   ...props
 }: CustomBtnProps) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       activeOpacity={0.7}
       onPress={onPress}
       style={[
@@ -34,12 +34,12 @@ const CustomBtn = ({
         {
           borderRadius: btnBorderRadius,
           backgroundColor: btnColor,
-          // width: btnWidth,
           height: btnHeight,
         },
         { ...props },
       ]}
     >
+      {disabled && <ActivityIndicator size={30} color={'grey'} />}
       <Text style={styles.text}>{label}</Text>
     </TouchableOpacity>
   );
@@ -52,8 +52,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    // marginVertical: 20,
     width: "100%",
+    flexDirection: 'row',
+    gap: 10
   },
   text: {
     textTransform: "uppercase",

@@ -8,7 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AntDesign,
   Feather,
@@ -37,10 +37,43 @@ export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
+  // Get order details
   const { data, error, isFetching } = useQuery({
     queryKey: ["orders", id],
     queryFn: () => ordersApi.orderDetails(id),
   });
+
+  // Handle order Pickup
+  const { mutate: handlePickup, data: pickupData } = useMutation({
+    mutationFn: () => ordersApi.pickUpOrder(id),
+  });
+
+  // Handle order Delivered
+  const { mutate: handleDelivered } = useMutation({
+    mutationFn: () => ordersApi.orderDelievered(id),
+  });
+
+  // Handle order Received
+  const { mutate: handleReceived } = useMutation({
+    mutationFn: () => ordersApi.orderReceived(id),
+  });
+
+  // Handle vendor cancel order
+  const { mutate: handleCancelOrderByVebdor } = useMutation({
+    mutationFn: () => ordersApi.cancelOrderByVendor(id),
+  });
+
+  // Handle rider cancel order
+  const { mutate: handleRiderCancelOrder } = useMutation({
+    mutationFn: () => ordersApi.cancelOrder(id),
+  });
+
+  // Handle vendor relist order
+  const { mutate: handleRelistOrderByVebdor } = useMutation({
+    mutationFn: () => ordersApi.relistOrderByVendor(id),
+  });
+
+  console.log(pickupData)
 
   if (isFetching) {
     return (
@@ -107,9 +140,9 @@ export default function HomeScreen() {
                 backgroundColor={
                   order?.order_status === "Delivered"
                     ? Colors.delivered
-                    : order.order_status === "Pickedup"
+                    : order?.order_status === "Pickedup"
                       ? Colors.pickUpColor
-                      : order.order_status === "Received"
+                      : order?.order_status === "Received"
                         ? Colors.success
                         : Colors.pendingColor
                 }
@@ -259,7 +292,7 @@ export default function HomeScreen() {
             btnBorderRadius={50}
             btnColor={Colors.btnPrimaryColor}
             label="Pickup"
-            onPress={() => { }}
+            onPress={handlePickup}
           />
         </View>
 
