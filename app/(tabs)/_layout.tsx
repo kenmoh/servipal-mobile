@@ -4,7 +4,7 @@ import { Link, router, Tabs } from "expo-router";
 import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { Constants } from "expo-constants";
+import Constants from 'expo-constants';
 
 import { Colors } from "@/constants/Colors";
 import AppHeader from "@/components/AppHeader";
@@ -56,9 +56,11 @@ export default function TabLayout() {
         }
         const token = await Notifications.getExpoPushTokenAsync(
           {
-            projectId: "53677c06-debc-41e7-9bdc-4280d6622175"
+            projectId: Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId,
+
           }
         );
+        console.log(token.data)
         registerNotification(token.data);
       } catch (error) {
         console.log("Error getting notification token", error);
@@ -115,6 +117,30 @@ export default function TabLayout() {
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="restaurant" size={size} color={color} />
+          ),
+
+        }}
+      />
+
+      <Tabs.Screen
+        name="laundry"
+        options={{
+          title: 'Laundry',
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="restaurant" size={size} color={color} />
+          ),
+
+        }}
+      />
+
+      <Tabs.Screen
+        name="buySell"
+        options={{
+          title: 'Buy/Sell',
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="sell" size={size} color={color} />
           ),
 
         }}

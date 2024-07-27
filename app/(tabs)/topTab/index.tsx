@@ -33,8 +33,10 @@ const index = () => {
     refetch,
   } = useQuery({
     queryKey: ["orders"],
-    queryFn: ordersApi.getListings,
+    queryFn: ordersApi.getItemOrders,
   });
+
+  console.log(order)
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -97,7 +99,7 @@ const index = () => {
       <View style={{ flex: 1, backgroundColor: activeColor.background }}>
         <FlatList
           data={order?.data}
-          keyExtractor={(item) => item?.id?.toString()}
+          keyExtractor={(item) => item?.item_order?.id.toString()}
           renderItem={({ item, index }) => {
             const isLastOrder = index === order?.data.length - 1
             return (item.order_status === "Pending" &&

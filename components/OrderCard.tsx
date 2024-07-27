@@ -4,9 +4,9 @@ import { Link, router } from "expo-router";
 import relativeTime from 'dayjs/plugin/relativeTime'
 import dayjs from "dayjs";
 
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { EvilIcons, MaterialIcons } from "@expo/vector-icons";
-import { OrderType } from "@/utils/types";
+import { ItemOrderType } from "@/utils/types";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
@@ -17,16 +17,16 @@ const blurhash =
 
 dayjs.extend(relativeTime)
 
-const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isHomeScreen?: boolean, isLastOrder: boolean }) => {
+const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: ItemOrderType, isHomeScreen?: boolean, isLastOrder: boolean }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
-    <Link href={`(order)/${order?.id}`} asChild>
+    <Link href={`(order)/${order?.item_order.id}`} asChild>
       <TouchableOpacity>
         <View style={[styles.container, { marginBottom: isLastOrder ? 35 : 0 }]}>
           <View style={{ flex: 1 }}>
             <Image
-              source={order?.order_photo_url}
+              source={order?.image_url}
               placeholder={{ blurhash }}
               contentFit="cover"
               transition={1000}
@@ -47,20 +47,20 @@ const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isH
               </Text>
               {!isHomeScreen && (<Status
 
-                text={order?.order_status!}
-                backgroundColor={`${order?.order_status === "Received"
+                text={order?.item_order.order_status}
+                backgroundColor={`${order?.item_order.order_status === "Received"
                   ? "success"
-                  : order?.order_status === "Picked up"
+                  : order?.item_order.order_status === "Picked up"
                     ? Colors.pickUpColor
-                    : order?.order_status === "Delivered"
+                    : order?.item_order.order_status === "Delivered"
                       ? Colors.delivered
                       : Colors.pendingColor
                   }`}
-                textColor={`${order?.order_status === "Pending"
+                textColor={`${order?.item_order.order_status === "Pending"
                   ? "#c8553d"
-                  : order?.order_status === "Received"
+                  : order?.item_order.order_status === "Received"
                     ? "#25a18e"
-                    : order?.order_status === "Delivered"
+                    : order?.item_order.order_status === "Delivered"
                       ? "#27187e"
                       : "#e8ac65"
                   }`} />)}
@@ -76,7 +76,7 @@ const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isH
                 color={activeColor.icon}
               />
               <Text style={[styles.textStyle, { color: activeColor.text, fontSize: 12 }]}>
-                {order?.origin}
+                {order?.item_order.origin}
               </Text>
             </View>
             <View
@@ -88,7 +88,7 @@ const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isH
             >
               <EvilIcons name="location" size={15} color={activeColor.icon} />
               <Text style={[styles.textStyle, { color: activeColor.text, fontSize: 12 }]}>
-                {order?.destination}
+                {order?.item_order.destination}
               </Text>
             </View>
 
@@ -111,13 +111,13 @@ const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isH
                     color: activeColor.text,
                   }}
                 >
-                  {order?.total_cost}
+                  {order?.item_order.total_cost}
                 </Text>
               </View>
-              {order?.payment_status != 'paid' &&
+              {order?.item_order.payment_status != 'paid' &&
                 <TouchableOpacity onPress={() => router.push({
                   pathname: "/(order)/payment",
-                  params: { paymentUrl: order?.payment_url, id: order?.id, totalCost: order?.total_cost },
+                  params: { paymentUrl: order?.item_order.payment_url, id: order?.item_order.id, totalCost: order?.item_order.total_cost },
                 })}>
                   <Text
                     style={{
@@ -136,7 +136,7 @@ const OrderCard = ({ order, isHomeScreen, isLastOrder }: { order: OrderType, isH
                   fontFamily: "Poppins-Light",
                 }}
               >
-                {dayjs().to(dayjs(order?.created_at?.split('T')[0]))}
+                {dayjs().to(dayjs(order?.item_order.created_at?.split('T')[0]))}
               </Text>
             </View>
           </View>

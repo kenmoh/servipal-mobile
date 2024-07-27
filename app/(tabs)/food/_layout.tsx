@@ -1,29 +1,39 @@
 import { useContext } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Stack } from "expo-router";
+import { StyleSheet } from "react-native";
+import { withLayoutContext } from "expo-router";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 
-const OrderLayout = () => {
+const FoodTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
+
+const FoodOrderLayout = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
-    <Stack
+    <FoodTabBar
       screenOptions={{
-        animation: "fade_from_bottom",
-        headerTitleAlign: "center",
-        headerShadowVisible: false,
-        headerTintColor: activeColor.text,
-        headerStyle: {
-          backgroundColor: activeColor.background
-        }
+        tabBarLabelStyle: {
+          color: activeColor.tabIconDefault,
+        },
+        tabBarAndroidRipple: { borderless: false },
+        tabBarPressColor: "gray",
+        tabBarStyle: {
+          borderBottomColor: activeColor.borderolor,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          elevation: 0,
+          shadowOpacity: 0,
+          backgroundColor: activeColor.background,
+        },
       }}
     >
+      <FoodTabBar.Screen name="index" options={{ title: "Restaurants" }} />
+      <FoodTabBar.Screen name="foodOrders" options={{ title: "Food Orders" }} />
 
-    </Stack>
+    </FoodTabBar>
   );
 };
 
-export default OrderLayout;
+export default FoodOrderLayout;
 
 const styles = StyleSheet.create({});

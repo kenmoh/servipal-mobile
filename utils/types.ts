@@ -9,28 +9,91 @@ type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
 
 type AccountStatus = "pending" | "confirmed";
 
-export type OrderType = {
-  id?: string;
-  name?: string;
-  origin?: string;
-  destination?: string;
-  distance?: string;
-  created_at?: string;
-  vendor_username?: string;
-  owner_phone_number?: string;
-  description?: string;
-  dispatch_company_name?: string;
-  dispatch_company_phone_numer?: string;
-  rider_name?: string;
-  rider_phone_number?: string;
+type Item = {
+  id: string;
+  vendor_id: string;
+  vendor_username: string;
+  delivery_fee: number;
+  item_id: string;
+  origin: string;
+  destination: string;
+  distance: number;
+  commission_delivery: number;
   total_cost: number;
-  amount_payable: number;
-  order_photo_url: string;
-  order_status?: OrderStatus;
-  deduction: number;
+  amount_payable_delivery: number;
+  order_status: OrderStatus;
   payment_status: PaymentStatus;
   payment_url: string;
+  vendor_phone_number: string;
+  order_type: string;
+  created_at: string;
+  updated_at: string;
 };
+
+export interface IOrderBase {
+  id: "string";
+  total_cost: number;
+  order_status: OrderStatus;
+  payment_status: PaymentStatus;
+  order_type: "string";
+  payment_url: "string";
+  vendor_username: "string";
+  delivery_fee: number;
+  order_owner_username: "string";
+  dispatch_company_phone_number: "string";
+  vendor_phone_number: "string";
+  order_owner_phone_number: "string";
+  dispatch_company_name: "string";
+  rider_phone_number: "string";
+  rider_image_url: "string";
+  rider_name: "string";
+  rider_bike_plate_number: "string";
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface FoodOrderType extends IOrderBase {
+  amount_payable_food: number;
+  commission_food: number;
+  food_cost: number;
+}
+
+export interface LaundryOrderType extends IOrderBase {
+  amount_payable_laundry: number;
+  commission_laundry: number;
+  laundry_cost: number;
+}
+
+export type ItemOrderType = {
+  item_id: string;
+  name: string;
+  description: string;
+  image_url: string;
+  item_order: Item;
+};
+
+// export type ItemOrderType = {
+//   id?: string;
+//   name?: string;
+//   origin?: string;
+//   destination?: string;
+//   distance?: string;
+//   created_at?: string;
+//   vendor_username?: string;
+//   owner_phone_number?: string;
+//   description?: string;
+//   dispatch_company_name?: string;
+//   dispatch_company_phone_numer?: string;
+//   rider_name?: string;
+//   rider_phone_number?: string;
+//   total_cost: number;
+//   amount_payable_food: number;
+//   order_photo_url: string;
+//   order_status?: OrderStatus;
+//   deduction: number;
+//   payment_status: PaymentStatus;
+//   payment_url: string;
+// };
 
 export type CreateOrderType = {
   name: string;
@@ -74,14 +137,6 @@ export type UpdateProfileImage = {
 type TransactionType = "deposit" | "withdrawal" | string;
 type PaymentTransactionType = "pay_with_wallet" | "fund_wallet" | string;
 
-type Deposits = {
-  id: string;
-  username: string;
-  amount: string;
-  transaction_type: TransactionType;
-  payment_transaction_type: TransactionType;
-  created_at: string;
-};
 export type Transaction = {
   id: string;
   amount: string;
@@ -119,7 +174,6 @@ export type UserReturn = {
   account_status: AccountStatus;
   confirm_email: number;
   confirm_phone_number: number;
-  // wallet: Wallet;
   created_at: string;
   updated_at: string;
   dispatch: string;

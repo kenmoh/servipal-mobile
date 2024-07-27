@@ -1,10 +1,17 @@
 import client from "@/api/client";
-import { CreateOrderType, OrderType } from "@/utils/types";
+import { CreateOrderType } from "@/utils/types";
 
 const endpoint = "/orders";
 
-// Get all orders
-const getListings = async () => await client.get(`${endpoint}`);
+// Get all item orders
+const getItemOrders = async () => await client.get(`${endpoint}/item-orders`);
+
+// Get food orders
+const getFoodOrders = async () => await client.get(`${endpoint}/food-orders`);
+
+// Get laundry orders
+const getLaundryOrders = async () =>
+  await client.get(`/${endpoint}/laundry-orders`);
 
 // Get order by Sender
 const getVendorListings = async () =>
@@ -47,14 +54,14 @@ const createOrder = async (item: CreateOrderType) => {
   data.append("description", item.description);
   data.append("origin", item.origin);
   data.append("destination", item.destination);
-  data.append("distance", item.distance);
+  data.append("distance", item.distance!);
   data.append("image", {
     type: "image/jpeg",
     uri: item.orderPhotoUrl,
     name: item.orderPhotoUrl.split("/").slice(-1)[0],
   });
 
-  const response = await client.post(endpoint, data, {
+  const response = await client.post(`$/{endpoint}/send-items`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -66,7 +73,9 @@ const createOrder = async (item: CreateOrderType) => {
 };
 
 export default {
-  getListings,
+  getItemOrders,
+  getFoodOrders,
+  getLaundryOrders,
   orderDetails,
   createOrder,
   getVendorListings,

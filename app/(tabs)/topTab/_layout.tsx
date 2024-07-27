@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { withLayoutContext } from "expo-router";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 
 const TopTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
