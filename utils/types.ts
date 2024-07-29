@@ -1,4 +1,4 @@
-type OrderStatus =
+export type OrderStatus =
   | "Pending"
   | "Picked up"
   | "Delivered"
@@ -64,36 +64,39 @@ export interface LaundryOrderType extends IOrderBase {
   laundry_cost: number;
 }
 
-export type ItemOrderType = {
-  item_id: string;
-  name: string;
-  description: string;
-  image_url: string;
-  item_order: Item;
-};
-
 // export type ItemOrderType = {
-//   id?: string;
-//   name?: string;
-//   origin?: string;
-//   destination?: string;
-//   distance?: string;
-//   created_at?: string;
-//   vendor_username?: string;
-//   owner_phone_number?: string;
-//   description?: string;
-//   dispatch_company_name?: string;
-//   dispatch_company_phone_numer?: string;
-//   rider_name?: string;
-//   rider_phone_number?: string;
-//   total_cost: number;
-//   amount_payable_food: number;
-//   order_photo_url: string;
-//   order_status?: OrderStatus;
-//   deduction: number;
-//   payment_status: PaymentStatus;
-//   payment_url: string;
+//   item_id: string;
+//   name: string;
+//   description: string;
+//   image_url: string;
+//   item_order: Item;
 // };
+
+export type ItemOrderType = {
+  id?: string;
+  package_name?: string;
+  origin?: string;
+  destination?: string;
+  distance?: string;
+  created_at?: string;
+  vendor_username?: string;
+  owner_phone_number?: string;
+  description?: string;
+  dispatch_company_name?: string;
+  dispatch_company_phone_numer?: string;
+  rider_name?: string;
+  image_url?: string;
+  vendor_phone_number?: string;
+  commission_delivery?: number;
+  rider_phone_number?: string;
+  total_cost: number;
+  amount_payable_delivery: number;
+  order_photo_url: string;
+  order_status?: OrderStatus;
+  deduction: number;
+  payment_status: PaymentStatus;
+  payment_url: string;
+};
 
 export type CreateOrderType = {
   name: string;

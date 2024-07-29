@@ -23,16 +23,17 @@ import DetailLabel from "@/components/DetailLabel";
 import Status from "@/components/Status";
 import { Colors, themeMode } from "@/constants/Colors";
 import ordersApi from "@/api/orders";
-import { OrderType } from "@/utils/types";
+import { ItemOrderType } from "@/utils/types";
 import CustomBtn from "@/components/CustomBtn";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+import { useAuth } from "@/auth/authContext";
 
 const IMG_HEIGHT = 300;
-const { width } = Dimensions.get("window");
 
 export default function HomeScreen() {
   const { id } = useLocalSearchParams();
+  const { user } = useAuth();
 
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
@@ -40,21 +41,21 @@ export default function HomeScreen() {
   // Get order details
   const { data, error, isFetching } = useQuery({
     queryKey: ["orders", id],
-    queryFn: () => ordersApi.orderDetails(id),
+    queryFn: () => ordersApi.orderItemDetails(id),
   });
 
   // Handle order Pickup
-  const { mutate: handlePickup, data: pickupData } = useMutation({
+  const { mutate: handlePickup, data: pickupData, isPending } = useMutation({
     mutationFn: () => ordersApi.pickUpOrder(id),
   });
 
   // Handle order Delivered
-  const { mutate: handleDelivered } = useMutation({
+  const { mutate: handleDelivered, isPending: delivered } = useMutation({
     mutationFn: () => ordersApi.orderDelievered(id),
   });
 
   // Handle order Received
-  const { mutate: handleReceived } = useMutation({
+  const { mutate: handleReceived, isPending: received } = useMutation({
     mutationFn: () => ordersApi.orderReceived(id),
   });
 
@@ -90,7 +91,7 @@ export default function HomeScreen() {
     );
   }
 
-  const order: OrderType = data?.data;
+  const order: ItemOrderType = data?.data;
 
   return (
     <View
@@ -107,7 +108,7 @@ export default function HomeScreen() {
           scrollEventThrottle={16}
         >
           <Image
-            source={order?.order_photo_url}
+            source={order?.image_url}
             // placeholder={{ blurhash }}
             contentFit="cover"
             transition={1000}
@@ -212,7 +213,7 @@ export default function HomeScreen() {
                 />
                 <DetailLabel
                   lable="Phone"
-                  value={order?.owner_phone_number || ""}
+                  value={order?.vendor_phone_number || ""}
                 />
                 <DetailLabel lable="Location" value={order?.origin || ""} />
               </View>
@@ -228,7 +229,7 @@ export default function HomeScreen() {
                 Order Details
               </Text>
               <View>
-                <DetailLabel lable="Name" value={order?.name || ""} />
+                <DetailLabel lable="Name" value={order?.package_name || ""} />
                 <DetailLabel lable="Origin" value={order?.origin || ""} />
                 <DetailLabel
                   lable="Destination"
@@ -236,23 +237,24 @@ export default function HomeScreen() {
                 />
                 <DetailLabel lable="Distance" value={order?.distance || ""} />
                 <DetailLabel lable="Total Cost" value={order?.total_cost} />
-                <DetailLabel lable="Commission" value={order?.deduction} />
+                <DetailLabel lable="Commission" value={order?.commission_delivery!} />
                 <DetailLabel
                   lable="Amount payable"
-                  value={order?.amount_payable}
+                  value={order?.amount_payable_delivery}
                 />
                 <View style={{ marginVertical: 10 }}>
                   <Text
                     style={{
-                      fontSize: 16,
+                      fontSize: 14,
                       color: activeColor.tabIconDefault,
                       marginBottom: 5,
+                      fontFamily: 'Poppins-Light'
                     }}
                   >
                     Description:
                   </Text>
                   <Text
-                    style={{ fontSize: 16, color: activeColor.tabIconDefault }}
+                    style={{ fontSize: 13, color: activeColor.tabIconDefault, fontFamily: 'Poppins-Light' }}
                   >
                     {order?.description}
                   </Text>
@@ -278,22 +280,41 @@ export default function HomeScreen() {
                 lable="Company Name"
                 value={order?.dispatch_company_name || ""}
               />
-              <DetailLabel
-                lable="Company Phone"
-                value={order?.dispatch_company_phone_numer || ""}
-              />
+
             </View>
           </View>)}
         </ScrollView>
       </View>
       <View style={styles.btnContainer}>
         <View style={{ flex: 1 }}>
-          <CustomBtn
-            btnBorderRadius={50}
-            btnColor={Colors.btnPrimaryColor}
-            label="Pickup"
-            onPress={handlePickup}
-          />
+          {
+            (order?.order_status === 'Pending' && user?.user_type === 'rider') ? (<CustomBtn
+              disabled={isPending}
+              btnBorderRadius={50}
+              btnColor={Colors.btnPrimaryColor}
+              label="Pickup"
+              onPress={handlePickup}
+            />) : (order?.order_status === 'Picked up' && user?.user_type === 'rider') ? (<CustomBtn
+              disabled={delivered}
+              btnBorderRadius={50}
+              btnColor={Colors.btnPrimaryColor}
+              label="Delivered"
+              onPress={handleDelivered}
+            />) : (order?.order_status === 'Delivered' && user?.user_type === 'vendor') ? (<CustomBtn
+              disabled={received}
+              btnBorderRadius={50}
+              btnColor={Colors.btnPrimaryColor}
+              label="Received"
+              onPress={handleReceived}
+            />) : order.order_status === 'Received' && (
+              <CustomBtn
+                btnBorderRadius={50}
+                btnColor={Colors.btnPrimaryColor}
+                label="Completed"
+
+              />
+            )
+          }
         </View>
 
         {order?.payment_status != 'paid' && (<View style={{ width: 100 }}>

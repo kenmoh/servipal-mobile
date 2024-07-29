@@ -15,13 +15,13 @@ const getLaundryOrders = async () =>
 
 // Get order by Sender
 const getVendorListings = async () =>
-  await client.get(`${endpoint}/vendor-orders`);
+  await client.get(`${endpoint}/user-item-orders`);
 
 // Get order by Dispatch
 const getUserListings = () => client.get(`${endpoint}/user-orders`);
 
-const orderDetails = async (orderId: string) =>
-  await client.get(`${endpoint}/${orderId}`);
+const orderItemDetails = async (orderId: string) =>
+  await client.get(`${endpoint}/${orderId}/item-order`);
 
 // Pickup order by dispatch/rider
 const pickUpOrder = (order_id: string) =>
@@ -76,7 +76,7 @@ export default {
   getItemOrders,
   getFoodOrders,
   getLaundryOrders,
-  orderDetails,
+  orderItemDetails,
   createOrder,
   getVendorListings,
   getUserListings,

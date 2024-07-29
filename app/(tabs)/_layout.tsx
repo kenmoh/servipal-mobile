@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { Link, router, Tabs } from "expo-router";
-import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, AntDesign, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from 'expo-constants';
@@ -82,10 +82,17 @@ export default function TabLayout() {
         headerTitleAlign: "center",
         headerTintColor: activeColor.text,
         tabBarStyle: {
-          borderBottomColor: activeColor.borderolor,
-          borderBottomWidth: StyleSheet.hairlineWidth,
+
           backgroundColor: activeColor.background,
+          height: 70,
         },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          marginBottom: 10
+        },
+        tabBarIconStyle: {
+          marginTop: 10
+        }
 
       }}
     >
@@ -128,7 +135,7 @@ export default function TabLayout() {
           title: 'Laundry',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="restaurant" size={size} color={color} />
+            <MaterialCommunityIcons name="washing-machine" size={size} color={color} />
           ),
 
         }}
@@ -150,7 +157,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="wallet"
         options={{
-          title: '',
+          title: 'Wallet',
           href: (user?.user_type === 'dispatcher' || user?.user_type === 'vendor' ? undefined : null),
           tabBarIcon: ({ color, size }) => (
             <Entypo name="wallet" size={size} color={color} />

@@ -10,9 +10,9 @@ import { useAuth } from "@/auth/authContext";
 import orderApi from "@/api/orders";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { useQuery } from "@tanstack/react-query";
-import { OrderType } from "@/utils/types";
+import { ItemOrderType } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { Link } from "expo-router";
+
 
 
 const myOrder = () => {
@@ -70,6 +70,7 @@ const myOrder = () => {
     </View>;
   }
 
+
   return (
     <>
       <CustomActivityIndicator visible={isPending} />
@@ -79,16 +80,16 @@ const myOrder = () => {
       >
         <FlatList
           data={order?.data}
-          keyExtractor={(item: OrderType) => item?.id?.toString()}
-          renderItem={({ item, index }) => {
-            const isLastOrder = index === order?.data.length - 1
+          keyExtractor={(item: ItemOrderType) => item?.id?.toString()}
+          renderItem={({ item }) => {
+            console.log(item.rider_phone_number)
             return (item.vendor_username === user?.username ? (
-              <OrderCard order={item} isLastOrder={isLastOrder} />
+              <OrderCard order={item} />
             ) : item.dispatch_company_name === user?.company_name ? (
-              <OrderCard order={item} isLastOrder={isLastOrder} />
+              <OrderCard order={item} />
             ) : (
-              item.rider_phone_number === user?.phone_number &&
-              item.dispatch_company_name === user?.dispatch && <OrderCard order={item} isHomeScreen={false} />
+              (item.rider_phone_number === user?.phone_number && item.dispatch_company_name === user?.dispatch) &&
+              <OrderCard order={item} isHomeScreen={false} />
             ))
           }
           }

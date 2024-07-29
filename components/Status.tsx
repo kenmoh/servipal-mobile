@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 type StatusProps = {
   text: string;
   textColor: string;
-  backgroundColor: string;
+  backgroundColor?: string;
   onPress?: () => void
 };
 

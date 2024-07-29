@@ -10,7 +10,7 @@ type CustomBtnProps = {
   btnColor: string;
   label: string;
   btnHeight?: number;
-  onPress: () => void;
+  onPress?: () => void;
   disabled?: boolean
 };
 
@@ -39,8 +39,8 @@ const CustomBtn = ({
         { ...props },
       ]}
     >
-      {disabled && <ActivityIndicator size={30} color={'grey'} />}
-      <Text style={styles.text}>{label}</Text>
+      {disabled ? <ActivityIndicator size={30} color={'grey'} /> : <Text style={styles.text}>{label}</Text>}
+
     </TouchableOpacity>
   );
 };

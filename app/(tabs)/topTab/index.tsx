@@ -36,7 +36,6 @@ const index = () => {
     queryFn: ordersApi.getItemOrders,
   });
 
-  console.log(order)
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -99,12 +98,11 @@ const index = () => {
       <View style={{ flex: 1, backgroundColor: activeColor.background }}>
         <FlatList
           data={order?.data}
-          keyExtractor={(item) => item?.item_order?.id.toString()}
+          keyExtractor={(item) => item?.id.toString()}
           renderItem={({ item, index }) => {
-            const isLastOrder = index === order?.data.length - 1
             return (item.order_status === "Pending" &&
               item.payment_status === "paid" && (
-                <OrderCard order={item} isHomeScreen={isHomeScreen} isLastOrder={isLastOrder} />
+                <OrderCard order={item} isHomeScreen={isHomeScreen} />
               ))
           }
           }

@@ -53,7 +53,8 @@ export function useProtectedRoute(user: {} | null) {
       router.replace("signin");
     } else if (user && inAuthGroup) {
       // Redirect away from the sign-in screen.
-      router.replace("/(tabs)");
+      // router.replace("/(tabs)");
+      router.replace("/");
       // setIsFirstLunch(true)
     }
   }, [user, segments, isFirstLaunch]);
