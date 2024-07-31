@@ -72,12 +72,14 @@ const wallet = () => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background }}>
+    <>
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
+      <WalletCard wallet={data?.data} user={user!} />
 
       <View
         style={[styles.container, { backgroundColor: activeColor.background }]}
       >
+        <Text style={{ color: activeColor.text, fontFamily: 'Poppins-SemiBold', fontSize: 16, letterSpacing: 2.5 }}>Transactions</Text>
         <FlatList
           data={walletData}
           keyExtractor={(item) => item?.id?.toString()}
@@ -87,15 +89,14 @@ const wallet = () => {
               <TransactionCard transaction={item} isLastTranx={isLastTranx} />
             );
           }}
-          ListHeaderComponent={<WalletCard wallet={data?.data} user={user!} />}
           showsVerticalScrollIndicator={false}
           refreshing={isFetching}
           onRefresh={handleRefresch}
           stickyHeaderIndices={[0]}
-          contentContainerStyle={{ paddingHorizontal: 15 }}
+
         />
       </View>
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -104,6 +105,7 @@ export default wallet;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingHorizontal: 15
+    paddingHorizontal: 20,
+
   },
 });

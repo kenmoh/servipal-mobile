@@ -30,6 +30,7 @@ const FoodOrderLayout = () => {
       <FoodTabBar.Screen name="index" options={{ title: "Restaurants" }} />
       <FoodTabBar.Screen name="foodOrders" options={{ title: "Food Orders" }} />
 
+
     </FoodTabBar>
   );
 };

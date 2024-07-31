@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -6,20 +6,19 @@ import { ThemeContext } from "@/context/themeContext";
 import FloatingActionButton from "./FloatingActionBtn";
 import { UserReturn, Transactions } from "@/utils/types";
 import { router } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
 
 
 
 const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    console.log(wallet)
     return (
-        <View
-            style={[styles.container, { backgroundColor: activeColor.background }]}
-        >
+
+        <LinearGradient colors={['#2566af', '#234c80', '#1d3454', '#151d2c']} style={styles.container}>
             <Text
                 style={{
-                    color: activeColor.text,
+                    color: 'white',
                     fontFamily: "Poppins-SemiBold",
                     fontSize: 16,
                 }}
@@ -28,14 +27,14 @@ const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }
             </Text>
             <Text
                 style={{
-                    color: activeColor.text,
+                    color: 'white',
                     fontFamily: "Poppins-SemiBold",
                     fontSize: 28,
                 }}
             >
                 ₦ {wallet?.balance || 0.00}
             </Text>
-            <View style={{ flexDirection: 'row', gap: 20 }}>
+            <View style={{ flexDirection: 'row', gap: 20, marginTop: 10 }}>
                 {
                     user.user_type === 'vendor' && <FloatingActionButton
                         icon={
@@ -62,7 +61,8 @@ const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }
 
                 />
             </View>
-        </View>
+        </LinearGradient>
+
     );
 };
 
@@ -70,9 +70,12 @@ export default WalletCard;
 
 const styles = StyleSheet.create({
     container: {
-        // paddingVertical: 35,
-        padding: 35,
-        // borderRadius: 10,
-        marginBottom: 25
+        marginBottom: 25,
+        height: Dimensions.get('screen').height * 0.28,
+        paddingVertical: 75,
+        paddingHorizontal: 30
     },
+    gradient: {
+        height: '100%'
+    }
 });

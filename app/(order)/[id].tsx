@@ -74,7 +74,6 @@ export default function HomeScreen() {
     mutationFn: () => ordersApi.relistOrderByVendor(id),
   });
 
-  console.log(pickupData)
 
   if (isFetching) {
     return (
@@ -138,18 +137,6 @@ export default function HomeScreen() {
             >
               <Status
                 text={order?.order_status!}
-                backgroundColor={
-                  order?.order_status === "Delivered"
-                    ? Colors.delivered
-                    : order?.order_status === "Pickedup"
-                      ? Colors.pickUpColor
-                      : order?.order_status === "Received"
-                        ? Colors.success
-                        : Colors.pendingColor
-                }
-                pillWidth={90}
-                pVertical={5}
-                pHorizontal={6}
                 textColor={
                   order?.order_status === "Pending"
                     ? "#c8553d"
@@ -262,7 +249,7 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-          {order.order_status === 'Picked up' && (<View style={styles.container}>
+          {order.order_status !== 'Pending' && (<View style={styles.container}>
             <View style={{ alignItems: "center" }}>
               <MaterialCommunityIcons name="bike-fast" size={30} color="grey" />
               <Divider />
@@ -347,11 +334,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 16,
+    fontSize: 12,
 
     marginVertical: 10,
     textTransform: "uppercase",
-    fontWeight: "bold",
+    fontFamily: 'Poppins-SemiBold'
   },
   btnContainer: {
     flex: 1,

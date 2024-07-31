@@ -5,7 +5,6 @@ import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 
-
 const TransactionCard = ({
     transaction,
     isLastTranx,
@@ -44,12 +43,23 @@ const TransactionCard = ({
                                 color: activeColor.text,
                             }}
                         >
-                            {transaction.created_at.split("T")[0]} {" "}
-                            {transaction.created_at.split("T")[1].split('.')[0]}
+                            {transaction.created_at.split("T")[0]}{" "}
+                            {transaction.created_at.split("T")[1].split(".")[0]}
                         </Text>
                     </View>
                 </View>
-                <Text style={[styles.text, { color: activeColor.text }]}>
+
+                <Text
+                    style={[
+                        styles.text,
+                        {
+                            color:
+                                parseInt(transaction.amount) < 1
+                                    ? Colors.error
+                                    : activeColor.text,
+                        },
+                    ]}
+                >
                     {transaction.amount}
                 </Text>
             </View>
@@ -64,12 +74,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginVertical: 2.5,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
+        padding: 10,
         borderRadius: 5,
+        opacity: 0.7
     },
     text: {
-        fontFamily: "Poppins-SemiBold",
+        fontFamily: "Poppins-Light",
         textTransform: "capitalize",
         fontSize: 12,
     },

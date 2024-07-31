@@ -7,7 +7,6 @@ import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/auth/authContext";
 import { UserReturn } from "@/utils/types";
-import HDivider from "@/components/HDivider";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 type RiderCardType = {

@@ -19,7 +19,7 @@ const ServiceCard = ({ imageUrl, lable, href }: CardProps) => {
     let activeColor = Colors[theme.mode];
     return (
         <Link href={href} asChild>
-            <ImageBackground source={imageUrl} style={styles.container} resizeMode='cover'>
+            <ImageBackground source={{ uri: imageUrl }} style={styles.container} resizeMode='cover'>
                 <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14, color: activeColor.text }}>{lable}</Text>
             </ImageBackground>
         </Link>

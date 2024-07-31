@@ -50,12 +50,12 @@ export const Colors: ColorProps = {
   },
   dark: {
     text: "#fff",
-    background: "#14202B",
+    background: "#0D1117",
     icon: "#9BA1A6",
     tabIconDefault: "#ddd",
     tabIconSelected: tintColorDark,
-    inputBackground: "#0c1821",
-    profileCard: "#0c1821",
+    inputBackground: "#161B22",
+    profileCard: "#161B22",
     borderolor: "#2f4550",
   },
 };

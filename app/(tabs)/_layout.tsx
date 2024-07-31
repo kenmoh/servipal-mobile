@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { StatusBar, StyleSheet } from "react-native";
 import { Link, router, Tabs } from "expo-router";
 import { Entypo, AntDesign, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Device from "expo-device";
@@ -13,22 +13,7 @@ import { useAuth } from "@/auth/authContext";
 import { registerNotification } from "@/api/notification";
 
 
-const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
-  return (
-    <Link href={link}>
-      <Pressable>
-        {({ pressed }) => (
-          <AntDesign
-            name={iconName}
-            size={20}
-            color={"grey"}
-            style={{ opacity: pressed ? 0.5 : 1 }}
-          />
-        )}
-      </Pressable>
-    </Link>
-  );
-};
+
 
 export default function TabLayout() {
 
@@ -82,9 +67,10 @@ export default function TabLayout() {
         headerTitleAlign: "center",
         headerTintColor: activeColor.text,
         tabBarStyle: {
-
+          borderTopWidth: StyleSheet.hairlineWidth,
           backgroundColor: activeColor.background,
           height: 70,
+          borderTopColor: activeColor.profileCard
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -96,6 +82,7 @@ export default function TabLayout() {
 
       }}
     >
+
       <Tabs.Screen
         name="topTab"
         options={{
@@ -108,8 +95,6 @@ export default function TabLayout() {
             backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
-            borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: activeColor.borderolor
 
           }
         }}
@@ -121,7 +106,12 @@ export default function TabLayout() {
         name="food"
         options={{
           title: 'Food',
-          headerShown: false,
+          headerStyle: {
+            height: Constants.statusBarHeight, backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+
+          },
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="restaurant" size={size} color={color} />
           ),
@@ -133,7 +123,12 @@ export default function TabLayout() {
         name="laundry"
         options={{
           title: 'Laundry',
-          headerShown: false,
+          headerStyle: {
+            height: Constants.statusBarHeight, backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+
+          },
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="washing-machine" size={size} color={color} />
           ),
@@ -145,7 +140,12 @@ export default function TabLayout() {
         name="buySell"
         options={{
           title: 'Buy/Sell',
-          headerShown: false,
+          headerStyle: {
+            height: Constants.statusBarHeight, backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+
+          },
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="sell" size={size} color={color} />
           ),

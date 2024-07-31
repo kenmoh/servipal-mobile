@@ -1,74 +1,93 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from "react-native";
 import React, { useContext } from "react";
-import { Image } from "expo-image";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 
+
+const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 type FoodCardProp = {
     name: string;
-    descriptinon: string;
-    price: string;
+    ingredients: string;
+    price: number;
     imageUrl: string;
-    onPress: () => void;
 };
 
 const FoodCard = ({
     name,
-    descriptinon,
+    ingredients,
     price,
     imageUrl,
-    onPress,
+
 }: FoodCardProp) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
     return (
-        <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={onPress}
-            style={[styles.container, { backgroundColor: activeColor.background }]}
-        >
-            <View style={{ gap: 3 }}>
-                <Text
+        <>
+            <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => { }}
+                style={[styles.container, { backgroundColor: activeColor.profileCard }]}
+            >
+                <View style={{ gap: 10 }}>
+                    <View style={{ width: Dimensions.get('screen').width * 0.60 }}>
+                        <Text
+                            style={{
+                                color: activeColor.tabIconDefault,
+                                fontFamily: "Poppins-SemiBold",
+                                fontSize: 13,
+                            }}
+                        >
+                            {name}
+                        </Text>
+                        <Text
+                            style={{
+                                color: activeColor.text,
+                                fontFamily: "Poppins-Thin",
+                                fontSize: 13,
+                                flexShrink: 1,
+                                flexWrap: 'wrap',
+                            }}
+                        >
+                            {ingredients}
+                        </Text>
+                    </View>
+                    <Text
+                        style={{
+
+                            color: activeColor.text,
+                            fontFamily: "Poppins-Bold",
+                            fontSize: 15,
+                        }}
+                    >
+                        ₦ {price}
+                    </Text>
+                </View>
+                <View
                     style={{
-                        color: activeColor.text,
-                        fontFamily: "Pippins-SemiBold",
-                        fontSize: 14,
-                    }}
-                >
-                    {name}
-                </Text>
-                <Text
-                    style={{
-                        color: activeColor.text,
-                        fontFamily: "Pippins-Light",
-                        fontSize: 13,
-                    }}
-                >
-                    {descriptinon}
-                </Text>
-                <Text
-                    style={{
-                        color: activeColor.text,
-                        fontFamily: "Pippins-Bold",
-                        fontSize: 15,
-                    }}
-                >
-                    ₦ {price}
-                </Text>
-            </View>
-            <View style={{ width: 300, height: 300, borderRadius: 10 }}>
-                <Image
-                    source={imageUrl}
-                    style={{
-                        objectFit: "cover",
-                        height: "100%",
-                        width: "100%",
+                        height: 80,
+                        width: 100,
+                        borderRadius: 5,
+                        backgroundColor: "white",
                         overflow: "hidden",
+
                     }}
-                />
-            </View>
-        </TouchableOpacity>
+                >
+                    <Image
+                        src={imageUrl}
+                        style={{
+                            height: "100%",
+                            width: "100%",
+                            overflow: "hidden",
+                            objectFit: "fill",
+
+                        }}
+                    />
+                </View>
+            </TouchableOpacity>
+
+        </>
     );
 };
 
@@ -77,10 +96,12 @@ export default FoodCard;
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        justifyContent: "space-around",
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        width: "100%",
-        marginVertical: 5
+        justifyContent: "space-between",
+        padding: 10,
+        alignItems: 'center',
+        marginVertical: 5,
+        borderRadius: 5,
+
+
     },
 });

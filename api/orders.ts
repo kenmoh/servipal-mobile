@@ -61,7 +61,7 @@ const createOrder = async (item: CreateOrderType) => {
     name: item.orderPhotoUrl.split("/").slice(-1)[0],
   });
 
-  const response = await client.post(`$/{endpoint}/send-items`, data, {
+  const response = await client.post(`${endpoint}/send-items`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

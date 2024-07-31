@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import OrderCard from "@/components/OrderCard";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { focusManager, useQuery } from "@tanstack/react-query";
 import {
   StyleSheet,
@@ -98,8 +98,8 @@ const index = () => {
       <View style={{ flex: 1, backgroundColor: activeColor.background }}>
         <FlatList
           data={order?.data}
-          keyExtractor={(item) => item?.id.toString()}
-          renderItem={({ item, index }) => {
+          keyExtractor={(item) => item?.id}
+          renderItem={({ item }) => {
             return (item.order_status === "Pending" &&
               item.payment_status === "paid" && (
                 <OrderCard order={item} isHomeScreen={isHomeScreen} />

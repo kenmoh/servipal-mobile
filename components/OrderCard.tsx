@@ -39,7 +39,7 @@ const OrderCard = ({ order, isHomeScreen, }: { order: ItemOrderType, isHomeScree
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text
                   style={{
-                    fontSize: 14,
+                    fontSize: 13,
                     fontFamily: "Poppins-Light",
                     color: activeColor.text,
                   }}
@@ -69,7 +69,7 @@ const OrderCard = ({ order, isHomeScreen, }: { order: ItemOrderType, isHomeScree
                   size={15}
                   color={activeColor.icon}
                 />
-                <Text style={[styles.textStyle, { color: activeColor.text, fontSize: 12 }]}>
+                <Text style={[styles.textStyle, { color: activeColor.text, fontSize: 10 }]}>
                   {order?.origin}
                 </Text>
               </View>
@@ -154,8 +154,7 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    fontFamily: "Poppins-Regular",
-
+    fontFamily: "Poppins-Light",
   },
   image: {
     height: 65,

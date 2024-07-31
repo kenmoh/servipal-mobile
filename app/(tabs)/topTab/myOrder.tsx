@@ -82,7 +82,7 @@ const myOrder = () => {
           data={order?.data}
           keyExtractor={(item: ItemOrderType) => item?.id?.toString()}
           renderItem={({ item }) => {
-            console.log(item.rider_phone_number)
+
             return (item.vendor_username === user?.username ? (
               <OrderCard order={item} />
             ) : item.dispatch_company_name === user?.company_name ? (

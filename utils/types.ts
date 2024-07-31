@@ -213,3 +213,14 @@ export type ConfirmAccount = {
   emailCode: string;
   phoneCode: string;
 };
+
+
+export type FoodType = {
+    id: string,
+    vendor_id: string,
+    name: string,
+    price: number,
+    side?: string,
+    ingredients: string,
+    image_url: string
+  },
