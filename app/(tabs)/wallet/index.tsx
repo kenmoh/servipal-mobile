@@ -74,11 +74,12 @@ const wallet = () => {
   return (
     <>
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
-      <WalletCard wallet={data?.data} user={user!} />
 
-      <View
+
+      <SafeAreaView
         style={[styles.container, { backgroundColor: activeColor.background }]}
       >
+        <WalletCard wallet={data?.data} user={user!} />
         <Text style={{ color: activeColor.text, fontFamily: 'Poppins-SemiBold', fontSize: 16, letterSpacing: 2.5 }}>Transactions</Text>
         <FlatList
           data={walletData}
@@ -95,7 +96,7 @@ const wallet = () => {
           stickyHeaderIndices={[0]}
 
         />
-      </View>
+      </SafeAreaView>
     </>
   );
 };

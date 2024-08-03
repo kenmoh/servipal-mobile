@@ -10,6 +10,7 @@ import {
     Platform,
     AppStateStatus,
     AppState,
+    ScrollView,
 } from "react-native";
 import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
@@ -20,69 +21,44 @@ import FloatingActionButton from "@/components/FloatingActionBtn";
 import { AntDesign } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FoodCard from "@/components/FoodCard";
-import { getFoods } from "@/api/foods";
+import { getCategories, getFoods, getUserByMealCategory } from "@/api/foods";
 import { FoodType } from "@/utils/types";
-import FoodLaundryCard from "@/components/FoodLaundryCard";
+import FoodLaundryCard, { CardProps } from "@/components/FoodLaundryCard";
 import items from "../buySell/items";
+import CategoryBtn from "@/components/CategoryBtn";
+import { StatusBar } from "expo-status-bar";
 
-const restaurants = [
-    {
-        imageUrl:
-            "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        address: "VI, Lagos",
-        average_rating: 3,
-        vendor_name: "MohEat",
-        numReviews: 18
-    },
-    {
-        imageUrl:
-            "https://images.pexels.com/photos/2696064/pexels-photo-2696064.jpeg?auto=compress&cs=tinysrgb&w=600",
-        address: "Yaba, Lagos",
-        average_rating: 4.6,
-        vendor_name: "JaroKili",
-        numReviews: 32
-    },
-    {
-        imageUrl:
-            "https://images.pexels.com/photos/541216/pexels-photo-541216.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        address: "New Benin",
-        average_rating: 4.2,
-        vendor_name: "FoodMama",
-        numReviews: 12
-    },
-    {
-        imageUrl:
-            "https://images.pexels.com/photos/64208/pexels-photo-64208.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        address: "New Benin",
-        average_rating: 4.2,
-        vendor_name: "FoodMania",
-        numReviews: 12
-    },
-    {
-        imageUrl:
-            "https://images.pexels.com/photos/2291603/pexels-photo-2291603.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-        address: "New Benin",
-        average_rating: 4.2,
-        vendor_name: "FoodCourt",
-        numReviews: 12
-    },
-];
-
+type CategoryType = {
+    name: string;
+    id: number;
+};
 const index = () => {
     const { user } = useAuth();
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [isHomeScreen, setIsHomeScreen] = useState(true);
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    const { data: categories, isSuccess: categorySuccess } = useQuery({
+        queryKey: ["categories"],
+        queryFn: getCategories,
+    });
     const {
-        data: foods,
+        data: restaurants,
         error,
         isLoading,
         isFetching,
         refetch,
     } = useQuery({
-        queryKey: ["orders"],
-        queryFn: getFoods,
+        queryKey: ["usersByMeal", "selectedCategory"],
+        queryFn: () => getUserByMealCategory(selectedCategory),
+        enabled: categorySuccess,
     });
+
+
+    const handleCategoryPress = (category: string) => {
+        setSelectedCategory(category);
+    };
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -99,6 +75,8 @@ const index = () => {
     const handleRefresch = () => refetch();
 
     useRefreshOnFocus(refetch);
+
+
 
     if (isLoading || isFetching) {
         return (
@@ -126,7 +104,7 @@ const index = () => {
             <Text>Something went wrong!</Text>
         </View>;
     }
-    if (!foods?.data) {
+    if (!restaurants?.data) {
         <View
             style={{
                 flex: 1,
@@ -143,22 +121,19 @@ const index = () => {
         <View
             style={[styles.container, { backgroundColor: activeColor.background }]}
         >
+            <StatusBar
+                hidden
+                backgroundColor={activeColor.background}
+                style="auto"
+            />
             <FlatList
-                data={restaurants}
-                keyExtractor={(item) => item.vendor_name}
+                data={restaurants?.data}
+                keyExtractor={(item) => item.id.toString()}
                 key={1}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
-                    <FoodLaundryCard
-                        address={item.address}
-                        imageUrl={item.imageUrl}
-                        vendor_name={item.vendor_name}
-                        average_rating={item.average_rating}
-                        numReviews={(item.numReviews)}
-                    />
-
+                    <FoodLaundryCard item={item} />
                 )}
-
             />
         </View>
     );
@@ -169,7 +144,7 @@ export default index;
 const styles = StyleSheet.create({
     container: {
         paddingVertical: 5,
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         flex: 1,
     },
 });

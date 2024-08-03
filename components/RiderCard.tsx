@@ -59,7 +59,7 @@ const RiderCard = ({ rider }: { rider: UserReturn }) => {
                     </Text>
                 </View>
             </View>
-            <View style={[styles.container, { borderBottomColor: activeColor.borderolor }]}>
+            <View style={[styles.container, { borderBottomColor: activeColor.borderColor }]}>
                 <View style={{ flexDirection: "row", gap: 20, alignItems: "center", marginBottom: 5 }}>
                     <View style={styles.headerContainer}>
                         <Text style={[styles.headerText, { color: activeColor.icon }]}>

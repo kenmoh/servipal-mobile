@@ -1,4 +1,5 @@
 import client from "@/api/client";
+import { CartState, OrderData } from "@/auth/cartContext";
 import { CreateOrderType } from "@/utils/types";
 
 const endpoint = "/orders";
@@ -47,6 +48,27 @@ const relistOrderByVendor = (order_id: string) =>
 const orderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/order-received`);
 
+// Order food
+const orderFood = async (vendorId: string, item: OrderData) => {
+  const data = {
+    foods: item.foods,
+    origin: item.origin,
+    destination: item.destination,
+    distance: item.distance,
+    additional_info: item.additional_info,
+  };
+
+  const response = await client.post(
+    `${endpoint}/${vendorId}/order-food`,
+    data
+  );
+
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  return response.data;
+};
+
 // create new order
 const createOrder = async (item: CreateOrderType) => {
   const data = new FormData();
@@ -86,4 +108,5 @@ export default {
   cancelOrderByVendor,
   orderReceived,
   relistOrderByVendor,
+  orderFood,
 };

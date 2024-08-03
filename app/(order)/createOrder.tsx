@@ -13,7 +13,7 @@ import orderApi from "@/api/orders";
 
 import { ThemeContext } from "@/context/themeContext";
 import { useContext, useEffect } from "react";
-import { CreateOrderType, OrderType } from "@/utils/types";
+import { CreateOrderType, ItemOrderType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
@@ -23,7 +23,7 @@ export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-  const { error, isSuccess, mutate, isPending, data } = useMutation<OrderType>({
+  const { error, isSuccess, mutate, isPending, data } = useMutation<ItemOrderType>({
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
   });
 

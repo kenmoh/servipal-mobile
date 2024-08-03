@@ -214,13 +214,21 @@ export type ConfirmAccount = {
   phoneCode: string;
 };
 
-
 export type FoodType = {
-    id: string,
-    vendor_id: string,
-    name: string,
-    price: number,
-    side?: string,
-    ingredients: string,
-    image_url: string
-  },
+  id: string;
+  vendor_id: string;
+  name: string;
+  price: number;
+  side?: string;
+  ingredients: string;
+  image_url: string;
+};
+
+export type AddMealType = {
+  name: string;
+  price: number;
+  category: string;
+  side?: string;
+  ingredients: string;
+  image: string;
+};

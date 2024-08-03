@@ -54,7 +54,7 @@ const orderMap = () => {
             style={[
               styles.textCard,
               {
-                backgroundColor: activeColor.borderolor,
+                backgroundColor: activeColor.borderColor,
                 color: activeColor.text,
               },
             ]}
@@ -65,7 +65,7 @@ const orderMap = () => {
             style={[
               styles.textCard,
               {
-                backgroundColor: activeColor.borderolor,
+                backgroundColor: activeColor.borderColor,
                 color: activeColor.text,
               },
             ]}

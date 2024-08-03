@@ -4,7 +4,6 @@ import {
   ScrollView,
   View,
   ActivityIndicator,
-  Platform,
   Dimensions,
   TouchableOpacity,
 } from "react-native";
@@ -21,7 +20,7 @@ import { StatusBar } from "expo-status-bar";
 import Divider from "@/components/Divider";
 import DetailLabel from "@/components/DetailLabel";
 import Status from "@/components/Status";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import ordersApi from "@/api/orders";
 import { ItemOrderType } from "@/utils/types";
 import CustomBtn from "@/components/CustomBtn";

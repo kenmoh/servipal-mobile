@@ -28,7 +28,7 @@ const AppHeader = () => {
   let activeColor = Colors[theme.mode];
   return (
     <View style={styles.container}>
-      <HeaderLeft link="/" iconName={"home"} />
+      {/* {hasIcon && <HeaderLeft link="/" iconName={"home"} />} */}
       <CustomTextInput
         placeholder="Search"
         style={[
@@ -39,7 +39,7 @@ const AppHeader = () => {
           },
         ]}
       />
-      <HeaderLeft link="/" iconName={"bells"} />
+      {/* {hasIcon && <HeaderLeft link="/" iconName={"bells"} />} */}
     </View>
   );
 };
@@ -56,10 +56,11 @@ const styles = StyleSheet.create({
 
   },
   textIput: {
-    width: 250,
+    minWidth: 300,
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 50,
     marginBottom: 10,
+    alignSelf: 'center'
   },
 });

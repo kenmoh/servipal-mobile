@@ -8,6 +8,7 @@ type AuthContextType = {
   setUser: (user: {} | null) => void;
   user?: UserReturn | null;
 };
+
 export const AuthContext = createContext<AuthContextType>({
   signIn: () => {},
   signOut: () => null,

@@ -62,7 +62,7 @@ const AppImagePicker = ({
           styles.imageContainer,
           {
             backgroundColor: activeColor.inputBackground,
-            borderColor: activeColor.borderolor,
+            borderColor: activeColor.borderColor,
           },
         ]}
       >

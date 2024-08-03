@@ -44,7 +44,7 @@ const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }
                         width={100}
                         height={35}
                         color={activeColor.text}
-                        backgroundColor={activeColor.borderolor}
+                        backgroundColor={activeColor.borderColor}
                         onPress={() => router.push('/wallet/fundWallet')}
                     />
                 }
@@ -56,7 +56,7 @@ const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }
                     width={110}
                     height={35}
                     color={activeColor.text}
-                    backgroundColor={activeColor.borderolor}
+                    backgroundColor={activeColor.borderColor}
                     onPress={() => { }}
 
                 />
@@ -71,9 +71,11 @@ export default WalletCard;
 const styles = StyleSheet.create({
     container: {
         marginBottom: 25,
-        height: Dimensions.get('screen').height * 0.28,
-        paddingVertical: 75,
-        paddingHorizontal: 30
+        marginTop: 15,
+        height: Dimensions.get('screen').height * 0.25,
+        paddingVertical: 35,
+        paddingHorizontal: 20,
+        borderRadius: 10
     },
     gradient: {
         height: '100%'

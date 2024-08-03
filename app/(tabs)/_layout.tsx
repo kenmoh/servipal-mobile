@@ -106,10 +106,11 @@ export default function TabLayout() {
         name="food"
         options={{
           title: 'Food',
+          headerTitle: () => <AppHeader />,
           headerStyle: {
-            height: Constants.statusBarHeight, backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
+            backgroundColor: activeColor.background,
 
           },
           tabBarIcon: ({ color, size }) => (
@@ -167,6 +168,25 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
+        name="sendItem"
+        options={{
+          title: 'Actions',
+          href: null,
+          headerShown: true,
+          headerTintColor: activeColor.text,
+          headerStyle: {
+            backgroundColor: activeColor.background,
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderBottomColor: activeColor.borderColor
+          }
+        }}
+
+
+      />
+
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
@@ -179,7 +199,7 @@ export default function TabLayout() {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: 'red'
+            borderBottomColor: activeColor.borderColor
 
           },
         }}

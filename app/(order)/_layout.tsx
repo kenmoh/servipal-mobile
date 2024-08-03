@@ -29,7 +29,7 @@ const OrderDetailLayout = () => {
       <Stack.Screen
         name="createOrder"
         options={{
-          title: "New order",
+          title: "Send Item",
         }}
       />
       <Stack.Screen

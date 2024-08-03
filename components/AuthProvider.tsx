@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { ReactNode, useState } from "react";
 import { AuthContext, useProtectedRoute } from "@/auth/authContext";
 

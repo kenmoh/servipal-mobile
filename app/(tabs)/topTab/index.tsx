@@ -19,6 +19,7 @@ import { useAuth } from "@/auth/authContext";
 import { router } from "expo-router";
 import FloatingActionButton from "@/components/FloatingActionBtn";
 import { AntDesign } from "@expo/vector-icons";
+import ScreenWithFAB from "@/app/ScreenWithFAB";
 
 const index = () => {
   const { user } = useAuth();
@@ -93,42 +94,28 @@ const index = () => {
   }
 
 
-  return (
-    <>
-      <View style={{ flex: 1, backgroundColor: activeColor.background }}>
-        <FlatList
-          data={order?.data}
-          keyExtractor={(item) => item?.id}
-          renderItem={({ item }) => {
-            return (item.order_status === "Pending" &&
-              item.payment_status === "paid" && (
-                <OrderCard order={item} isHomeScreen={isHomeScreen} />
-              ))
-          }
-          }
-          estimatedItemSize={200}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          vertical
-          refreshing={isFetching}
-          onRefresh={handleRefresch}
-        />
-        {
-          user?.user_type === 'vendor' &&
-          <View style={{
-            position: "absolute",
-            bottom: 30,
-            right: 10,
-          }}>
 
-            <FloatingActionButton
-              icon={<AntDesign name="pluscircleo" color={"#fff"} size={30} />}
-              onPress={() => router.push("/(order)/createOrder")}
-            />
-          </View>
+  return (
+    <View style={{ flex: 1, backgroundColor: activeColor.background }}>
+
+      <FlatList
+        data={order?.data}
+        keyExtractor={(item) => item?.id}
+        renderItem={({ item }) => {
+          return (item.order_status === "Pending" &&
+            item.payment_status === "paid" && (
+              <OrderCard order={item} isHomeScreen={isHomeScreen} />
+            ))
         }
-      </View>
-    </>
+        }
+        estimatedItemSize={200}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        vertical
+        refreshing={isFetching}
+        onRefresh={handleRefresch}
+      />
+    </View>
   );
 };
 

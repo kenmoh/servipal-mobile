@@ -1,68 +1,98 @@
-import { StyleSheet, Text, TouchableOpacity, View, Image, Dimensions } from "react-native";
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    Image,
+
+} from "react-native";
 import React, { useContext } from "react";
+import BouncyCheckBox from "react-native-bouncy-checkbox";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
+import { useCart } from "./CartProvider";
 
 
 const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-type FoodCardProp = {
+
+
+export type MealType = {
+    id: string;
+    vendor_id: string;
     name: string;
-    ingredients: string;
     price: number;
-    imageUrl: string;
+    quantity: number;
+    side?: string;
+    ingredients?: string;
+    image_url?: string;
 };
 
-const FoodCard = ({
-    name,
-    ingredients,
-    price,
-    imageUrl,
-
-}: FoodCardProp) => {
+const FoodCard = ({ meal }: { meal: MealType }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+
+    const { cart, addToCart, removeFromCart } = useCart();
+    const isItemInCart = cart.foods.some((cartItem) => cartItem.id === meal.id);
+
+    const handleCheckboxChange = (isChecked: boolean) => {
+        if (isChecked) {
+            addToCart(meal);
+        } else {
+            removeFromCart(meal);
+        }
+    };
+
 
     return (
         <>
             <TouchableOpacity
-                activeOpacity={0.7}
+                activeOpacity={1}
                 onPress={() => { }}
-                style={[styles.container, { backgroundColor: activeColor.profileCard }]}
+                style={[styles.container]}
             >
-                <View style={{ gap: 10 }}>
-                    <View style={{ width: Dimensions.get('screen').width * 0.60 }}>
-                        <Text
-                            style={{
-                                color: activeColor.tabIconDefault,
-                                fontFamily: "Poppins-SemiBold",
-                                fontSize: 13,
-                            }}
-                        >
-                            {name}
-                        </Text>
-                        <Text
-                            style={{
-                                color: activeColor.text,
-                                fontFamily: "Poppins-Thin",
-                                fontSize: 13,
-                                flexShrink: 1,
-                                flexWrap: 'wrap',
-                            }}
-                        >
-                            {ingredients}
-                        </Text>
+                <View>
+                    <View style={{ maxWidth: "70%", flexDirection: "row" }}>
+                        <BouncyCheckBox
+                            isChecked={isItemInCart}
+                            iconStyle={{ borderRadius: 5 }}
+                            fillColor="teal"
+                            size={20}
+                            innerIconStyle={{ borderRadius: 5, borderColor: 'grey' }}
+                            onPress={handleCheckboxChange}
+                        />
+                        <View style={{}}>
+                            <Text
+                                style={{
+                                    color: activeColor.tabIconDefault,
+                                    fontFamily: "Poppins-SemiBold",
+                                    fontSize: 13,
+                                }}
+                            >
+                                {meal.name}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: activeColor.text,
+                                    fontFamily: "Poppins-Thin",
+                                    fontSize: 13,
+                                    flexShrink: 1,
+                                    flexWrap: "wrap",
+                                }}
+                            >
+                                {meal.ingredients}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: activeColor.text,
+                                    fontFamily: "Poppins-Bold",
+                                    fontSize: 12,
+                                }}
+                            >
+                                ₦ {meal.price}
+                            </Text>
+                        </View>
                     </View>
-                    <Text
-                        style={{
-
-                            color: activeColor.text,
-                            fontFamily: "Poppins-Bold",
-                            fontSize: 15,
-                        }}
-                    >
-                        ₦ {price}
-                    </Text>
                 </View>
                 <View
                     style={{
@@ -71,22 +101,19 @@ const FoodCard = ({
                         borderRadius: 5,
                         backgroundColor: "white",
                         overflow: "hidden",
-
                     }}
                 >
                     <Image
-                        src={imageUrl}
+                        src={meal.image_url}
                         style={{
                             height: "100%",
                             width: "100%",
                             overflow: "hidden",
                             objectFit: "fill",
-
                         }}
                     />
                 </View>
             </TouchableOpacity>
-
         </>
     );
 };
@@ -97,11 +124,8 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         justifyContent: "space-between",
-        padding: 10,
-        alignItems: 'center',
-        marginVertical: 5,
-        borderRadius: 5,
-
-
+        alignItems: "center",
+        marginVertical: 10,
+        width: "100%",
     },
 });

@@ -20,7 +20,7 @@ const LaundryTabLayout = () => {
                 tabBarAndroidRipple: { borderless: false },
                 tabBarPressColor: "gray",
                 tabBarStyle: {
-                    borderBottomColor: activeColor.borderolor,
+                    borderBottomColor: activeColor.borderColor,
                     borderBottomWidth: StyleSheet.hairlineWidth,
                     elevation: 0,
                     shadowOpacity: 0,

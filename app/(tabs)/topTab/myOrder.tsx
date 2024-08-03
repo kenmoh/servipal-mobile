@@ -12,6 +12,8 @@ import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { useQuery } from "@tanstack/react-query";
 import { ItemOrderType } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import ScreenWithFAB from "@/app/ScreenWithFAB";
+import { router } from "expo-router";
 
 
 
@@ -72,36 +74,32 @@ const myOrder = () => {
 
 
   return (
-    <>
+    <View style={{ backgroundColor: activeColor.background, flex: 1 }}>
       <CustomActivityIndicator visible={isPending} />
+      <FlatList
+        data={order?.data}
+        keyExtractor={(item: ItemOrderType) => item?.id?.toString()}
+        renderItem={({ item }) => {
 
-      <View
-        style={[styles.container, { backgroundColor: activeColor.background }]}
-      >
-        <FlatList
-          data={order?.data}
-          keyExtractor={(item: ItemOrderType) => item?.id?.toString()}
-          renderItem={({ item }) => {
+          return (item.vendor_username === user?.username ? (
+            <OrderCard order={item} />
+          ) : item.dispatch_company_name === user?.company_name ? (
+            <OrderCard order={item} />
+          ) : (
+            (item.rider_phone_number === user?.phone_number && item.dispatch_company_name === user?.dispatch) &&
+            <OrderCard order={item} isHomeScreen={false} />
+          ))
+        }
+        }
+        estimatedItemSize={200}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        vertical
+        refreshing={isFetching}
+        onRefresh={handleRefresch}
+      />
 
-            return (item.vendor_username === user?.username ? (
-              <OrderCard order={item} />
-            ) : item.dispatch_company_name === user?.company_name ? (
-              <OrderCard order={item} />
-            ) : (
-              (item.rider_phone_number === user?.phone_number && item.dispatch_company_name === user?.dispatch) &&
-              <OrderCard order={item} isHomeScreen={false} />
-            ))
-          }
-          }
-          estimatedItemSize={200}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          vertical
-          refreshing={isFetching}
-          onRefresh={handleRefresch}
-        />
-      </View>
-    </>
+    </View>
   );
 };
 
