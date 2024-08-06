@@ -22,6 +22,9 @@ const OrderDetailLayout = () => {
         },
         headerTintColor: activeColor.text,
         headerShadowVisible: false,
+        contentStyle: {
+          backgroundColor: activeColor.background
+        }
       }}
     >
       <Stack.Screen name="[id]" options={{ headerShown: false }} />

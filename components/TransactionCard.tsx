@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         opacity: 0.7
     },
     text: {
-        fontFamily: "Poppins-Light",
+        fontFamily: "Poppins-SemiBold",
         textTransform: "capitalize",
         fontSize: 12,
     },

@@ -21,10 +21,15 @@ const FoodOrderLayout = () => {
             fontSize: 12,
             textTransform: 'capitalize',
             fontFamily: 'Poppins-Bold',
-            marginBottom: -20, marginLeft: -5
+            textAlign: 'center',
+            marginBottom: -15,
+            marginLeft: -10,
+
           },
-          tabBarAndroidRipple: { borderless: false },
-          tabBarPressColor: "gray",
+          tabBarAndroidRipple: {
+            borderless: false
+          },
+          tabBarPressColor: activeColor.profileCard,
           tabBarStyle: {
             borderBottomColor: activeColor.borderColor,
             borderBottomWidth: StyleSheet.hairlineWidth,

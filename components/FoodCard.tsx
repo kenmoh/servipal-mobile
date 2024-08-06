@@ -4,7 +4,7 @@ import {
     TouchableOpacity,
     View,
     Image,
-
+    Dimensions,
 } from "react-native";
 import React, { useContext } from "react";
 import BouncyCheckBox from "react-native-bouncy-checkbox";
@@ -12,10 +12,8 @@ import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { useCart } from "./CartProvider";
 
-
 const blurhash =
     "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-
 
 export type MealType = {
     id: string;
@@ -43,7 +41,6 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
         }
     };
 
-
     return (
         <>
             <TouchableOpacity
@@ -51,64 +48,57 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
                 onPress={() => { }}
                 style={[styles.container]}
             >
-                <View>
-                    <View style={{ maxWidth: "70%", flexDirection: "row" }}>
+                <View style={{ width: "65%", flexDirection: "row", alignItems: 'center' }}>
+                    <View>
                         <BouncyCheckBox
                             isChecked={isItemInCart}
                             iconStyle={{ borderRadius: 5 }}
                             fillColor="teal"
                             size={20}
-                            innerIconStyle={{ borderRadius: 5, borderColor: 'grey' }}
+                            innerIconStyle={{ borderRadius: 5, borderColor: "grey" }}
                             onPress={handleCheckboxChange}
                         />
-                        <View style={{}}>
-                            <Text
-                                style={{
-                                    color: activeColor.tabIconDefault,
-                                    fontFamily: "Poppins-SemiBold",
-                                    fontSize: 13,
-                                }}
-                            >
-                                {meal.name}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: activeColor.text,
-                                    fontFamily: "Poppins-Thin",
-                                    fontSize: 13,
-                                    flexShrink: 1,
-                                    flexWrap: "wrap",
-                                }}
-                            >
-                                {meal.ingredients}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: activeColor.text,
-                                    fontFamily: "Poppins-Bold",
-                                    fontSize: 12,
-                                }}
-                            >
-                                ₦ {meal.price}
-                            </Text>
-                        </View>
+                    </View>
+
+                    <View style={{ width: "100%" }}>
+                        <Text
+                            style={{
+                                color: activeColor.tabIconDefault,
+                                fontFamily: "Poppins-SemiBold",
+                                fontSize: 13,
+                            }}
+                        >
+                            {meal.name}
+                        </Text>
+                        <Text
+                            style={{
+                                color: activeColor.text,
+                                fontFamily: "Poppins-Thin",
+                                fontSize: 13,
+                                flexShrink: 1,
+                                flexWrap: "wrap",
+                            }}
+                        >
+                            {meal.ingredients}
+                        </Text>
+                        <Text
+                            style={{
+                                color: activeColor.text,
+                                fontFamily: "Poppins-Bold",
+                                fontSize: 12,
+                            }}
+                        >
+                            ₦ {meal.price}
+                        </Text>
                     </View>
                 </View>
-                <View
-                    style={{
-                        height: 80,
-                        width: 100,
-                        borderRadius: 5,
-                        backgroundColor: "white",
-                        overflow: "hidden",
-                    }}
-                >
+                <View style={{}}>
                     <Image
                         src={meal.image_url}
                         style={{
-                            height: "100%",
-                            width: "100%",
-                            overflow: "hidden",
+                            height: 80,
+                            width: 100,
+                            borderRadius: 10,
                             objectFit: "fill",
                         }}
                     />
@@ -125,7 +115,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginVertical: 10,
-        width: "100%",
+        width: Dimensions.get("screen").width,
+        padding: 10,
+        gap: 20
     },
 });
+

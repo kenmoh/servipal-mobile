@@ -7,12 +7,12 @@
     "icon": "./assets/images/icon.png",
     "scheme": "com.onrender.quickpickup",
     "userInterfaceStyle": "automatic",
-    "androidNavigationBar": {
-      "backgroundColor": "#0D1117", 
-      "barStyle": "light-content" ,
-      "visible": "sticky-immersive"
+    // "androidNavigationBar": {
+    //   "backgroundColor": "#0D1117", 
+    //   "barStyle": "light-content" ,
+    //   "visible": "sticky-immersive"
   
-    },
+    // },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",

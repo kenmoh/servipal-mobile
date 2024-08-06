@@ -2,50 +2,61 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useContext } from "react";
 import * as Linking from "expo-linking";
 import { A } from "@expo/html-elements";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 
-
 type SupportCardPropType = {
-    phoneNumber: string
-    username: string
-}
+    phoneNumber: string;
+    username: string;
+};
 
 const SupportCard = ({ phoneNumber, username }: SupportCardPropType) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
         <View style={{ marginVertical: 10 }}>
-            <Text style={{ fontFamily: "Poppins-Light", color: activeColor.text }}>
-                {username}
-            </Text>
             <View
                 style={{
                     flexDirection: "row",
-                    alignItems: "center",
+                    alignItems: "baseline",
                     gap: 20,
                     marginVertical: 5,
                 }}
             >
-
-                <TouchableOpacity style={styles.callContainer} onPress={() => Linking.openURL(`tel: ${phoneNumber}`)}>
-                    <FontAwesome name="phone" size={20} color={activeColor.icon} />
-                    <Text
-                        style={{
-                            color: activeColor.text,
-                            fontFamily: "Poppins-Thin",
-                            fontSize: 12,
-                        }}
-
+                <TouchableOpacity
+                    style={styles.callContainer}
+                    onPress={() => Linking.openURL(`tel: ${phoneNumber}`)}
+                >
+                    <View
+                        style={
+                            {
+                                height: 35, width: 35, backgroundColor: Colors.primaryBtnColor, alignItems: 'center',
+                                justifyContent: 'center', borderRadius: 30, opacity: 0.3
+                            }
+                        }
                     >
-                        {phoneNumber}
-                    </Text>
+                        <MaterialIcons name="smartphone" size={25} color={activeColor.icon} />
+                    </View>
+                    <View>
+                        <Text
+                            style={{ fontFamily: "Poppins-Light", color: activeColor.text }}
+                        >
+                            {username}
+                        </Text>
+                        <Text
+                            style={{
+                                color: activeColor.text,
+                                fontFamily: "Poppins-Thin",
+                                fontSize: 12,
+                            }}
+                        >
+                            {phoneNumber}
+                        </Text>
+                    </View>
                 </TouchableOpacity>
 
-
-
-                <TouchableOpacity style={styles.callContainer}>
+                {/* <TouchableOpacity style={{ flexDirection: 'row', gap: 5, alignItems: 'baseline' }}>
                     <FontAwesome name="whatsapp" size={20} color={activeColor.icon} />
                     <A href={`https://wa.me/${phoneNumber}`}>
 
@@ -59,7 +70,7 @@ const SupportCard = ({ phoneNumber, username }: SupportCardPropType) => {
                             {phoneNumber}
                         </Text>
                     </A>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         </View>
     );
@@ -72,6 +83,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        gap: 5,
+        gap: 10,
     },
 });

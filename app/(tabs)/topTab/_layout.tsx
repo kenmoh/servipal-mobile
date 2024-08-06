@@ -24,10 +24,12 @@ const TopTabLayout = () => {
             fontSize: 12,
             textTransform: 'capitalize',
             fontFamily: 'Poppins-Bold',
-            marginBottom: -20
+            marginBottom: -15,
+            marginLeft: -10,
+            textAlign: 'center'
           },
           tabBarAndroidRipple: { borderless: false },
-          tabBarPressColor: "gray",
+          tabBarPressColor: activeColor.profileCard,
           tabBarStyle: {
             borderBottomColor: activeColor.borderColor,
             borderBottomWidth: StyleSheet.hairlineWidth,

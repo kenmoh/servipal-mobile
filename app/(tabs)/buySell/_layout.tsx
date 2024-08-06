@@ -16,6 +16,14 @@ const ItemTabLayout = () => {
             screenOptions={{
                 tabBarLabelStyle: {
                     color: activeColor.tabIconDefault,
+                    fontSize: 12,
+                    textAlign: 'center',
+                    textTransform: 'capitalize',
+                    fontFamily: 'Poppins-Bold',
+
+                    marginBottom: -15,
+                    marginLeft: -10
+
                 },
                 tabBarAndroidRipple: { borderless: false },
                 tabBarPressColor: "gray",
@@ -26,6 +34,7 @@ const ItemTabLayout = () => {
                     shadowOpacity: 0,
                     backgroundColor: activeColor.background,
                 },
+
             }}
         >
             <ItemTopTabBar.Screen name="index" options={{ title: "Buy/Sell" }} />

@@ -99,7 +99,7 @@ export default function HomeScreen() {
         justifyContent: "center",
       }}
     >
-      <StatusBar style="inverted" />
+      <StatusBar style={theme.mode === 'dark' ? 'light' : 'dark'} backgroundColor={activeColor.background} />
       <View style={[styles.mainContainer]}>
         <ScrollView
           showsVerticalScrollIndicator={false}

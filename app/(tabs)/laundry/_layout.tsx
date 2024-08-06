@@ -16,6 +16,14 @@ const LaundryTabLayout = () => {
             screenOptions={{
                 tabBarLabelStyle: {
                     color: activeColor.tabIconDefault,
+                    fontSize: 12,
+                    textAlign: 'center',
+                    textTransform: 'capitalize',
+                    fontFamily: 'Poppins-Bold',
+
+                    marginBottom: -15,
+                    marginLeft: -10
+
                 },
                 tabBarAndroidRipple: { borderless: false },
                 tabBarPressColor: "gray",

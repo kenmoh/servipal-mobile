@@ -37,7 +37,7 @@ const index = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [isHomeScreen, setIsHomeScreen] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState("");
 
     const { data: categories, isSuccess: categorySuccess } = useQuery({
         queryKey: ["categories"],
@@ -54,7 +54,6 @@ const index = () => {
         queryFn: () => getUserByMealCategory(selectedCategory),
         enabled: categorySuccess,
     });
-
 
     const handleCategoryPress = (category: string) => {
         setSelectedCategory(category);
@@ -75,8 +74,6 @@ const index = () => {
     const handleRefresch = () => refetch();
 
     useRefreshOnFocus(refetch);
-
-
 
     if (isLoading || isFetching) {
         return (
@@ -122,18 +119,15 @@ const index = () => {
             style={[styles.container, { backgroundColor: activeColor.background }]}
         >
             <StatusBar
-                hidden
                 backgroundColor={activeColor.background}
-                style="auto"
+                style={theme.mode === "dark" ? "light" : "dark"}
             />
             <FlatList
                 data={restaurants?.data}
                 keyExtractor={(item) => item.id.toString()}
                 key={1}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <FoodLaundryCard item={item} />
-                )}
+                renderItem={({ item }) => <FoodLaundryCard item={item} />}
             />
         </View>
     );

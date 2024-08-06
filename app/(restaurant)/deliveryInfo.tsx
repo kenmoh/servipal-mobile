@@ -40,8 +40,7 @@ const DliveryInfo = () => {
                 justifyContent: "center",
             }}
         >
-            {/* <CustomActivityIndicator visible={isPending} /> */}
-            <StatusBar style="inverted" />
+            <StatusBar style="auto" />
             <View style={styles.mainContainer}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Formik
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         padding: 10,
-        alignItems: "center",
+        // alignItems: "center",
     },
     text: {
         fontSize: 16,

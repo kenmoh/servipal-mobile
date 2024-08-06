@@ -20,6 +20,7 @@ import { router } from "expo-router";
 import FloatingActionButton from "@/components/FloatingActionBtn";
 import { AntDesign } from "@expo/vector-icons";
 import ScreenWithFAB from "@/app/ScreenWithFAB";
+import { StatusBar } from "expo-status-bar";
 
 const index = () => {
   const { user } = useAuth();
@@ -36,7 +37,6 @@ const index = () => {
     queryKey: ["orders"],
     queryFn: ordersApi.getItemOrders,
   });
-
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -93,21 +93,23 @@ const index = () => {
     </View>;
   }
 
-
-
   return (
     <View style={{ flex: 1, backgroundColor: activeColor.background }}>
-
+      <StatusBar
+        backgroundColor={activeColor.background}
+        style={theme.mode === "dark" ? "light" : "dark"}
+      />
       <FlatList
         data={order?.data}
         keyExtractor={(item) => item?.id}
         renderItem={({ item }) => {
-          return (item.order_status === "Pending" &&
+          return (
+            item.order_status === "Pending" &&
             item.payment_status === "paid" && (
               <OrderCard order={item} isHomeScreen={isHomeScreen} />
-            ))
-        }
-        }
+            )
+          );
+        }}
         estimatedItemSize={200}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

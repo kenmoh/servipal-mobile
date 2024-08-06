@@ -105,7 +105,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="food"
         options={{
-          title: 'Food',
+
           headerTitle: () => <AppHeader />,
           headerStyle: {
             elevation: 0,
@@ -123,9 +123,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="laundry"
         options={{
-          title: 'Laundry',
+          headerTitle: () => <AppHeader />,
           headerStyle: {
-            height: Constants.statusBarHeight, backgroundColor: activeColor.background,
+            backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
 
@@ -140,9 +140,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="buySell"
         options={{
-          title: 'Buy/Sell',
+          headerTitle: () => <AppHeader />,
           headerStyle: {
-            height: Constants.statusBarHeight, backgroundColor: activeColor.background,
+            backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
 

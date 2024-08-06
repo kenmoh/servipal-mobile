@@ -43,7 +43,6 @@ const AuthNav = () => {
           <Text style={[styles.btntext, { color: "white" }]}>Rider Signup</Text>
         </TouchableOpacity>
       </View>
-      <StatusBar style="inverted" />
     </SafeAreaView>
   );
 };

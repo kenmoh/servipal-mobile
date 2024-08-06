@@ -24,28 +24,22 @@ const ViewCartBtn = ({ totalCost, totalItem, onPress, label }: ViewCartBtnType) 
     let activeColor = Colors[theme.mode];
 
     const opacity = useSharedValue(0);
-    const translateY = useSharedValue(50);
+
 
     useEffect(() => {
         if (totalItem > 0) {
             opacity.value = withTiming(1, {
-                duration: 500,
+                duration: 1500,
                 easing: Easing.out(Easing.exp),
             });
-            translateY.value = withTiming(0, {
-                duration: 500,
-                easing: Easing.out(Easing.exp),
-            });
-        } else {
-            opacity.value = withTiming(0, { duration: 500 });
-            translateY.value = withTiming(50, { duration: 500 });
+
         }
     }, [totalItem]);
 
     const animatedStyle = useAnimatedStyle(() => {
         return {
             opacity: opacity.value,
-            transform: [{ translateY: translateY.value }],
+
         };
     });
 

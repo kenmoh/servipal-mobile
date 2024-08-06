@@ -15,17 +15,17 @@ const services = [
     {
         href: "(restaurant)/addMeal",
         imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png",
-        label: "Order Food",
+        label: "Add Meal",
     },
     {
         href: "(laundry)/addLaundry",
         imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/laundry.png",
-        label: "Laundry Services",
+        label: "Add Laundry",
     },
     {
         href: "(p2p)/addItem",
         imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/trade.png",
-        label: "Buy/Sell",
+        label: "Sell",
     },
 ];
 

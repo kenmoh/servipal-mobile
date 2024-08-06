@@ -1,4 +1,14 @@
-import { ActivityIndicator, AppState, AppStateStatus, FlatList, Platform, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  AppState,
+  AppStateStatus,
+  Dimensions,
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useContext, useEffect } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
@@ -11,6 +21,7 @@ import walletApi from "@/api/wallet";
 import TransactionCard from "@/components/TransactionCard";
 import { Transactions } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { LinearGradient } from "expo-linear-gradient";
 
 const wallet = () => {
   const { theme } = useContext(ThemeContext);
@@ -23,8 +34,6 @@ const wallet = () => {
   });
 
   const walletData: Transactions[] = data?.data?.transactions;
-
-
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -69,18 +78,29 @@ const wallet = () => {
     </View>;
   }
 
-
-
   return (
     <>
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
 
-
+      <LinearGradient
+        colors={["#34639D", "#417EB2", "#4E9DE6"]}
+        style={{ height: Dimensions.get("screen").height * 0.33, padding: 20 }}
+      >
+        <WalletCard wallet={data?.data} user={user!} />
+      </LinearGradient>
       <SafeAreaView
         style={[styles.container, { backgroundColor: activeColor.background }]}
       >
-        <WalletCard wallet={data?.data} user={user!} />
-        <Text style={{ color: activeColor.text, fontFamily: 'Poppins-SemiBold', fontSize: 16, letterSpacing: 2.5 }}>Transactions</Text>
+        <Text
+          style={{
+            color: activeColor.text,
+            fontFamily: "Poppins-SemiBold",
+            fontSize: 16,
+            letterSpacing: 2.5,
+          }}
+        >
+          Transactions
+        </Text>
         <FlatList
           data={walletData}
           keyExtractor={(item) => item?.id?.toString()}
@@ -94,7 +114,6 @@ const wallet = () => {
           refreshing={isFetching}
           onRefresh={handleRefresch}
           stickyHeaderIndices={[0]}
-
         />
       </SafeAreaView>
     </>
@@ -107,6 +126,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-
   },
 });

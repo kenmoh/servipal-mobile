@@ -8,7 +8,7 @@ const BuySellLayout = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
-        <Stack>
+        <Stack screenOptions={{ contentStyle: { backgroundColor: activeColor.background } }}>
             <Stack.Screen name='addItem' options={{
                 title: 'Add Item',
                 headerShadowVisible: false,

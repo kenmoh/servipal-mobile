@@ -10,14 +10,17 @@ const RestaurantLayout = () => {
     let activeColor = Colors[theme.mode];
     const { user } = useAuth()
     return (
-        <Stack>
+        <Stack screenOptions={{ contentStyle: { backgroundColor: activeColor.background } }}>
             <Stack.Screen name='restaurant' options={{
-
+                title: '',
                 headerShadowVisible: false,
                 headerTitleAlign: 'center',
                 headerTintColor: activeColor.text,
+                headerTransparent: true,
                 headerStyle: {
-                    backgroundColor: activeColor.background,
+                    // backgroundColor: activeColor.background,
+
+
                 }
             }} />
 
@@ -37,6 +40,7 @@ const RestaurantLayout = () => {
                 headerTintColor: activeColor.text,
                 headerStyle: {
                     backgroundColor: activeColor.background,
+
                 }
             }} />
         </Stack>

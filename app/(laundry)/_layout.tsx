@@ -8,7 +8,7 @@ const LaundryLayout = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
-        <Stack>
+        <Stack screenOptions={{ contentStyle: { backgroundColor: activeColor.background } }}>
             <Stack.Screen name='addLaundry' options={{
                 title: 'Add Item',
                 headerShadowVisible: false,

@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
         height: Dimensions.get('screen').height * 0.25,
         paddingVertical: 35,
         paddingHorizontal: 20,
-        borderRadius: 10
+        borderRadius: 10,
+        elevation: 10
     },
     gradient: {
         height: '100%'
