@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { focusManager, useQuery } from "@tanstack/react-query";
 import {
@@ -12,19 +12,12 @@ import {
     AppState,
     ScrollView,
 } from "react-native";
-import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
-import { router } from "expo-router";
-import FloatingActionButton from "@/components/FloatingActionBtn";
-import { AntDesign } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import FoodCard from "@/components/FoodCard";
+
 import { getCategories, getFoods, getUserByMealCategory } from "@/api/foods";
-import { FoodType } from "@/utils/types";
 import FoodLaundryCard, { CardProps } from "@/components/FoodLaundryCard";
-import items from "../buySell/items";
 import CategoryBtn from "@/components/CategoryBtn";
 import { StatusBar } from "expo-status-bar";
 
@@ -33,31 +26,41 @@ type CategoryType = {
     id: number;
 };
 const index = () => {
-    const { user } = useAuth();
+
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [isHomeScreen, setIsHomeScreen] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState<string | null>('pasta');
+    const categoryScrollViewRef = useRef<ScrollView>(null);
+    const [buttonWidths, setButtonWidths] = useState<number[]>([]);
 
-    const { data: categories, isSuccess: categorySuccess } = useQuery({
+    const { data: categories } = useQuery({
         queryKey: ["categories"],
         queryFn: getCategories,
     });
+
+
     const {
         data: restaurants,
         error,
         isLoading,
         isFetching,
         refetch,
+
     } = useQuery({
-        queryKey: ["usersByMeal", "selectedCategory"],
+        queryKey: ["usersByMeal", selectedCategory],
         queryFn: () => getUserByMealCategory(selectedCategory),
-        enabled: categorySuccess,
+        enabled: !!selectedCategory,
     });
 
-    const handleCategoryPress = (category: string) => {
-        setSelectedCategory(category);
+
+
+    const handleCategoryPress = (category: CategoryType, index: number) => {
+        const xOffset = buttonWidths.slice(0, index).reduce((total, width) => total + width, 0);
+        setSelectedCategory(category.name);
+        categoryScrollViewRef?.current?.scrollTo({ x: xOffset, animated: true })
+
     };
+
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -122,6 +125,16 @@ const index = () => {
                 backgroundColor={activeColor.background}
                 style={theme.mode === "dark" ? "light" : "dark"}
             />
+            <ScrollView ref={categoryScrollViewRef} horizontal showsHorizontalScrollIndicator={false}>
+                {categories?.data?.map((category: CategoryType, index: number) => (
+                    <CategoryBtn
+                        label={category?.name}
+                        key={category.id}
+                        isSelected={category.name === selectedCategory}
+                        onPress={() => handleCategoryPress(category, index)}
+                    />
+                ))}
+            </ScrollView>
             <FlatList
                 data={restaurants?.data}
                 keyExtractor={(item) => item.id.toString()}

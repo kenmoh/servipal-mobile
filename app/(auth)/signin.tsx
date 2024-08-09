@@ -110,28 +110,31 @@ const SignIn = () => {
                 <View>
                   <CustomTextInput
                     label="Email"
-                    hasBorder={theme.mode !== "dark"}
+
                     autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={handleChange("username")}
                     value={values.username}
                     labelColor={activeColor.text}
-                    inputBackgroundColor={activeColor.inputBackground}
-                    inputTextColor={activeColor.text}
+                    inputHeight={50}
+                    borderRadius={5}
+
                   />
                   {touched.username && errors.username && (
                     <InputErrorMessage error={errors.username} />
                   )}
                   <CustomTextInput
                     label="Password"
-                    hasBorder={theme.mode !== "dark"}
+                    // hasBorder={theme.mode !== "dark"}
                     autoCapitalize="none"
                     secureTextEntry={true}
                     onChangeText={handleChange("password")}
                     value={values.password}
                     labelColor={activeColor.text}
-                    inputBackgroundColor={activeColor.inputBackground}
-                    inputTextColor={activeColor.text}
+                    inputHeight={50}
+                    borderRadius={5}
+                  // inputBackgroundColor={activeColor.inputBackground}
+                  // inputTextColor={activeColor.text}
                   />
                   {touched.password && errors.password && (
                     <InputErrorMessage error={errors.password} />
@@ -144,7 +147,7 @@ const SignIn = () => {
                       btnColor={Colors.btnPrimaryColor}
                       label="Login"
                       btnBorderRadius={5}
-
+                      btnHeight={50}
                       onPress={handleSubmit}
                     />
                   </View>

@@ -56,16 +56,12 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         dispatch({ type: "SET_DELIVERY_INFO", payload: info });
     };
 
+    const clearCart = () => {
+        dispatch({ type: "CLEAR_CART" });
+    };
 
-    // const getOrderData = (): OrderData => {
-    //     return {
-    //         foods: state.items,
-    //         origin: state.origin,
-    //         destination: state.destination,
-    //         distance: state.distance,
-    //         additional_info: state.additional_info,
-    //     };
-    // };
+    const clearDeliveryInfo = () => dispatch({ type: "CLEAR_DELIVERY_INFO" });
+
 
 
     const contextValue: CartContextType = {
@@ -76,12 +72,10 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         getTotalPrice,
         incrementItem,
         decrementItem,
-        setDeliveryInfo
-        // setOrigin,
-        // setDestination,
-        // setDistance,
-        // setAdditionalInfo,
-        // getOrderData,
+        setDeliveryInfo,
+        clearCart,
+        clearDeliveryInfo
+
 
 
     };

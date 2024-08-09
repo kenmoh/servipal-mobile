@@ -40,6 +40,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 500,
     paddingHorizontal: 10,
-    paddingVertical: 2
+    paddingVertical: 2,
+    fontFamily: 'Poppins-Light',
+    fontSize: 11
   },
 });

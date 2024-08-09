@@ -12,7 +12,7 @@ const HDivider = () => {
         <View
             style={{
                 width: '100%',
-                backgroundColor: activeColor.borderColor,
+                backgroundColor: activeColor.profileCard,
                 marginVertical: 5,
                 flex: 1,
                 height: StyleSheet.hairlineWidth

@@ -17,9 +17,10 @@ const blurhash =
 
 dayjs.extend(relativeTime)
 
-const OrderCard = ({ order, isHomeScreen, }: { order: ItemOrderType, isHomeScreen?: boolean }) => {
+const OrderCard = ({ order, isHomeScreen, image }: { order: ItemOrderType, isHomeScreen?: boolean, image?: string }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+
   return (
     <Link href={`(order)/${order?.id}`} asChild>
       <TouchableOpacity>
@@ -27,7 +28,7 @@ const OrderCard = ({ order, isHomeScreen, }: { order: ItemOrderType, isHomeScree
           <View style={[styles.container]}>
             <View style={{ flex: 1 }}>
               <Image
-                source={order?.image_url}
+                source={image ? image : order?.image_url}
                 placeholder={{ blurhash }}
                 contentFit="cover"
                 transition={1000}
@@ -115,8 +116,8 @@ const OrderCard = ({ order, isHomeScreen, }: { order: ItemOrderType, isHomeScree
                   })}>
                     <Text
                       style={{
-                        fontSize: 15,
-                        fontFamily: "Poppins-SemiBold",
+                        fontSize: 10,
+                        fontFamily: "Poppins-Light",
                         color: Colors.btnPrimaryColor,
                       }}
                     >

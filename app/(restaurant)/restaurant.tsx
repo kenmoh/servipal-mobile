@@ -5,7 +5,7 @@ import { getRestaurantMeals } from "@/api/foods";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import FoodCard from "@/components/FoodCard";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import ViewCartBtn from "@/components/ViewCartBtn";
 import { useCart } from "@/components/CartProvider";
 import { StatusBar } from "expo-status-bar";
@@ -22,22 +22,45 @@ const RestaurantDetails = () => {
         queryFn: () => getRestaurantMeals(id),
     });
 
-
     return (
         <>
-            <StatusBar translucent style={theme.mode === 'dark' ? 'light' : 'dark'} backgroundColor={activeColor.background} />
+            <StatusBar
+                translucent
+                style={theme.mode === "dark" ? "light" : "dark"}
+                backgroundColor={activeColor.background}
+            />
             <Image
                 source={imageUrl}
-                // placeholder={{ blurhash }}
                 contentFit="cover"
                 transition={1000}
                 style={styles.image}
             />
-
+            <View
+                style={{
+                    padding: 10,
+                    marginBottom: 10,
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                    borderBottomColor: activeColor.borderColor
+                }}
+            >
+                <Text
+                    style={{
+                        fontFamily: "Poppins-SemiBold",
+                        textTransform: "capitalize",
+                        color: activeColor.text,
+                    }}
+                >
+                    {username || companyName}
+                </Text>
+                <Text
+                    style={[{ color: activeColor.text, fontFamily: "Poppins-Thin" }]}
+                >
+                    Address
+                </Text>
+            </View>
             <View
                 style={[styles.container, { backgroundColor: activeColor.background }]}
             >
-                <Text style={[{ color: activeColor.text }]}>RestaurantDetail</Text>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={meals?.data}
@@ -50,7 +73,7 @@ const RestaurantDetails = () => {
                             label="View cart"
                             totalItem={cart.foods.length}
                             totalCost={getTotalPrice().toFixed(2)}
-                            onPress={() => router.push('(restaurant)/deliveryInfo')}
+                            onPress={() => router.push("(restaurant)/deliveryInfo")}
                         />
                     </View>
                 )}
@@ -67,7 +90,7 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        height: Dimensions.get('screen').height * 0.15,
+        height: Dimensions.get("screen").height * 0.2,
         width: Dimensions.get("screen").width,
         alignSelf: "stretch",
         resizeMode: "cover",

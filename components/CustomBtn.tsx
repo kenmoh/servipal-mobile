@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "100%",
     flexDirection: 'row',
-    gap: 10
+    gap: 10, borderCurve: 'continuous'
   },
   text: {
     textTransform: "uppercase",

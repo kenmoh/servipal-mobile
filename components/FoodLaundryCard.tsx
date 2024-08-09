@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
         fontFamily: "Poppins-Thin",
     },
     image: {
-        height: "100%",
-        width: "100%",
+
+        aspectRatio: 4 / 2.25
     },
     wrapper: {
         gap: 3,

@@ -26,22 +26,15 @@ export interface CartState {
   additional_info: string;
 }
 
-// export interface CartState {
-//   items: CartItem[];
-//   additionalInfo: AdditionalInfo;
-// }
-
 type CartAction =
   | { type: "ADD_TO_CART"; payload: Omit<CartItem, "quantity"> }
   | { type: "REMOVE_FROM_CART"; payload: { id: string } }
+  | { type: "CLEAR_CART" }
+  | { type: "CLEAR_DELIVERY_INFO" }
   | { type: "UPDATE_QUANTITY"; payload: { id: string; quantity: number } }
   | { type: "INCREMENT_ITEM"; payload: { id: string } }
   | { type: "DECREMENT_ITEM"; payload: { id: string } }
   | { type: "SET_DELIVERY_INFO"; payload: Omit<CartState, "foods"> };
-// | { type: "SET_ORIGIN"; payload: string }
-// | { type: "SET_DESTINATION"; payload: string }
-// | { type: "SET_DISTANCE"; payload: number }
-// | { type: "SET_ADDITIONAL_INFO"; payload: string };
 
 export interface CartContextType {
   cart: CartState;
@@ -52,11 +45,8 @@ export interface CartContextType {
   decrementItem: (id: string) => void;
   getTotalPrice: () => number;
   setDeliveryInfo: (info: Omit<CartState, "foods">) => void;
-  // setOrigin: (origin: string) => void;
-  // setDestination: (destination: string) => void;
-  // setDistance: (distance: number) => void;
-  // setAdditionalInfo: (info: string) => void;
-  // getOrderData: () => OrderData;
+  clearCart: () => void;
+  clearDeliveryInfo: () => void;
 }
 
 export interface OrderData {
@@ -128,6 +118,24 @@ export const cartReducer = (
       };
     case "SET_DELIVERY_INFO":
       return { ...state, ...action.payload };
+
+    case "CLEAR_CART":
+      return {
+        foods: [],
+        origin: "",
+        destination: "",
+        distance: 0,
+        additional_info: "",
+      };
+
+    case "CLEAR_DELIVERY_INFO":
+      return {
+        ...state,
+        origin: "",
+        destination: "",
+        distance: 0,
+        additional_info: "",
+      };
     default:
       return state;
   }

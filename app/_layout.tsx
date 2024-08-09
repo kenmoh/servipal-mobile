@@ -1,25 +1,26 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-
+import { StatusBar, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import FlashMessage from "react-native-flash-message";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import * as NavigationBar from "expo-navigation-bar";
+
 import { ThemeContext, ThemeModeType } from "@/context/themeContext";
 import { getTheme, storeTheme } from "@/auth/storage";
 import AuthProvider from "@/components/AuthProvider";
-import CartProvider from "@/components/CartProvider";
+import CartProvider, { useCart } from "@/components/CartProvider";
 import { Colors } from "@/constants/Colors";
-import { StatusBar, View } from "react-native";
-
+import { AntDesign } from "@expo/vector-icons";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 const queryClient = new QueryClient();
 
 export const unstable_settings = {
-  initialRouteName: '/(tabs)',
+  initialRouteName: "/(tabs)",
 };
 
 type ThemeMode = {
@@ -29,6 +30,7 @@ type ThemeMode = {
 export default function RootLayout() {
   const [theme, setTheme] = useState<ThemeMode>({ mode: "light" });
   let activeColor = Colors[theme.mode];
+
 
   const [loaded, error] = useFonts({
     "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
@@ -68,6 +70,14 @@ export default function RootLayout() {
   };
 
   useEffect(() => {
+    if (theme.mode === "dark") {
+      NavigationBar.setBackgroundColorAsync("#18191c");
+    } else if (theme.mode === "light") {
+      NavigationBar.setBackgroundColorAsync("#ffffff");
+    }
+  }, [theme.mode]);
+
+  useEffect(() => {
     getStoredTheme();
   }, []);
 
@@ -83,42 +93,54 @@ export default function RootLayout() {
   }
 
   return (
-
     <>
       <QueryClientProvider client={queryClient}>
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
-
           <AuthProvider>
             <CartProvider>
-              <Stack screenOptions={{ contentStyle: { backgroundColor: activeColor.background } }}>
-                <Stack.Screen name="index" options={{ headerShown: false, }} />
-                <Stack.Screen name="cart" options={{
-                  animation: "fade_from_bottom",
-                  headerShadowVisible: false,
-                  headerStyle: {
-                    backgroundColor: activeColor.background,
-                  },
-                  headerTintColor: activeColor.text,
-                  headerTitleAlign: 'center',
-                  contentStyle: {
-                    backgroundColor: activeColor.background
-                  }
-                }} />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
-                <Stack.Screen name="(restaurant)" options={{ headerShown: false, }} />
-                <Stack.Screen name="(laundry)" options={{ headerShown: false, }} />
-                <Stack.Screen name="(p2p)" options={{ headerShown: false, }} />
-                <Stack.Screen name="(order)" options={{ headerShown: false }}
+              <Stack
+                screenOptions={{
+                  contentStyle: { backgroundColor: activeColor.background },
+                }}
+              >
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="cart"
+                  options={{
+                    title: "Cart",
+                    animation: "fade_from_bottom",
+                    headerShadowVisible: false,
+                    headerStyle: {
+                      backgroundColor: activeColor.background,
+                    },
+
+                    headerTintColor: activeColor.text,
+                    headerTitleAlign: "center",
+                    contentStyle: {
+                      backgroundColor: activeColor.background,
+                    },
+                  }}
                 />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(restaurant)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(laundry)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="(p2p)" options={{ headerShown: false }} />
+                <Stack.Screen name="(order)" options={{ headerShown: false }} />
               </Stack>
             </CartProvider>
           </AuthProvider>
 
-
-          <FlashMessage position={"top"} style={{ marginTop: StatusBar.currentHeight }} />
-
-
+          <FlashMessage
+            position={"top"}
+            style={{ marginTop: StatusBar.currentHeight }}
+          />
         </ThemeContext.Provider>
       </QueryClientProvider>
     </>

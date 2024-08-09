@@ -115,6 +115,7 @@ const DliveryInfo = () => {
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                             labelColor={activeColor.text}
+                                            inputHeight={70}
                                         />
                                         {touched.additional_info && errors.additional_info && (
                                             <InputErrorMessage error={errors.additional_info} />
@@ -124,6 +125,7 @@ const DliveryInfo = () => {
                                             <CustomBtn
                                                 label="submit"
                                                 btnBorderRadius={5}
+                                                btnHeight={50}
                                                 btnColor="orange"
                                                 onPress={handleSubmit}
                                             />

@@ -16,14 +16,9 @@ import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
-import { router } from "expo-router";
-import FloatingActionButton from "@/components/FloatingActionBtn";
-import { AntDesign } from "@expo/vector-icons";
-import ScreenWithFAB from "@/app/ScreenWithFAB";
 import { StatusBar } from "expo-status-bar";
 
 const index = () => {
-  const { user } = useAuth();
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   const [isHomeScreen, setIsHomeScreen] = useState(true);
@@ -43,7 +38,6 @@ const index = () => {
       focusManager.setFocused(status === "active");
     }
   }
-
   useEffect(() => {
     const subscription = AppState.addEventListener("change", onAppStateChange);
 
@@ -102,14 +96,13 @@ const index = () => {
       <FlatList
         data={order?.data}
         keyExtractor={(item) => item?.id}
-        renderItem={({ item }) => {
-          return (
-            item.order_status === "Pending" &&
-            item.payment_status === "paid" && (
-              <OrderCard order={item} isHomeScreen={isHomeScreen} />
-            )
-          );
-        }}
+        renderItem={({ item }) => (
+          item.order_status === "Pending" &&
+          item.payment_status === "paid" && item.order_type === 'delivery' && (
+            <OrderCard order={item} isHomeScreen={isHomeScreen} />
+          )
+        )
+        }
         estimatedItemSize={200}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}

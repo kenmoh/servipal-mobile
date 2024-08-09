@@ -1,130 +1,123 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import React, { useContext, useState } from "react";
-import { Image } from "expo-image";
-import { ThemeContext } from "@/context/themeContext";
+import { useContext, useEffect, useState } from "react";
+import OrderCard from "@/components/OrderCard";
 import { Colors } from "@/constants/Colors";
-import CustomBtn from "@/components/CustomBtn";
-import QuantityBtn from "@/components/quantityBtn";
-import { Stack } from "expo-router";
+import { focusManager, useQuery } from "@tanstack/react-query";
+import {
+    StyleSheet,
+    Text,
+    View,
+    FlatList,
+    ActivityIndicator,
+    Platform,
+    AppStateStatus,
+    AppState,
+} from "react-native";
+import ordersApi from "@/api/orders";
+import { ThemeContext } from "@/context/themeContext";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { useAuth } from "@/auth/authContext";
+import { StatusBar } from "expo-status-bar";
 
-const IMG_HEIGHT = Dimensions.get('screen').height * 0.35
+const imageUrl = "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png"
 
-type FoodDetailProps = {
-    name: string;
-    price: number;
-    description: string;
-    preparationTime: string;
-    quantity: number;
-    imageUrl: string;
-    onPress: () => void;
-};
-
-const InfoText = ({
-    label,
-    item,
-}: {
-    label: string;
-    item: string | number;
-}) => {
+const CompletedOrders = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    return (
-        <>
+    const [isHomeScreen, setIsHomeScreen] = useState(true);
+    const {
+        data: orders,
+        error,
+        isLoading,
+        isFetching,
+        refetch,
+    } = useQuery({
+        queryKey: ["foodOrders"],
+        queryFn: ordersApi.getFoodOrders,
+    });
+
+
+
+    function onAppStateChange(status: AppStateStatus) {
+        if (Platform.OS !== "web") {
+            focusManager.setFocused(status === "active");
+        }
+    }
+    useEffect(() => {
+        const subscription = AppState.addEventListener("change", onAppStateChange);
+
+        return () => subscription.remove();
+    }, []);
+
+    const handleRefresch = () => refetch();
+
+    useRefreshOnFocus(refetch);
+
+    if (isLoading || isFetching) {
+        return (
             <View
                 style={{
-                    flexDirection: "row",
-                    gap: 10,
-                    marginVertical: 5,
+                    flex: 1,
                     backgroundColor: activeColor.background,
+                    alignItems: "center",
+                    justifyContent: "center",
                 }}
             >
-                <Text
-                    style={{
-                        color: activeColor.text,
-                        fontFamily: "Poppins-Bold",
-                        fontSize: 12,
-                    }}
-                >
-                    {label}
-                </Text>
-                <Text
-                    style={{
-                        color: activeColor.text,
-                        fontFamily: "Poppins-Light",
-                        fontSize: 12,
-                    }}
-                >
-                    {item}
-                </Text>
+                <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
             </View>
-        </>
-    );
-};
+        );
+    }
+    if (error) {
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: activeColor.background,
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <Text>Something went wrong!</Text>
+        </View>;
+    }
+    if (!orders?.data) {
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: activeColor.background,
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <Text>No Order yet</Text>
+        </View>;
+    }
 
-const FoodDetails = ({
-    name,
-    price,
-    description,
-    preparationTime,
-    quantity,
-    onPress,
-    imageUrl,
-}: FoodDetailProps) => {
-    const [totalPrice, setTotalPrice] = useState(0)
-    const { theme } = useContext(ThemeContext);
-    let activeColor = Colors[theme.mode];
     return (
-        <>
-            <Stack />
-            <View
-                style={[styles.container, { backgroundColor: activeColor.background }]}
-            >
-                <Image source={imageUrl} style={{ height: IMG_HEIGHT, objectFit: 'cover' }} />
-                <View
-                    style={{
-                        flexDirection: "row",
-                        gap: 10,
-                        backgroundColor: activeColor.background,
-                    }}
-                >
-                    <Text style={[styles.text, { color: activeColor.text }]}>{name}</Text>
-                    <Text style={[styles.text, { color: activeColor.text }]}>
-                        ₦ {price}
-                    </Text>
-                </View>
-                <View>
-                    <InfoText label="Descriprion" item={description} />
-                    <InfoText label="Preparation Time" item={preparationTime} />
-                </View>
-                <View style={styles.btnContainer}>
-                    <QuantityBtn inCreament={onPress} deCreament={onPress} quantity={quantity} />
-                    <CustomBtn
-                        label={`Add ${totalPrice}`}
-                        btnBorderRadius={5}
-                        btnColor={Colors.btnPrimaryColor}
-                        onPress={() => { }}
-                    />
-                </View>
-            </View>
-        </>
+        <View style={{ flex: 1, backgroundColor: activeColor.background }}>
+            <StatusBar
+                backgroundColor={activeColor.background}
+                style={theme.mode === "dark" ? "light" : "dark"}
+            />
+            <FlatList
+                data={orders?.data}
+                keyExtractor={(item) => item?.id}
+                renderItem={({ item }) => (
+                    item.order_status === "Received" &&
+                    item.order_type === 'food' && (
+                        <OrderCard order={item} isHomeScreen={isHomeScreen} image={imageUrl} />
+                    )
+                )
+                }
+                estimatedItemSize={200}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                vertical
+                refreshing={isFetching}
+                onRefresh={handleRefresch}
+            />
+        </View>
     );
 };
 
-export default FoodDetails;
+export default CompletedOrders;
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    text: {
-        fontFamily: "Poppins-Bold",
-        fontSize: 14,
-    },
-    btnContainer: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-});
+const styles = StyleSheet.create({});

@@ -42,6 +42,7 @@ const myOrder = () => {
     queryFn: orderApi.getVendorListings,
   });
 
+  console.log(order?.data)
   const handleRefresch = () => refetch()
   useRefreshOnFocus(refetch)
 

@@ -20,12 +20,16 @@ const FoodOrderLayout = () => {
             color: activeColor.icon,
             fontSize: 12,
             textTransform: 'capitalize',
-            fontFamily: 'Poppins-Bold',
+            fontFamily: 'Poppins-SemiBold',
             textAlign: 'center',
             marginBottom: -15,
-            marginLeft: -10,
 
           },
+          tabBarItemStyle: {
+            width: 100,
+            alignContent: 'center'
+          },
+          tabBarScrollEnabled: true,
           tabBarAndroidRipple: {
             borderless: false
           },
@@ -38,12 +42,13 @@ const FoodOrderLayout = () => {
             backgroundColor: activeColor.background,
           },
 
+
         }}
       >
         <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
-        <FoodTabBar.Screen name="delivery" options={{ title: "Pickup" }} />
+        <FoodTabBar.Screen name="delivery" options={{ title: "Orders" }} />
         <FoodTabBar.Screen name="foodOrders" options={{ title: "Pending" }} />
-        <FoodTabBar.Screen name="completed" options={{ title: "completed" }} />
+        <FoodTabBar.Screen name="completed" options={{ title: "Completed" }} />
       </FoodTabBar>
     </ScreenWithFAB>
   );

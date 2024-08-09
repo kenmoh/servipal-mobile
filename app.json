@@ -7,16 +7,10 @@
     "icon": "./assets/images/icon.png",
     "scheme": "com.onrender.quickpickup",
     "userInterfaceStyle": "automatic",
-    // "androidNavigationBar": {
-    //   "backgroundColor": "#0D1117", 
-    //   "barStyle": "light-content" ,
-    //   "visible": "sticky-immersive"
-  
-    // },
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0D1117"
     },
     "ios": {
       "supportsTablet": true,
@@ -25,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#0D1117"
       },
       "package": "com.swiftmart"
     },

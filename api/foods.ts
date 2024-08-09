@@ -9,10 +9,21 @@ export const getFoods = async () => await client.get(`${food}`);
 export const getFoodCategories = async () =>
   await client.get(`${food}/category`);
 export const getCategories = async () => await client.get(`${food}/category`);
-export const getUserByMealCategory = async (category?: string | null) =>
-  await client.get(`${user}/get-user-by-meal-category`, {
-    params: category ? { category } : {},
-  });
+export const getUserByMealCategory = async (
+  category?: string | string[] | null
+) => {
+  let query = "";
+  if (typeof category === "string") {
+    query = `?category=${category}`;
+  } else if (Array.isArray(category)) {
+    query = `?${category.map((c) => `category=${c}`).join("&")}`;
+  }
+  const response = await client.get(
+    `${user}/get-user-by-meal-category${query}`
+  );
+
+  return response;
+};
 export const getRestaurantMeals = async (userId: string) =>
   await client.get(`${food}/${userId}/restaurant-food`);
 

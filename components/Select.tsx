@@ -8,6 +8,7 @@ const Select = ({
     data,
     value,
     onChange,
+    borderRadius = 50,
     // hasBorder = false,
     // inputBorderWidth = hasBorder ? StyleSheet.hairlineWidth : 0,
     // inputBackgroundColor = hasBorder ? "white" : "#eee",
@@ -35,8 +36,8 @@ const Select = ({
                     styles.dropdown,
                     {
                         backgroundColor: activeColor.inputBackground,
-                        borderRadius: hasBorder ? 5 : 0,
-                        borderWidth: hasBorder ? StyleSheet.hairlineWidth : 0
+                        borderRadius: borderRadius,
+
                     },
                 ]}
 
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         paddingHorizontal: 10,
         paddingVertical: 5,
+
     },
     icon: {
         marginRight: 5,
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
 
     selectedTextStyle: {
         fontSize: 14,
-        fontFamily: "Poppins-SemiBold",
+        fontFamily: "Poppins-Light",
     },
     iconStyle: {
         width: 20,
@@ -96,5 +98,6 @@ const styles = StyleSheet.create({
     inputSearchStyle: {
         height: 40,
         fontSize: 16,
+
     },
 });

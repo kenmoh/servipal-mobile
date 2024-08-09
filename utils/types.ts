@@ -6,6 +6,7 @@ export type OrderStatus =
   | "Cancelled";
 
 type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
+type OrderType = "delivery" | "food" | "laundry";
 
 type AccountStatus = "pending" | "confirmed";
 
@@ -25,7 +26,7 @@ type Item = {
   payment_status: PaymentStatus;
   payment_url: string;
   vendor_phone_number: string;
-  order_type: string;
+  order_type: OrderType;
   created_at: string;
   updated_at: string;
 };
@@ -35,7 +36,7 @@ export interface IOrderBase {
   total_cost: number;
   order_status: OrderStatus;
   payment_status: PaymentStatus;
-  order_type: "string";
+  order_type: OrderType;
   payment_url: "string";
   vendor_username: "string";
   delivery_fee: number;
@@ -93,6 +94,7 @@ export type ItemOrderType = {
   amount_payable_delivery: number;
   order_photo_url: string;
   order_status?: OrderStatus;
+  order_type?: OrderType;
   deduction: number;
   payment_status: PaymentStatus;
   payment_url: string;
@@ -231,4 +233,48 @@ export type AddMealType = {
   side?: string;
   ingredients: string;
   image: string;
+};
+
+type Food = {
+  id: string;
+  vendor_id: string;
+  name: string;
+  price: string;
+  quantity: number;
+  side: string;
+  ingredients: string;
+  image_url: string;
+};
+
+export type FoodReturnType = {
+  id: string;
+  amount_payable_food: string;
+  commission_food: string;
+  delivery_fee: string;
+  food_cost: string;
+  total_cost: string;
+  order_status: string;
+  payment_status: string;
+  order_type: string;
+  payment_url: string;
+  order_owner_username: string;
+  dispatch_company_phone_number: string;
+  vendor_phone_number: string;
+  order_owner_phone_number: string;
+  dispatch_company_name: string;
+  rider_phone_number: string;
+  rider_image_url: string;
+  rider_name: string;
+  rider_bike_plate_number: string;
+  foods: Food[];
+  created_at: string;
+  updated_at: string;
+};
+
+export type CartSummaryType = {
+  id: string;
+  foods?: Food[];
+  delivery_fee: number;
+  food_cost?: number;
+  total_cost: null;
 };

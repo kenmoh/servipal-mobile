@@ -43,6 +43,19 @@ const RestaurantLayout = () => {
 
                 }
             }} />
+
+            <Stack.Screen name="payment" options={{
+                title: 'Make Payment',
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerTintColor: activeColor.text,
+                headerStyle: {
+                    backgroundColor: activeColor.background,
+
+
+                }
+
+            }} />
         </Stack>
     )
 }
