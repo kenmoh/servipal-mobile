@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Colors } from "@/constants/Colors";
 import { focusManager, useQuery } from "@tanstack/react-query";
 import {
@@ -10,7 +10,7 @@ import {
     Platform,
     AppStateStatus,
     AppState,
-    ScrollView,
+    Dimensions,
 } from "react-native";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
@@ -26,18 +26,19 @@ type CategoryType = {
     id: number;
 };
 const index = () => {
-
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [selectedCategory, setSelectedCategory] = useState<string | null>('pasta');
-    const categoryScrollViewRef = useRef<ScrollView>(null);
-    const [buttonWidths, setButtonWidths] = useState<number[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(
+        "pasta"
+    );
+    const [index, setIndex] = useState(3);
+    const ref = useRef<FlatList<CategoryType>>(null);
+    const screenWidth = Dimensions.get('window').width
 
     const { data: categories } = useQuery({
         queryKey: ["categories"],
         queryFn: getCategories,
     });
-
 
     const {
         data: restaurants,
@@ -45,7 +46,6 @@ const index = () => {
         isLoading,
         isFetching,
         refetch,
-
     } = useQuery({
         queryKey: ["usersByMeal", selectedCategory],
         queryFn: () => getUserByMealCategory(selectedCategory),
@@ -53,30 +53,21 @@ const index = () => {
     });
 
 
-
-    const handleCategoryPress = (category: CategoryType, index: number) => {
-        const xOffset = buttonWidths.slice(0, index).reduce((total, width) => total + width, 0);
+    const handleCategoryPress = (category: CategoryType) => {
         setSelectedCategory(category.name);
-        categoryScrollViewRef?.current?.scrollTo({ x: xOffset, animated: true })
 
+        ref.current?.scrollToItem({
+            animated: true,
+            item: category,
+            viewPosition: 0.5,
+        });
     };
 
 
-    function onAppStateChange(status: AppStateStatus) {
-        if (Platform.OS !== "web") {
-            focusManager.setFocused(status === "active");
-        }
-    }
 
-    useEffect(() => {
-        const subscription = AppState.addEventListener("change", onAppStateChange);
-
-        return () => subscription.remove();
-    }, []);
 
     const handleRefresch = () => refetch();
 
-    useRefreshOnFocus(refetch);
 
     if (isLoading || isFetching) {
         return (
@@ -125,16 +116,23 @@ const index = () => {
                 backgroundColor={activeColor.background}
                 style={theme.mode === "dark" ? "light" : "dark"}
             />
-            <ScrollView ref={categoryScrollViewRef} horizontal showsHorizontalScrollIndicator={false}>
-                {categories?.data?.map((category: CategoryType, index: number) => (
+            <FlatList
+                ref={ref}
+                data={categories?.data}
+                keyExtractor={(item) => item?.id?.toString()}
+                key={2}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                renderItem={({ item }) => (
                     <CategoryBtn
-                        label={category?.name}
-                        key={category.id}
-                        isSelected={category.name === selectedCategory}
-                        onPress={() => handleCategoryPress(category, index)}
+                        label={item?.name}
+                        key={item.id}
+                        isSelected={item.name === selectedCategory}
+                        onPress={() => handleCategoryPress(item)}
                     />
-                ))}
-            </ScrollView>
+                )}
+            />
+
             <FlatList
                 data={restaurants?.data}
                 keyExtractor={(item) => item.id.toString()}

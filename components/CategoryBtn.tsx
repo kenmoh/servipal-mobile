@@ -39,14 +39,15 @@ export default CategoryBtn;
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 25,
+        borderRadius: 5,
         maxWidth: 400,
-        padding: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
         opacity: 0.5,
         alignItems: "center",
         marginVertical: 10,
         marginHorizontal: 5,
         justifyContent: 'center',
-        height: 40
+        height: 30
     },
 });

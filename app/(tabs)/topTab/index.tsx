@@ -33,6 +33,7 @@ const index = () => {
     queryFn: ordersApi.getItemOrders,
   });
 
+
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
       focusManager.setFocused(status === "active");

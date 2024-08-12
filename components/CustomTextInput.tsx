@@ -15,10 +15,6 @@ type InputProps = {
   secureTextEntry?: boolean;
   keyboardType?: KeyboardTypeOptions;
   inputHeight?: number
-  // inputBorderWidth?: number;
-  // inputBorderColor?: string;
-  // inputBackgroundColor?: string;
-  // hasBorder?: boolean;
   labelColor?: string;
   inputTextColor: string;
   borderRadius?: number

@@ -8,11 +8,8 @@ const Select = ({
     data,
     value,
     onChange,
-    borderRadius = 50,
-    // hasBorder = false,
-    // inputBorderWidth = hasBorder ? StyleSheet.hairlineWidth : 0,
-    // inputBackgroundColor = hasBorder ? "white" : "#eee",
-    // borderRadius = hasBorder ? 5 : 0,
+    borderRadius = 5,
+    label = 'Location',
     ...props
 }) => {
     const { theme } = useContext(ThemeContext);
@@ -26,10 +23,11 @@ const Select = ({
                 style={{
                     color: activeColor.text,
                     fontSize: 14,
-                    fontFamily: "Poppins-Bold",
+                    fontFamily: "Poppins-Medium",
+                    marginTop: 12
                 }}
             >
-                Location
+                {label}
             </Text>
             <Dropdown
                 style={[
@@ -60,7 +58,7 @@ const Select = ({
                 searchPlaceholder="Search..."
                 containerStyle={{ backgroundColor: activeColor.background }}
                 activeColor={activeColor.inputBackground}
-                fontFamily="Poppins-Bold"
+                fontFamily="Poppins-Light"
                 itemTextStyle={{ color: activeColor.text, fontSize: 14 }}
                 value={value}
                 onChange={(item) => {
@@ -81,6 +79,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         paddingHorizontal: 10,
         paddingVertical: 5,
+        marginVertical: 5
 
     },
     icon: {

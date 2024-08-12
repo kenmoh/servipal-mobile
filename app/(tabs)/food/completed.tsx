@@ -17,6 +17,7 @@ import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
+import { usePathname } from "expo-router";
 
 const imageUrl = "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png"
 
@@ -24,6 +25,7 @@ const CompletedOrders = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [isHomeScreen, setIsHomeScreen] = useState(true);
+
     const {
         data: orders,
         error,

@@ -25,7 +25,10 @@ const Status = ({
         },
       ]}
     >
-      <Text style={{ color: textColor, textTransform: "capitalize" }}>
+      <Text style={{
+        color: textColor, textTransform: "capitalize", fontFamily: 'Poppins-Light',
+        fontSize: 12
+      }}>
         {text}
       </Text>
     </TouchableOpacity>
@@ -41,7 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: 500,
     paddingHorizontal: 10,
     paddingVertical: 2,
-    fontFamily: 'Poppins-Light',
-    fontSize: 11
+
   },
 });

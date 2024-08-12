@@ -1,4 +1,4 @@
-import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getRestaurantMeals } from "@/api/foods";
@@ -17,10 +17,50 @@ const RestaurantDetails = () => {
     const { id, username, companyName, imageUrl } = useLocalSearchParams();
     const { cart, getTotalPrice } = useCart();
 
-    const { data: meals } = useQuery({
+    const { data: meals, isFetching, isLoading, error } = useQuery({
         queryKey: ["restaurant", id],
         queryFn: () => getRestaurantMeals(id),
     });
+
+    if (isLoading || isFetching) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: activeColor.background,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
+            </View>
+        );
+    }
+    if (error) {
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: activeColor.background,
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <Text>Something went wrong!</Text>
+        </View>;
+    }
+    if (!meals?.data) {
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: activeColor.background,
+                alignItems: "center",
+                justifyContent: "center",
+            }}
+        >
+            <Text>No Order yet</Text>
+        </View>;
+    }
+
 
     return (
         <>

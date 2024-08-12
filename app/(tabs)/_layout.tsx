@@ -63,6 +63,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+
         tabBarActiveTintColor: activeColor.text,
         headerTitleAlign: "center",
         headerTintColor: activeColor.text,
@@ -70,11 +71,12 @@ export default function TabLayout() {
           borderTopWidth: StyleSheet.hairlineWidth,
           backgroundColor: activeColor.background,
           height: 70,
-          borderTopColor: activeColor.profileCard
+          borderTopColor: activeColor.profileCard,
         },
         tabBarLabelStyle: {
           fontSize: 12,
-          marginBottom: 10
+          marginBottom: 10,
+
         },
         tabBarIconStyle: {
           marginTop: 10

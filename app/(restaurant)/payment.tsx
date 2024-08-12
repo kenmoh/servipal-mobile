@@ -7,7 +7,7 @@ import {
     Dimensions,
     ScrollView,
 } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { WebView } from "react-native-webview";
@@ -18,7 +18,7 @@ import client from "@/api/client";
 import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
 
-const TIME_OUT = 3000;
+const TIME_OUT = 2000;
 
 type TransferBtnType = {
     onPress: () => void;
@@ -128,6 +128,9 @@ const payment = () => {
     const { paymentUrl, totalCost, id, foodCost, foods, deliveryFee } = params;
     const meals = JSON.parse(foods);
 
+
+
+
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
     const handleOpenWebView = () => {
@@ -153,7 +156,7 @@ const payment = () => {
                 },
             });
             setTimeout(() => {
-                router.push("/(tabs)/food/completed");
+                router.push("/food/completed");
             }, TIME_OUT);
         }
         if (response.ok) {
@@ -167,7 +170,7 @@ const payment = () => {
             });
 
             setTimeout(() => {
-                router.push("/(tabs)/food/completed");
+                router.push("/food/completed");
             }, TIME_OUT);
         }
     };
@@ -198,7 +201,7 @@ const payment = () => {
                 type: "success",
             });
             setTimeout(() => {
-                router.push("/(tabs)/food/delivered");
+                router.push("food/completed");
             }, TIME_OUT);
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
@@ -208,7 +211,7 @@ const payment = () => {
                 type: "danger",
             });
             setTimeout(() => {
-                router.push("/(tabs)/food/completed");
+                router.push("food/completed");
             }, TIME_OUT);
         }
     }, [status]);
@@ -243,7 +246,7 @@ const payment = () => {
                                     amount={parseInt(meal.price) * parseInt(meal.quantity)}
                                     quantity={meal.quantity}
                                     key={meal.id}
-                                    textColor={activeColor.text}
+                                    textColor={activeColor.icon}
                                 />
                             ))}
                             <HDivider />
@@ -251,12 +254,12 @@ const payment = () => {
                                 <Label
                                     label="Delivery Feee"
                                     amount={deliveryFee}
-                                    textColor={activeColor.text}
+                                    textColor={activeColor.icon}
                                 />
                                 <Label
                                     label="Food Cost"
                                     amount={foodCost}
-                                    textColor={activeColor.text}
+                                    textColor={activeColor.icon}
                                 />
                                 <Label
                                     label="TOTAL COST"
@@ -267,7 +270,7 @@ const payment = () => {
                         </ScrollView>
                         <View
                             style={{
-                                bottom: 20,
+                                bottom: 35,
                                 left: 10,
                                 right: 10,
                                 position: "absolute",
@@ -348,7 +351,7 @@ const styles = StyleSheet.create({
     },
 
     btnText: {
-        fontFamily: "Poppins-Light",
+        fontFamily: "Poppins-Medium",
         fontSize: 14,
     },
 

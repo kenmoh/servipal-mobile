@@ -18,6 +18,7 @@ import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
 
+
 const imageUrl =
     "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png";
 
@@ -25,7 +26,7 @@ const UserOrders = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth();
-    const [isHomeScreen, setIsHomeScreen] = useState(true);
+
     const {
         data: orders,
         error,
@@ -36,7 +37,7 @@ const UserOrders = () => {
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
     });
-    console.log(orders?.data[0])
+
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
             focusManager.setFocused(status === "active");

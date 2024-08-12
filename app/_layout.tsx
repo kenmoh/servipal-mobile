@@ -7,16 +7,18 @@ import "react-native-reanimated";
 import FlashMessage from "react-native-flash-message";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import * as NavigationBar from "expo-navigation-bar";
+import * as SystemUI from 'expo-system-ui'
 
 import { ThemeContext, ThemeModeType } from "@/context/themeContext";
 import { getTheme, storeTheme } from "@/auth/storage";
 import AuthProvider from "@/components/AuthProvider";
-import CartProvider, { useCart } from "@/components/CartProvider";
+import CartProvider from "@/components/CartProvider";
 import { Colors } from "@/constants/Colors";
-import { AntDesign } from "@expo/vector-icons";
+
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
 const queryClient = new QueryClient();
 
 export const unstable_settings = {
@@ -30,6 +32,9 @@ type ThemeMode = {
 export default function RootLayout() {
   const [theme, setTheme] = useState<ThemeMode>({ mode: "light" });
   let activeColor = Colors[theme.mode];
+
+  SystemUI.setBackgroundColorAsync(activeColor.background)
+
 
 
   const [loaded, error] = useFonts({

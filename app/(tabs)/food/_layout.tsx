@@ -25,6 +25,7 @@ const FoodOrderLayout = () => {
             marginBottom: -15,
 
           },
+
           tabBarItemStyle: {
             width: 100,
             alignContent: 'center'
@@ -46,6 +47,7 @@ const FoodOrderLayout = () => {
         }}
       >
         <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
+        {/* <FoodTabBar.Screen name="(restaurant)" options={{ title: "mw", tabBarButton: () => null }} /> */}
         <FoodTabBar.Screen name="delivery" options={{ title: "Orders" }} />
         <FoodTabBar.Screen name="foodOrders" options={{ title: "Pending" }} />
         <FoodTabBar.Screen name="completed" options={{ title: "Completed" }} />

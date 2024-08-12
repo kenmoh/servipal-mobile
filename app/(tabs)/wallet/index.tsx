@@ -88,7 +88,7 @@ const wallet = () => {
       >
         <WalletCard wallet={data?.data} user={user!} />
       </LinearGradient>
-      <SafeAreaView
+      <View
         style={[styles.container, { backgroundColor: activeColor.background }]}
       >
         <Text
@@ -97,6 +97,7 @@ const wallet = () => {
             fontFamily: "Poppins-SemiBold",
             fontSize: 16,
             letterSpacing: 2.5,
+            marginTop: 10
           }}
         >
           Transactions
@@ -115,7 +116,7 @@ const wallet = () => {
           onRefresh={handleRefresch}
           stickyHeaderIndices={[0]}
         />
-      </SafeAreaView>
+      </View>
     </>
   );
 };

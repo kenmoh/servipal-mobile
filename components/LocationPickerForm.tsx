@@ -8,22 +8,23 @@ import { useFormikContext } from "formik";
 import InputErrorMessage from "./InputErrorMessage";
 import Select from "./Select";
 
-type Option = {
+type StatleOption = {
     state: string
     capital: string
 }
 
 type LocationType = {
     field: string
-    locations: Option[]
+    locations: StatleOption[],
+    label: string
 }
 
-const LocationPickerForm = ({ field, locations, ...props }: LocationType) => {
+const LocationPickerForm = ({ field, locations, label, ...props }: LocationType) => {
     const { setFieldValue, touched, errors, values } = useFormikContext();
 
     return (
         <>
-            <Select data={locations} value={values[field]} onChange={(location: string) => setFieldValue(field, location)} {...props} />
+            <Select label={label} data={locations} value={values[field]} onChange={(location: string) => setFieldValue(field, location)} {...props} />
             <InputErrorMessage error={errors[field]} visible={touched[field]} />
         </>
     );

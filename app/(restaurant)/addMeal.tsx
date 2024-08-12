@@ -16,36 +16,40 @@ import { useContext, useEffect, useState } from "react";
 import { AddMealType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
+import { Picker } from '@react-native-picker/picker';
+
+
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { addMeal, getCategories } from "@/api/foods";
-import LocationPickerForm from "@/components/LocationPickerForm";
+import CategoryPicker from "@/components/CategoryPicker";
 
 type CategoryType = {
+    id: number
     name: string
 }
 const AddMeal = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [categories, setCategories] = useState([])
 
     const { error, isSuccess, mutate, isPending, data } = useMutation<AddMealType>({
         mutationFn: (meal: AddMealType) => addMeal(meal),
     });
 
-    const { data: categoriesData } = useQuery({
+    const { data: categoriesData } = useQuery<CategoryType[]>({
         queryKey: ['categories'],
-        queryFn: getCategories
+        queryFn: getCategories,
+
     })
+
+
+    // useEffect(() => {
+    //     if (categoriesData) {
+    //         const categoryNames = categoriesData?.data.map((category: CategoryType) => category.name);
+    //         setCategories(categoryNames);
+    //     }
+    // }, [categoriesData]);
+
     console.log(categoriesData?.data)
-
-    useEffect(() => {
-        if (categoriesData) {
-            const categoryNames = categoriesData?.data.map((category: CategoryType) => category.name);
-            setCategories(categoryNames);
-        }
-    }, [categoriesData]);
-
-    console.log(categories)
 
     useEffect(() => {
 
@@ -61,7 +65,7 @@ const AddMeal = () => {
         }
         if (isSuccess) {
             showMessage({
-                message: "Order added successfully.",
+                message: "Meal successfully.",
                 type: "success",
                 style: {
                     alignItems: "center",
@@ -124,19 +128,16 @@ const AddMeal = () => {
                                         {touched.price && errors.price && (
                                             <InputErrorMessage error={errors.price} />
                                         )}
-                                        {/* <CustomTextInput
-                                            onChangeText={handleChange("category")}
-                                            value={values.category}
-                                            labelColor={activeColor.text}
-                                            label="Category"
-                                            hasBorder={theme.mode !== "dark"}
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.category && errors.category && (
-                                            <InputErrorMessage error={errors.category} />
-                                        )} */}
-                                        <LocationPickerForm field={"location"} locations={categories} hasBorder={theme.mode !== "dark"} />
+                                        {/* <Picker
+                                            selectedValue={selectedLanguage}
+                                            onValueChange={(itemValue, itemIndex) =>
+                                                setSelectedLanguage(itemValue)
+                                            }>
+                                            <Picker.Item label="Java" value="java" />
+                                            <Picker.Item label="JavaScript" value="js" />
+                                        </Picker> */}
+
+
                                     </View>
                                 </View>
                                 <View style={styles.container}>
@@ -168,6 +169,8 @@ const AddMeal = () => {
                                         {touched.ingredients && errors.ingredients && (
                                             <InputErrorMessage error={errors.ingredients} />
                                         )}
+                                        <CategoryPicker categories={categoriesData?.data} field="category" />
+                                        {/* <LocationPickerForm field={"category"} locations={categoriesData?.data} label="Category" /> */}
                                         <ImagePickerForm field={"image"} />
 
                                         <View style={styles.btnContainer}>
