@@ -56,6 +56,13 @@ export interface OrderData {
   distance: number;
   additional_info: string;
 }
+export interface LaundryOrderData {
+  laundries: CartItem[];
+  origin: string;
+  destination: string;
+  distance: number;
+  additional_info: string;
+}
 
 export const CartContext = createContext<CartContextType | undefined>(
   undefined

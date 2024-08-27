@@ -5,7 +5,7 @@ import { useFormikContext } from "formik";
 import AppImagePicker from "./AppImagePicker";
 import InputErrorMessage from "./InputErrorMessage";
 
-const ImagePickerForm = ({ field }) => {
+const ImagePickerForm = ({ field }: { field: string }) => {
   const { setFieldValue, touched, errors, values } = useFormikContext();
 
   const handleAdd = (uri: string) => {

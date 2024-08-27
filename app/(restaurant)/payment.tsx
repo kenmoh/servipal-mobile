@@ -18,7 +18,7 @@ import client from "@/api/client";
 import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
 
-const TIME_OUT = 2000;
+const TIME_OUT = 1200;
 
 type TransferBtnType = {
     onPress: () => void;
@@ -124,8 +124,7 @@ const payment = () => {
     const [showWebView, setShowWebView] = useState(false);
     const [redirectedUrl, setRedirectedUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const params = useLocalSearchParams<FoodParams>();
-    const { paymentUrl, totalCost, id, foodCost, foods, deliveryFee } = params;
+    const { paymentUrl, totalCost, id, foodCost, foods, deliveryFee } = useLocalSearchParams<FoodParams>();
     const meals = JSON.parse(foods);
 
 
@@ -156,7 +155,7 @@ const payment = () => {
                 },
             });
             setTimeout(() => {
-                router.push("/food/completed");
+                router.push("/(drawer)/stats");
             }, TIME_OUT);
         }
         if (response.ok) {
@@ -170,7 +169,7 @@ const payment = () => {
             });
 
             setTimeout(() => {
-                router.push("/food/completed");
+                router.push("/(drawer)/topTab");
             }, TIME_OUT);
         }
     };
@@ -201,7 +200,7 @@ const payment = () => {
                 type: "success",
             });
             setTimeout(() => {
-                router.push("food/completed");
+                router.push("(drawer)/topTab");
             }, TIME_OUT);
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
@@ -211,7 +210,7 @@ const payment = () => {
                 type: "danger",
             });
             setTimeout(() => {
-                router.push("food/completed");
+                router.push("(drawer)/stats");
             }, TIME_OUT);
         }
     }, [status]);
@@ -257,7 +256,7 @@ const payment = () => {
                                     textColor={activeColor.icon}
                                 />
                                 <Label
-                                    label="Food Cost"
+                                    label="Food/Laundry Cost"
                                     amount={foodCost}
                                     textColor={activeColor.icon}
                                 />

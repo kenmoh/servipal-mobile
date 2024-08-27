@@ -1,5 +1,5 @@
 import client from "@/api/client";
-import { CartState, OrderData } from "@/auth/cartContext";
+import { CartState, LaundryOrderData, OrderData } from "@/auth/cartContext";
 import { CreateOrderType } from "@/utils/types";
 
 const endpoint = "/orders";
@@ -12,7 +12,7 @@ const getFoodOrders = async () => await client.get(`${endpoint}/food-orders`);
 
 // Get laundry orders
 const getLaundryOrders = async () =>
-  await client.get(`/${endpoint}/laundry-orders`);
+  await client.get(`${endpoint}/laundry-orders`);
 
 // Get order by Sender
 const getVendorListings = async () =>
@@ -21,8 +21,22 @@ const getVendorListings = async () =>
 // Get order by Dispatch
 const getUserListings = () => client.get(`${endpoint}/user-orders`);
 
+// get package details
 const orderItemDetails = async (orderId: string) =>
   await client.get(`${endpoint}/${orderId}/item-order`);
+
+// Food details
+const getFoodDetails = async (orderId: string, orderType: string = "food") =>
+  await client.get(`${endpoint}/${orderId}/item-food?order_type=${orderType}`);
+
+// Laundry details
+const getLaundryDetails = async (
+  orderId: string,
+  orderType: string = "laundry"
+) =>
+  await client.get(
+    `${endpoint}/${orderId}/item-laundry?order_type=${orderType}`
+  );
 
 // Pickup order by dispatch/rider
 const pickUpOrder = (order_id: string) =>
@@ -60,6 +74,25 @@ const orderFood = async (vendorId: string, item: OrderData) => {
 
   const response = await client.post(
     `${endpoint}/${vendorId}/order-food`,
+    data
+  );
+
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  return response.data;
+};
+const orderLaundry = async (vendorId: string, item: LaundryOrderData) => {
+  const data = {
+    laundries: item.laundries,
+    origin: item.origin,
+    destination: item.destination,
+    distance: item.distance,
+    additional_info: item.additional_info,
+  };
+
+  const response = await client.post(
+    `${endpoint}/${vendorId}/order-laundry`,
     data
   );
 
@@ -109,4 +142,7 @@ export default {
   orderReceived,
   relistOrderByVendor,
   orderFood,
+  orderLaundry,
+  getFoodDetails,
+  getLaundryDetails,
 };

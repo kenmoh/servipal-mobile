@@ -7,7 +7,7 @@ const storeToken = async (authToken: string) => {
   try {
     await SecureStore.setItemAsync(key, authToken);
   } catch (error) {
-    throw error;
+    throw new Error("Error storing auth token", error!);
   }
 };
 
@@ -20,7 +20,7 @@ const getToken = async () => {
   try {
     return await SecureStore.getItemAsync(key);
   } catch (error) {
-    throw error;
+    throw new Error("Error getting auth token", error!);
   }
 };
 
@@ -28,7 +28,7 @@ const removeToken = async () => {
   try {
     await SecureStore.deleteItemAsync(key);
   } catch (error) {
-    throw error;
+    throw new Error("Error deleting auth token", error!);
   }
 };
 
@@ -36,7 +36,7 @@ export const storeTheme = async (key: string, value: ThemeModeType) => {
   try {
     await SecureStore.setItemAsync(key, JSON.stringify(value));
   } catch (error) {
-    throw error;
+    throw new Error("Error storing app theme", error!);
   }
 };
 export const getTheme = async (key: string) => {
@@ -49,7 +49,7 @@ export const getTheme = async (key: string) => {
       return null;
     }
   } catch (error) {
-    throw error;
+    throw new Error("Error getting app theme", error!);
   }
 };
 

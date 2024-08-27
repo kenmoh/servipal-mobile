@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useReducer, useState } from "react";
 import { cartReducer, CartContext, CartContextType, OrderData, CartItem, CartState } from "@/auth/cartContext";
-import items from "@/app/(tabs)/buySell/items";
+import items from "@/app/(drawer)/(tabs)/buySell/items";
 
 
 // export interface CartItem {

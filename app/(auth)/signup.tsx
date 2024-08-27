@@ -12,7 +12,7 @@ import TitleText from "@/components/TitleText";
 
 import usersApi from "@/api/users";
 import { CreateUser } from "@/utils/types";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { vendorValidationSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { showMessage } from "react-native-flash-message";
@@ -20,6 +20,7 @@ import { useMutation } from "@tanstack/react-query";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { Colors, themeMode } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
+import { SIZES } from "@/constants/Sizes";
 
 const SenderSignup = () => {
   const { theme } = useContext(ThemeContext);
@@ -51,7 +52,7 @@ const SenderSignup = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    < >
       <View
         style={{
           backgroundColor: activeColor.background,
@@ -64,12 +65,9 @@ const SenderSignup = () => {
           style={{
             flex: 1,
             width: "100%",
-            borderRadius: 10,
-            // padding: 20,
             backgroundColor: activeColor.background,
           }}
         >
-          <TitleText label="Signup | Sender" textColor={activeColor.text} />
           <Formik
             initialValues={{
               username: "",
@@ -84,10 +82,10 @@ const SenderSignup = () => {
             {({ handleChange, handleSubmit, values, errors, touched }) => (
               <>
                 <CustomActivityIndicator visible={isPending} />
-                <View style={{ padding: 20 }}>
+                <View style={{ padding: SIZES.paddingMedium }}>
                   <CustomTextInput
                     label="Email"
-                    hasBorder={theme.mode !== "dark"}
+
                     autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={handleChange("email")}
@@ -154,7 +152,7 @@ const SenderSignup = () => {
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
                       label="Sign Up"
-                      btnBorderRadius={5}
+
                       onPress={handleSubmit}
                     />
                   </View>
@@ -170,8 +168,9 @@ const SenderSignup = () => {
           />
         </ScrollView>
       </View>
-      <StatusBar style="light" backgroundColor={activeColor.background} />
-    </SafeAreaView>
+      <StatusBar style={theme.mode === 'dark' ? "light" : 'dark'} backgroundColor={activeColor.background} />
+
+    </>
   );
 };
 

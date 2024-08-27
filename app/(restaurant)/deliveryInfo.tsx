@@ -68,7 +68,7 @@ const DliveryInfo = () => {
                                             value={values.origin}
                                             labelColor={activeColor.text}
                                             label="origin"
-                                            hasBorder={theme.mode !== "dark"}
+
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                         />
@@ -80,7 +80,7 @@ const DliveryInfo = () => {
                                             value={values.destination}
                                             labelColor={activeColor.text}
                                             label="destination"
-                                            hasBorder={theme.mode !== "dark"}
+
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                         />
@@ -92,7 +92,7 @@ const DliveryInfo = () => {
                                             value={values.distance}
                                             labelColor={activeColor.text}
                                             label="distance"
-                                            hasBorder={theme.mode !== "dark"}
+
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                         />
@@ -108,14 +108,14 @@ const DliveryInfo = () => {
                                             label="Additional Info"
                                             onChangeText={handleChange("additional_info")}
                                             value={values.additional_info}
-                                            hasBorder={theme.mode !== "dark"}
+
                                             multiline
                                             numberOfLines={4}
                                             textAlignVertical="top"
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                             labelColor={activeColor.text}
-                                            inputHeight={70}
+                                            borderRadius={50}
                                         />
                                         {touched.additional_info && errors.additional_info && (
                                             <InputErrorMessage error={errors.additional_info} />
@@ -124,7 +124,7 @@ const DliveryInfo = () => {
                                         <View style={styles.btnContainer}>
                                             <CustomBtn
                                                 label="submit"
-                                                btnBorderRadius={5}
+                                                btnBorderRadius={50}
                                                 btnHeight={50}
                                                 btnColor="orange"
                                                 onPress={handleSubmit}

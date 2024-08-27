@@ -16,10 +16,10 @@ type CustomBtnProps = {
 
 
 const CustomBtn = ({
-  btnBorderRadius,
   btnColor,
   label,
-  btnHeight = 45,
+  btnBorderRadius = 50,
+  btnHeight = 50,
   disabled = false,
   onPress = () => { },
   ...props

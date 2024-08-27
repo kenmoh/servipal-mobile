@@ -60,8 +60,7 @@ const payment = () => {
     const [showWebView, setShowWebView] = useState(false);
     const [redirectedUrl, setRedirectedUrl] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const params = useLocalSearchParams();
-    const { paymentUrl, totalCost, id } = params;
+    const { paymentUrl, totalCost, id } = useLocalSearchParams();
 
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
@@ -88,7 +87,7 @@ const payment = () => {
                 },
             });
             setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
+                router.push("/(drawer)/stats");
             }, TIME_OUT);
         }
         if (response.ok) {
@@ -102,7 +101,7 @@ const payment = () => {
             });
 
             setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
+                router.push("/(drawer)/topTab");
             }, TIME_OUT);
         }
     };
@@ -133,7 +132,7 @@ const payment = () => {
                 type: "success",
             });
             setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
+                router.push("/(drawer)/topTab");
             }, TIME_OUT);
 
         }
@@ -144,7 +143,7 @@ const payment = () => {
                 type: "danger",
             });
             setTimeout(() => {
-                router.push("/(tabs)/topTab/myOrder");
+                router.push("/(drawer)/stats");
             }, TIME_OUT);
         }
     }, [status]);

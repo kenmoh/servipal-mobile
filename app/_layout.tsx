@@ -8,12 +8,15 @@ import FlashMessage from "react-native-flash-message";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import * as NavigationBar from "expo-navigation-bar";
 import * as SystemUI from 'expo-system-ui'
+import { Drawer } from 'expo-router/drawer';
+import * as Network from 'expo-network';
 
 import { ThemeContext, ThemeModeType } from "@/context/themeContext";
 import { getTheme, storeTheme } from "@/auth/storage";
 import AuthProvider from "@/components/AuthProvider";
 import CartProvider from "@/components/CartProvider";
 import { Colors } from "@/constants/Colors";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -74,6 +77,9 @@ export default function RootLayout() {
     }
   };
 
+
+
+
   useEffect(() => {
     if (theme.mode === "dark") {
       NavigationBar.setBackgroundColorAsync("#18191c");
@@ -98,56 +104,63 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
-          <AuthProvider>
-            <CartProvider>
-              <Stack
-                screenOptions={{
-                  contentStyle: { backgroundColor: activeColor.background },
+
+
+    <QueryClientProvider client={queryClient}>
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <AuthProvider>
+          <CartProvider>
+            <Stack
+              screenOptions={{
+                contentStyle: { backgroundColor: activeColor.background },
+              }}
+            >
+              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="cart"
+                options={{
+                  title: "Cart",
+                  animation: "fade_from_bottom",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+
+                  headerTintColor: activeColor.text,
+                  headerTitleAlign: "center",
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
                 }}
-              >
-                <Stack.Screen name="index" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="cart"
-                  options={{
-                    title: "Cart",
-                    animation: "fade_from_bottom",
-                    headerShadowVisible: false,
-                    headerStyle: {
-                      backgroundColor: activeColor.background,
-                    },
+              />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+              <Stack.Screen
+                name="(restaurant)"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="(laundry)"
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="(p2p)" options={{ headerShown: false }} />
+              <Stack.Screen name="(order)" options={{ headerShown: false }} />
+              <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+              <Stack.Screen name="sendItem" options={{ headerShown: false }} />
+            </Stack>
+          </CartProvider>
+        </AuthProvider>
 
-                    headerTintColor: activeColor.text,
-                    headerTitleAlign: "center",
-                    contentStyle: {
-                      backgroundColor: activeColor.background,
-                    },
-                  }}
-                />
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="(restaurant)"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(laundry)"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen name="(p2p)" options={{ headerShown: false }} />
-                <Stack.Screen name="(order)" options={{ headerShown: false }} />
-              </Stack>
-            </CartProvider>
-          </AuthProvider>
+        <FlashMessage
+          position={"top"}
+          style={{
+            zIndex: 999
+          }}
 
-          <FlashMessage
-            position={"top"}
-            style={{ marginTop: StatusBar.currentHeight }}
-          />
-        </ThemeContext.Provider>
-      </QueryClientProvider>
-    </>
+        />
+      </ThemeContext.Provider>
+    </QueryClientProvider>
+
+
   );
 }

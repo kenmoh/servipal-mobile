@@ -51,23 +51,27 @@ const ViewCartBtn = ({ totalCost, totalItem, onPress, label }: ViewCartBtnType) 
             activeOpacity={0.8}
             style={[
                 styles.container,
-                { backgroundColor: Colors.btnPrimaryColor },
+
                 animatedStyle,
             ]}
         >
+            <Text style={[styles.text, { color: activeColor.text, fontSize: 20, alignSelf: 'flex-end' }]}>
+                ₦ {totalCost}
+            </Text>
             <View
                 style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
+
                     alignItems: "center",
+                    backgroundColor: Colors.btnPrimaryColor,
+                    paddingVertical: 10,
+                    paddingHorizontal: 35,
+                    borderRadius: 35
                 }}
             >
                 <Text style={[styles.text, { color: activeColor.text }]}>
                     {label} ({totalItem})
                 </Text>
-                <Text style={[styles.text, { color: activeColor.text }]}>
-                    ₦ {totalCost}
-                </Text>
+
             </View>
         </AnimatedTouchableOpacity>
     );
@@ -78,11 +82,13 @@ export default ViewCartBtn;
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        bottom: 30,
-        paddingVertical: 10,
+        bottom: 0,
+        flexDirection: 'row',
         borderRadius: 7.5,
         zIndex: 999,
-        paddingHorizontal: 35,
+        justifyContent: 'space-between',
+        paddingVertical: 5
+
     },
 
     text: {

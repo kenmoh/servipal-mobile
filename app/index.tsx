@@ -2,23 +2,19 @@ import { Text, View, StyleSheet } from "react-native";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
+import { Redirect } from "expo-router";
 
 
 
-const welcome = () => {
+const indes = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
-    <View
-      style={[styles.container, { backgroundColor: activeColor.background }]}
-    >
-      <Text style={[styles.text, { color: activeColor.text }]}>Welcome</Text>
-
-    </View>
+    <View style={[styles.container, { backgroundColor: activeColor.background }]}><Redirect href={'(auth)/welcome'} /></View>
   );
 };
 
-export default welcome;
+export default indes;
 
 const styles = StyleSheet.create({
   container: {

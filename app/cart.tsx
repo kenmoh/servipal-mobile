@@ -14,7 +14,7 @@ import { Colors } from "@/constants/Colors";
 import CartItem from "@/components/CartItem";
 import OrderBtn from "@/components/OrderBtn";
 import { useMutation } from "@tanstack/react-query";
-import { OrderData } from "@/auth/cartContext";
+import { LaundryOrderData, OrderData } from "@/auth/cartContext";
 import orderApi from "@/api/orders";
 import { router, Stack } from "expo-router";
 import { showMessage } from "react-native-flash-message";
@@ -55,18 +55,24 @@ const Cart = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
+    type FoodLaundryOrderData = OrderData | LaundryOrderData
+
+
+
     const { cart, getTotalPrice, clearCart, clearDeliveryInfo } = useCart();
     const { mutate, data, error, isSuccess, isPending } = useMutation({
         mutationFn: (orderData: OrderData) =>
             orderApi.orderFood(orderData.foods[0].vendor_id, orderData),
+        onSuccess: () => { clearCart(); clearDeliveryInfo() }
     });
 
-    const handleSubmitOrder = () => {
-        mutate(cart);
-        if (isSuccess || error) {
 
+    const handleSubmitOrder = () => {
+        mutate(cart, { onSuccess: () => clearDeliveryInfo() });
+        if (isSuccess || error) {
             clearCart();
-            clearDeliveryInfo();
+
+
         }
     };
     useEffect(() => {
@@ -161,6 +167,6 @@ export default Cart;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
     },
 });

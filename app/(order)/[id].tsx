@@ -24,24 +24,52 @@ import { Colors } from "@/constants/Colors";
 import ordersApi from "@/api/orders";
 import { ItemOrderType } from "@/utils/types";
 import CustomBtn from "@/components/CustomBtn";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 
 const IMG_HEIGHT = 300;
 
 export default function HomeScreen() {
-  const { id } = useLocalSearchParams();
+  const { id, orderType } = useLocalSearchParams();
+
   const { user } = useAuth();
 
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
   // Get order details
-  const { data, error, isFetching } = useQuery({
-    queryKey: ["orders", id],
-    queryFn: () => ordersApi.orderItemDetails(id),
+  // const { data, error, isFetching } = useQuery({
+  //   queryKey: ["orders", id],
+  //   queryFn: () => ordersApi.orderItemDetails(id),
+  // });
+  console.log(orderType)
+  const fetchOrder = useMemo(() => {
+    if (orderType === 'delivery') {
+      return ordersApi.orderItemDetails;
+    } else if (orderType === 'food') {
+      return ordersApi.getFoodDetails;
+    } else {
+      return ordersApi.getLaundryDetails;
+    }
+    // switch (orderType) {
+    //   case 'delivery':
+    //     return ordersApi.orderItemDetails;
+    //   case 'food':
+    //     return ordersApi.getFoodDetails;
+    //   case 'laundry':
+    //     return ordersApi.getLaundryDetails;
+    //   default:
+    //     throw new Error(`Unknown order type: ${orderType}`);
+    // }
+  }, [orderType]);
+
+  // Fetch order details
+  const { data, isLoading, isError, error, isFetching } = useQuery({
+    queryKey: ['order', orderType, id],
+    queryFn: () => fetchOrder(id),
   });
+
 
   // Handle order Pickup
   const { mutate: handlePickup, data: pickupData, isPending } = useMutation({
@@ -72,6 +100,9 @@ export default function HomeScreen() {
   const { mutate: handleRelistOrderByVebdor } = useMutation({
     mutationFn: () => ordersApi.relistOrderByVendor(id),
   });
+
+
+
 
 
   if (isFetching) {
@@ -195,7 +226,7 @@ export default function HomeScreen() {
               <View>
                 <DetailLabel
                   lable="Name"
-                  value={order?.vendor_username || ""}
+                  value={order?.vendor_username || order?.order_owner_username!}
                 />
                 <DetailLabel
                   lable="Phone"
@@ -207,7 +238,7 @@ export default function HomeScreen() {
           </View>
           <View style={styles.container}>
             <View style={{ alignItems: "center" }}>
-              <Feather name="box" size={30} color="gray" />
+              <Feather name="box" size={30} color={activeColor.icon} />
               <Divider />
             </View>
             <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -215,7 +246,7 @@ export default function HomeScreen() {
                 Order Details
               </Text>
               <View>
-                <DetailLabel lable="Name" value={order?.package_name || ""} />
+                <DetailLabel lable="Name" value={order?.package_name || order?.order_owner_username!} />
                 <DetailLabel lable="Origin" value={order?.origin || ""} />
                 <DetailLabel
                   lable="Destination"

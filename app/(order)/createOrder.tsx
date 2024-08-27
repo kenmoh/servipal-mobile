@@ -23,7 +23,7 @@ export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-  const { error, isSuccess, mutate, isPending, data } = useMutation<ItemOrderType>({
+  const { error, isSuccess, mutate, isPending, data } = useMutation({
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
   });
 
@@ -76,7 +76,7 @@ export default function HomeScreen() {
               distance: "",
               orderPhotoUrl: "",
             }}
-            onSubmit={mutate}
+            onSubmit={(values, { resetForm }) => mutate(values, { onSuccess: () => resetForm() })}
             validationSchema={orderValidationSchema}
           >
             {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -156,7 +156,7 @@ export default function HomeScreen() {
                     <View style={styles.btnContainer}>
                       <CustomBtn
                         label="submit"
-                        btnBorderRadius={5}
+
                         btnColor="orange"
                         onPress={handleSubmit}
                       />

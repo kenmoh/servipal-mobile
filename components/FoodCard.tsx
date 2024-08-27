@@ -3,14 +3,13 @@ import {
     Text,
     TouchableOpacity,
     View,
-    Dimensions,
+
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { memo, useContext, useState } from "react";
 import BouncyCheckBox from "react-native-bouncy-checkbox";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { useCart } from "./CartProvider";
-import HDivider from "./HDivider";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Image } from "expo-image";
 
@@ -26,6 +25,7 @@ export type MealType = {
     side?: string;
     ingredients?: string;
     image_url?: string;
+
 };
 
 const FoodCard = ({ meal }: { meal: MealType }) => {
@@ -36,13 +36,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
     const isItemInCart = cart.foods.some((cartItem) => cartItem.id === meal.id);
     const [isChecked, setIsChecked] = useState(isItemInCart);
 
-    // const handleCheckboxChange = (isChecked: boolean) => {
-    //     if (isChecked) {
-    //         addToCart(meal);
-    //     } else {
-    //         removeFromCart(meal);
-    //     }
-    // };
+
     const handleCheckboxChange = () => {
         const newCheckedState = !isChecked;
         setIsChecked(newCheckedState);
@@ -59,7 +53,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
                 style={[styles.container, { backgroundColor: activeColor.profileCard }]}
                 onPress={handleCheckboxChange}
             >
-                <View style={styles.topWrapper}>
+                <View style={[styles.topWrapper]}>
                     <View style={styles.topHeader}>
                         <Text style={[styles.titletext, { color: activeColor.text }]}>
                             {meal.name}
@@ -95,6 +89,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
                             {" "}
                             ₦ {meal.price}
                         </Text>
+
                         <View
                             style={[
                                 styles.timeWrapper,
@@ -116,6 +111,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
                                 45 mins
                             </Text>
                         </View>
+
                     </View>
                 </View>
             </TouchableOpacity>
@@ -123,7 +119,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
     );
 };
 
-export default FoodCard;
+export default memo(FoodCard);
 
 const styles = StyleSheet.create({
     container: {

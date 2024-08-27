@@ -82,6 +82,7 @@ export type ItemOrderType = {
   created_at?: string;
   vendor_username?: string;
   owner_phone_number?: string;
+  order_owner_username?: string;
   description?: string;
   dispatch_company_name?: string;
   dispatch_company_phone_numer?: string;
@@ -94,7 +95,7 @@ export type ItemOrderType = {
   amount_payable_delivery: number;
   order_photo_url: string;
   order_status?: OrderStatus;
-  order_type?: OrderType;
+  order_type: OrderType;
   deduction: number;
   payment_status: PaymentStatus;
   payment_url: string;
@@ -132,7 +133,6 @@ export type CreateRider = {
   phoneNumber: string;
   plateNumber: string;
   password: string;
-  location: string;
   confirmPassword: string;
 };
 export type UpdateProfileImage = {
@@ -228,7 +228,7 @@ export type FoodType = {
 
 export type AddMealType = {
   name: string;
-  price: number;
+  price: string;
   category: string;
   side?: string;
   ingredients: string;
@@ -277,4 +277,38 @@ export type CartSummaryType = {
   delivery_fee: number;
   food_cost?: number;
   total_cost: null;
+};
+
+export type ListingResponseType = {
+  id: number;
+  name: string;
+  price: string;
+  stock: number;
+  description: string;
+  image_url: string;
+  image_urls: string[];
+};
+
+export type CreateListingType = {
+  name: string;
+  price: string;
+  stock: string;
+  description: string;
+  image: string;
+  images: string[];
+};
+
+export type CreateLaundry = {
+  name: string;
+  price: string;
+  image: string;
+};
+
+export type CreateLaundryResponse = {
+  name: string;
+  price: string;
+  image_url: string;
+  id: string;
+  vendor_id: string;
+  detail?: string;
 };

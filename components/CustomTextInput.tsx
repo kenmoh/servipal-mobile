@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -26,12 +26,13 @@ const CustomTextInput = ({
   placeholder,
   secureTextEntry,
   keyboardType,
-  borderRadius = 5,
-  inputHeight = 45,
+  borderRadius = 50,
+  inputHeight = 50,
   ...props
 }: InputProps) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+  const [isFocused, setIsFocused] = useState(false)
   return (
     <View style={styles.container}>
       <Text style={[styles.text, { color: labelColor }]}>{label}</Text>
@@ -43,6 +44,8 @@ const CustomTextInput = ({
             color: activeColor.text,
             height: inputHeight,
             borderRadius,
+            borderWidth: isFocused ? 1.5 : 0,
+            borderColor: isFocused ? Colors.btnPrimaryColor : ''
           },
         ]}
         placeholder={placeholder}
@@ -51,8 +54,10 @@ const CustomTextInput = ({
         keyboardType={keyboardType}
         autoComplete="off"
         autoCorrect={false}
-        cursorColor={"gray"}
+        cursorColor={activeColor.text}
         maxLength={150}
+        onBlur={() => setIsFocused(false)}
+        onFocus={() => setIsFocused(true)}
         {...props}
       />
     </View>
@@ -63,15 +68,14 @@ export default CustomTextInput;
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 3,
+    marginVertical: 5,
   },
   textInput: {
     paddingVertical: 7.5,
     fontSize: 14,
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     width: "100%",
 
-    marginVertical: 5,
     alignSelf: "center",
     fontFamily: "Poppins-Light",
     borderCurve: 'continuous',

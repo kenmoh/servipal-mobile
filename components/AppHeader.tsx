@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import CustomTextInput from "@/components/CustomTextInput";
-import { Link } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import { Colors, themeMode } from "@/constants/Colors";
 import { useContext } from "react";
@@ -26,9 +26,10 @@ const HeaderLeft = ({ link, iconName }: { link: string; iconName: any }) => {
 const AppHeader = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+
   return (
     <View style={styles.container}>
-      {/* {hasIcon && <HeaderLeft link="/" iconName={"home"} />} */}
+      {/* <HeaderLeft link="/" iconName={"home"} /> */}
       <CustomTextInput
         placeholder="Search"
         style={[
@@ -48,19 +49,14 @@ export default AppHeader;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: "100%",
-    width: "100%",
+    height: 100
 
   },
   textIput: {
-    minWidth: 300,
+    minWidth: 250,
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 50,
-    marginBottom: 10,
     alignSelf: 'center'
   },
 });

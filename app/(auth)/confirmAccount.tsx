@@ -87,7 +87,6 @@ const confirmAccount = () => {
                                 <View>
                                     <CustomTextInput
                                         label="Email Code"
-                                        hasBorder={theme.mode !== "dark"}
                                         keyboardType="number-pad"
                                         onChangeText={handleChange("emailCode")}
                                         value={values.emailCode}
@@ -100,7 +99,6 @@ const confirmAccount = () => {
                                     )}
                                     <CustomTextInput
                                         label="Phone Code"
-                                        hasBorder={theme.mode !== "dark"}
                                         keyboardType="number-pad"
 
                                         onChangeText={handleChange("phoneCode")}
@@ -116,7 +114,7 @@ const confirmAccount = () => {
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
                                             label="Send"
-                                            btnBorderRadius={5}
+
                                             onPress={handleSubmit}
                                         />
                                     </View>

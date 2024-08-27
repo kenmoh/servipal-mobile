@@ -9,27 +9,47 @@ const AuthLayout = () => {
   return (
     <Stack
       screenOptions={{
-        animation: "slide_from_bottom",
+        animation: "ios",
         headerShown: false,
       }}
     >
       <Stack.Screen name="signin" />
-      <Stack.Screen name="signup" />
+      <Stack.Screen
+        name="signup"
+        options={{
+          headerShown: true,
+          title: "Sign Up | User",
+          headerShadowVisible: false,
+          headerTintColor: activeColor.text,
+          headerStyle: {
+            backgroundColor: activeColor.background
+          }
+        }}
+      />
       <Stack.Screen name="authNav" />
-      <Stack.Screen name="signupDispatch" />
-      <Stack.Screen name="confirmAccount" />
-      <Stack.Screen name="resetPassword" />
-      <Stack.Screen name="resetPasswordLink" options={{
-        title: 'Recover Password Link',
+      <Stack.Screen name="signupDispatch" options={{
         headerShown: true,
+        title: "Sign Up | Rider",
         headerShadowVisible: false,
         headerTintColor: activeColor.text,
         headerStyle: {
-          backgroundColor: activeColor.background,
-
+          backgroundColor: activeColor.background
         }
       }} />
-
+      <Stack.Screen name="confirmAccount" />
+      <Stack.Screen name="resetPassword" />
+      <Stack.Screen
+        name="resetPasswordLink"
+        options={{
+          title: "Recover Password Link",
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTintColor: activeColor.text,
+          headerStyle: {
+            backgroundColor: activeColor.background,
+          },
+        }}
+      />
     </Stack>
   );
 };

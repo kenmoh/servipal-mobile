@@ -44,7 +44,6 @@ export const dispatchValidationSchema = Yup.object().shape({
 export const riderValidationSchema = Yup.object().shape({
   email: Yup.string().email().trim().required().label("Email"),
   plateNumber: Yup.string().required().label("Plate number is required"),
-  location: Yup.string().required().label("Location is required"),
   fullName: Yup.string().required().label("Full Name is required"),
   phoneNumber: Yup.string()
     .required()

@@ -7,6 +7,7 @@ import FloatingActionButton from "./FloatingActionBtn";
 import { UserReturn, Transactions } from "@/utils/types";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { SIZES } from "@/constants/Sizes";
 
 
 
@@ -71,12 +72,9 @@ export default WalletCard;
 const styles = StyleSheet.create({
     container: {
         marginBottom: 25,
-        marginTop: 15,
         height: Dimensions.get('screen').height * 0.25,
         paddingVertical: 35,
-        paddingHorizontal: 20,
-        borderRadius: 10,
-        elevation: 10
+        paddingHorizontal: SIZES.paddingLarge,
     },
     gradient: {
         height: '100%'

@@ -14,15 +14,17 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { ItemOrderType } from "@/utils/types";
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
 import HDivider from "./HDivider";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-
+const imageUrl =
+  "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png";
 dayjs.extend(relativeTime);
+
 
 const OrderCard = ({
   order,
@@ -37,16 +39,18 @@ const OrderCard = ({
   let activeColor = Colors[theme.mode];
 
   return (
-    // <Link href={`(order)/${order?.id}`} asChild>
     <TouchableOpacity
-      onPress={() => router.push(`(order)/${order?.id}`)}
+      onPress={() => router.push({
+        pathname: `(order)/${order?.id}`,
+        params: { orderType: order.order_type }
+      })}
       activeOpacity={0.7}
       style={[styles.container, { backgroundColor: activeColor.profileCard }]}
     >
       <View style={styles.topWrapper}>
         <View>
           <Text style={[styles.titleText, { color: activeColor.text, fontSize: 12 }]}>
-            {order.package_name}
+            {order.package_name || order.order_owner_username}
           </Text>
           <View style={styles.locationStyle}>
             <FontAwesome name="circle" color={activeColor.icon} size={15} />
@@ -67,7 +71,7 @@ const OrderCard = ({
         </View>
         <View>
           <Image
-            source={image ? image : order?.image_url}
+            source={image ? image : order?.image_url || imageUrl}
             placeholder={{ blurhash }}
             contentFit="cover"
             transition={1000}
@@ -101,156 +105,17 @@ const OrderCard = ({
               : order?.order_status === "Received"
                 ? "#25a18e"
                 : order?.order_status === "Delivered"
-                  ? "#27e"
+                  ? "#3bade2"
                   : "#e8ac65"
               }`}
           />
         )}
       </View>
-
-      {/* <View style={{ paddingHorizontal: 20 }}>
-          <View style={[styles.container]}>
-            <View style={{ flex: 1 }}>
-              <Image
-                source={image ? image : order?.image_url}
-                placeholder={{ blurhash }}
-                contentFit="cover"
-                transition={1000}
-                style={styles.image}
-              />
-            </View>
-
-            <View style={{ flex: 4 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontFamily: "Poppins-Light",
-                    color: activeColor.text,
-                  }}
-                >
-                  {order?.package_name}
-                </Text>
-                {!isHomeScreen && (
-                  <Status
-                    text={order?.order_status!}
-                    textColor={`${order?.order_status === "Pending"
-                      ? "#c8553d"
-                      : order?.order_status === "Received"
-                        ? "#25a18e"
-                        : order?.order_status === "Delivered"
-                          ? "#27e"
-                          : "#e8ac65"
-                      }`}
-                  />
-                )}
-              </View>
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 7.5 }}
-              >
-                <MaterialIcons
-                  name="trip-origin"
-                  size={15}
-                  color={activeColor.icon}
-                />
-                <Text
-                  style={[
-                    styles.textStyle,
-                    { color: activeColor.text, fontSize: 10 },
-                  ]}
-                >
-                  {order?.origin}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 7.5,
-                }}
-              >
-                <EvilIcons name="location" size={15} color={activeColor.icon} />
-                <Text
-                  style={[
-                    styles.textStyle,
-                    { color: activeColor.text, fontSize: 12 },
-                  ]}
-                >
-                  {order?.destination}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "baseline",
-                  marginTop: 5,
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ flexDirection: "row", alignItems: "baseline" }}>
-                  <Text style={{ color: activeColor.text }}> ₦ </Text>
-                  <Text
-                    style={{
-
-                      fontSize: 12,
-                      fontFamily: "Poppins-Bold",
-                      color: activeColor.text,
-                    }}
-                  >
-                    {order?.total_cost}
-                  </Text>
-                </View>
-                {order?.payment_status != "paid" && (
-                  <TouchableOpacity
-                    onPress={() =>
-                      router.push({
-                        pathname: "/(order)/payment",
-                        params: {
-                          paymentUrl: order?.payment_url,
-                          id: order?.id,
-                          totalCost: order?.total_cost,
-                        },
-                      })
-                    }
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                        fontFamily: "Poppins-Light",
-                        color: Colors.btnPrimaryColor,
-                      }}
-                    >
-                      PAY
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                <Text
-                  style={{
-                    color: activeColor.icon,
-                    fontSize: 12,
-                    fontFamily: "Poppins-Light",
-                  }}
-                >
-                  {dayjs().to(dayjs(order?.created_at?.split("T")[0]))}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <HDivider />
-        </View> */}
     </TouchableOpacity>
-    // </Link>
   );
 };
 
-export default OrderCard;
+export default memo(OrderCard);
 
 const styles = StyleSheet.create({
   container: {

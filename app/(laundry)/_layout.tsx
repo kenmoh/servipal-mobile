@@ -10,13 +10,22 @@ const LaundryLayout = () => {
     return (
         <Stack screenOptions={{ contentStyle: { backgroundColor: activeColor.background } }}>
             <Stack.Screen name='addLaundry' options={{
-                title: 'Add Item',
+                title: 'Add Laundry Item',
                 headerShadowVisible: false,
                 headerTitleAlign: 'center',
                 headerTintColor: activeColor.text,
                 headerStyle: {
                     backgroundColor: activeColor.background,
                 }
+            }} />
+
+            <Stack.Screen name='laundry' options={{
+                title: '',
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerTintColor: activeColor.text,
+                headerTransparent: true,
+
             }} />
         </Stack>
     )

@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, View } from "react-native";
+import { StyleSheet, ScrollView, View, Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Formik } from "formik";
@@ -10,49 +10,60 @@ import CustomTextInput from "@/components/CustomTextInput";
 import { addMealValidation } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 
-
 import { ThemeContext } from "@/context/themeContext";
 import { useContext, useEffect, useState } from "react";
 import { AddMealType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
-import { Picker } from '@react-native-picker/picker';
-
+import { Picker } from "@react-native-picker/picker";
 
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { addMeal, getCategories } from "@/api/foods";
 import CategoryPicker from "@/components/CategoryPicker";
+import CustomPickerTextInput from "@/components/AppModal";
+import Accordion from "@/components/Accordion";
+
+
 
 type CategoryType = {
-    id: number
-    name: string
-}
+    id: number;
+    name: string;
+};
 const AddMeal = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation<AddMealType>({
+    const tabs = [
+        {
+            title: 'Tab 1',
+            content: (
+                <View>
+                    <Text>This is the content for Tab 1.</Text>
+                    <Text>You can put any components here.</Text>
+                </View>
+            ),
+        },
+        {
+            title: 'Tab 2',
+            content: (
+                <View>
+                    <Text>Welcome to Tab 2 content!</Text>
+                    <Text>Feel free to add more complex components.</Text>
+                </View>
+            ),
+        },
+    ];
+
+    const { error, isSuccess, mutate, isPending, data } = useMutation({
         mutationFn: (meal: AddMealType) => addMeal(meal),
     });
 
-    const { data: categoriesData } = useQuery<CategoryType[]>({
-        queryKey: ['categories'],
+    const { data: categoriesData } = useQuery({
+        queryKey: ["categories"],
         queryFn: getCategories,
-
-    })
-
-
-    // useEffect(() => {
-    //     if (categoriesData) {
-    //         const categoryNames = categoriesData?.data.map((category: CategoryType) => category.name);
-    //         setCategories(categoryNames);
-    //     }
-    // }, [categoriesData]);
-
-    console.log(categoriesData?.data)
+    });
 
     useEffect(() => {
-
         if (error) {
             showMessage({
                 message: error.message,
@@ -71,23 +82,21 @@ const AddMeal = () => {
                     alignItems: "center",
                 },
             });
-            router.push('/(restaurant)/addMeal');
+            router.push("/(restaurant)/addMeal");
         }
-    }, [error, isSuccess])
+    }, [error, isSuccess]);
     return (
         <View
             style={{
                 backgroundColor: activeColor.background,
                 flex: 1,
                 justifyContent: "center",
-
             }}
         >
             <CustomActivityIndicator visible={isPending} />
             <StatusBar style="inverted" />
             <View style={styles.mainContainer}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-
                     <Formik
                         initialValues={{
                             name: "",
@@ -97,10 +106,19 @@ const AddMeal = () => {
                             ingredients: "",
                             image: "",
                         }}
-                        onSubmit={mutate}
+                        onSubmit={(values, { resetForm }) =>
+                            mutate(values, { onSuccess: () => resetForm() })
+                        }
                         validationSchema={addMealValidation}
                     >
-                        {({ handleChange, handleSubmit, resetForm, values, errors, touched }) => (
+                        {({
+                            handleChange,
+                            handleSubmit,
+                            values,
+                            errors,
+                            touched,
+                            setFieldValue,
+                        }) => (
                             <>
                                 <View style={styles.container}>
                                     <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -128,15 +146,6 @@ const AddMeal = () => {
                                         {touched.price && errors.price && (
                                             <InputErrorMessage error={errors.price} />
                                         )}
-                                        {/* <Picker
-                                            selectedValue={selectedLanguage}
-                                            onValueChange={(itemValue, itemIndex) =>
-                                                setSelectedLanguage(itemValue)
-                                            }>
-                                            <Picker.Item label="Java" value="java" />
-                                            <Picker.Item label="JavaScript" value="js" />
-                                        </Picker> */}
-
 
                                     </View>
                                 </View>
@@ -169,14 +178,23 @@ const AddMeal = () => {
                                         {touched.ingredients && errors.ingredients && (
                                             <InputErrorMessage error={errors.ingredients} />
                                         )}
-                                        <CategoryPicker categories={categoriesData?.data} field="category" />
-                                        {/* <LocationPickerForm field={"category"} locations={categoriesData?.data} label="Category" /> */}
+
+                                        <CustomPickerTextInput
+                                            label="Category"
+                                            categories={categoriesData?.data}
+                                            onSelect={(item: CategoryType) => setFieldValue("category", item.name)}
+                                        />
+                                        {touched.category && errors.category && (
+                                            <InputErrorMessage error={errors.category} />
+                                        )}
+
                                         <ImagePickerForm field={"image"} />
+
+                                        <Accordion tabs={tabs} />
 
                                         <View style={styles.btnContainer}>
                                             <CustomBtn
                                                 label="submit"
-                                                btnBorderRadius={5}
                                                 btnColor="orange"
                                                 onPress={handleSubmit}
                                             />
@@ -188,11 +206,11 @@ const AddMeal = () => {
                     </Formik>
                 </ScrollView>
             </View>
-        </View >
-    )
-}
+        </View>
+    );
+};
 
-export default AddMeal
+export default AddMeal;
 
 const styles = StyleSheet.create({
     container: {
@@ -215,4 +233,4 @@ const styles = StyleSheet.create({
     btnContainer: {
         marginVertical: 20,
     },
-})
+});

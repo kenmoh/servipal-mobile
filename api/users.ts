@@ -19,6 +19,10 @@ const getDispatchRiders = async () =>
 const dispatchSuspenRider = async (id: string) =>
   await client.put(`${user}/${id}/suspend-rider`);
 
+// Get user reviews
+const getUserReviews = async (id: string) =>
+  await client.get(`${user}/${id}/user-reviews`);
+
 const createUser = async (user: CreateUser) => {
   const reqData = {
     email: user.email.toLowerCase().trim(),
@@ -54,7 +58,6 @@ const vendorAddRider = async (rider: CreateRider) => {
     phone_number: rider.phoneNumber,
     plate_number: rider.plateNumber,
     full_name: rider.fullName,
-    location: rider.location,
     password: rider.password,
   };
 
@@ -130,4 +133,5 @@ export default {
   fundWallet,
   vendorAddRider,
   updateProfileImage,
+  getUserReviews,
 };

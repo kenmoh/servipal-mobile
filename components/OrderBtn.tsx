@@ -21,23 +21,30 @@ const OrderBtn = ({ totalCost, onPress }: OrderBtnType) => {
             activeOpacity={0.8}
             style={[
                 styles.container,
-                { backgroundColor: Colors.btnPrimaryColor },
+
 
             ]}
         >
+            <Text style={[styles.text, { color: activeColor.text }]}>
+                ₦ {totalCost}
+            </Text>
             <View
                 style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    backgroundColor: Colors.btnPrimaryColor,
+                    paddingVertical: 7,
+                    borderRadius: 50,
+                    paddingHorizontal: 30,
+
+
                 }}
             >
                 <Text style={[styles.text, { color: activeColor.text }]}>
                     Place Order
                 </Text>
-                <Text style={[styles.text, { color: activeColor.text }]}>
-                    ₦ {totalCost}
-                </Text>
+
             </View>
         </TouchableOpacity>
     );
@@ -48,15 +55,15 @@ export default OrderBtn;
 const styles = StyleSheet.create({
     container: {
         width: "100%",
-        bottom: 30,
-        paddingVertical: 10,
-        borderRadius: 7.5,
-        zIndex: 999,
-        paddingHorizontal: 35,
+
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+
     },
 
     text: {
         fontFamily: "Poppins-SemiBold",
-        fontSize: 14,
+        fontSize: 18,
     },
 });

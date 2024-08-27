@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         zIndex: 999,
+        borderCurve: 'continuous'
 
     },
 });

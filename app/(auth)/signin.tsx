@@ -22,6 +22,7 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import authStorage from '@/auth/storage'
+import { SIZES } from "@/constants/Sizes";
 
 
 const SignIn = () => {
@@ -54,7 +55,7 @@ const SignIn = () => {
 
       if (user?.account_status === 'confirmed') {
         authContext.setUser(user);
-        authStorage.storeToken(data.access_token);
+        authStorage.storeToken(data?.access_token);
       }
       if (user?.account_status === 'pending') {
         showMessage({
@@ -94,9 +95,8 @@ const SignIn = () => {
           style={{
             flex: 1,
             width: "100%",
-            borderRadius: 10,
-            padding: 20,
             backgroundColor: activeColor.background,
+            paddingHorizontal: SIZES.paddingMedium
           }}
         >
           <TitleText label="Sign In" textColor={activeColor.text} />
@@ -116,8 +116,8 @@ const SignIn = () => {
                     onChangeText={handleChange("username")}
                     value={values.username}
                     labelColor={activeColor.text}
-                    inputHeight={50}
-                    borderRadius={5}
+
+
 
                   />
                   {touched.username && errors.username && (
@@ -131,10 +131,6 @@ const SignIn = () => {
                     onChangeText={handleChange("password")}
                     value={values.password}
                     labelColor={activeColor.text}
-                    inputHeight={50}
-                    borderRadius={5}
-                  // inputBackgroundColor={activeColor.inputBackground}
-                  // inputTextColor={activeColor.text}
                   />
                   {touched.password && errors.password && (
                     <InputErrorMessage error={errors.password} />
@@ -146,8 +142,6 @@ const SignIn = () => {
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
                       label="Login"
-                      btnBorderRadius={5}
-                      btnHeight={50}
                       onPress={handleSubmit}
                     />
                   </View>
@@ -163,10 +157,13 @@ const SignIn = () => {
             riderLink="signupDispatch"
             riderLabel="Rider"
           />
+
         </View>
+
 
       </View>
       <StatusBar style="light" backgroundColor={activeColor.background} />
+      <Link href={'(auth)/welcome'} style={{ color: 'red' }}>Onboarding</Link>
     </SafeAreaView>
   );
 };

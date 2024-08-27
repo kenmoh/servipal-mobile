@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,19 +8,29 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 
 const AppImagePicker = ({
   imageUri,
   onChangeImage,
+  borderRadius = 20,
+
 }: {
   imageUri: string;
+  borderRadius: number;
   onChangeImage: (url: string | null) => null | string;
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+
+  useEffect(() => { requestPermission() }, [])
+
+  const requestPermission = async () => {
+    const { granted } = await ImagePicker.requestCameraPermissionsAsync()
+    if (!granted) alert('You need to enable permission to access the camera!')
+  }
 
   const handlePress = () => {
     if (!imageUri) {
@@ -63,6 +73,7 @@ const AppImagePicker = ({
           {
             backgroundColor: activeColor.inputBackground,
             borderColor: activeColor.borderColor,
+            borderRadius
           },
         ]}
       >
@@ -89,11 +100,11 @@ export default AppImagePicker;
 
 const styles = StyleSheet.create({
   imageContainer: {
-    width: "100%",
-    height: 200,
+
+    height: 75,
+    width: 75,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 5,
     marginVertical: 5,
     overflow: "hidden",
     borderWidth: 1,

@@ -18,6 +18,7 @@ import { router } from "expo-router";
 import { Formik } from "formik";
 import { Colors, themeMode } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
+import { SIZES } from "@/constants/Sizes";
 
 const SignUpDispatch = () => {
   const { theme } = useContext(ThemeContext);
@@ -49,7 +50,7 @@ const SignUpDispatch = () => {
     router.replace("confirmAccount");
   }
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <>
       <View
         style={{
           backgroundColor: activeColor.background,
@@ -62,12 +63,10 @@ const SignUpDispatch = () => {
           style={{
             flex: 1,
             width: "100%",
-            borderRadius: 10,
-
             backgroundColor: activeColor.background,
           }}
         >
-          <TitleText label="Signup | Rider" textColor={activeColor.text} />
+
           <Formik
             initialValues={{
               companyName: "",
@@ -83,10 +82,10 @@ const SignUpDispatch = () => {
             {({ handleChange, handleSubmit, values, errors, touched }) => (
               <>
                 <CustomActivityIndicator visible={isPending} />
-                <View style={{ padding: 20 }}>
+                <View style={{ padding: SIZES.paddingMedium }}>
                   <CustomTextInput
                     label="Email"
-                    hasBorder={theme.mode !== "dark"}
+
                     autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={handleChange("email")}
@@ -100,7 +99,7 @@ const SignUpDispatch = () => {
                   )}
                   <CustomTextInput
                     label="Phone Number"
-                    hasBorder={theme.mode !== "dark"}
+
                     keyboardType="phone-pad"
                     onChangeText={handleChange("phoneNumber")}
                     labelColor={activeColor.text}
@@ -125,7 +124,7 @@ const SignUpDispatch = () => {
                   )}
                   <CustomTextInput
                     label="Company Reg No."
-                    hasBorder={theme.mode !== "dark"}
+
                     onChangeText={handleChange("companyRegNum")}
                     labelColor={activeColor.text}
                     inputBackgroundColor={activeColor.inputBackground}
@@ -137,7 +136,7 @@ const SignUpDispatch = () => {
                   )}
                   <CustomTextInput
                     label="Password"
-                    hasBorder={theme.mode !== "dark"}
+
                     autoCapitalize="none"
                     secureTextEntry={true}
                     onChangeText={handleChange("password")}
@@ -151,7 +150,6 @@ const SignUpDispatch = () => {
                   )}
                   <CustomTextInput
                     label="Confirm Passord"
-                    hasBorder={theme.mode !== "dark"}
                     secureTextEntry={true}
                     onChangeText={handleChange("confirmPassword")}
                     value={values.confirmPassword}
@@ -166,7 +164,7 @@ const SignUpDispatch = () => {
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}
                       label="Sign Up"
-                      btnBorderRadius={5}
+
                       onPress={handleSubmit}
                     />
                   </View>
@@ -182,8 +180,8 @@ const SignUpDispatch = () => {
           />
         </ScrollView>
       </View>
-      <StatusBar style="light" backgroundColor={activeColor.background} />
-    </SafeAreaView>
+      <StatusBar style={theme.mode === 'dark' ? "light" : 'dark'} backgroundColor={activeColor.background} />
+    </>
   );
 };
 
