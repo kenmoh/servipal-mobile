@@ -24,8 +24,8 @@ const index = () => {
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={data?.data}
-                keyExtractor={(item) => item.id.toString()}
-                numColumns={3}
+                keyExtractor={(item) => item?.id?.toString()}
+                numColumns={2}
                 contentContainerStyle={{
                     alignSelf: 'center',
                     justifyContent: 'center',

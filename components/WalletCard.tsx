@@ -11,7 +11,7 @@ import { SIZES } from "@/constants/Sizes";
 
 
 
-const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }) => {
+const WalletCard = ({ wallet, user, onPress }: { wallet: Transactions, user: UserReturn, onPress: () => void }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
@@ -58,7 +58,7 @@ const WalletCard = ({ wallet, user }: { wallet: Transactions, user: UserReturn }
                     height={35}
                     color={activeColor.text}
                     backgroundColor={activeColor.borderColor}
-                    onPress={() => { }}
+                    onPress={onPress}
 
                 />
             </View>
@@ -71,10 +71,10 @@ export default WalletCard;
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 25,
-        height: Dimensions.get('screen').height * 0.25,
-        paddingVertical: 35,
+        height: Dimensions.get('screen').height * 0.30,
+        paddingVertical: 75,
         paddingHorizontal: SIZES.paddingLarge,
+
     },
     gradient: {
         height: '100%'

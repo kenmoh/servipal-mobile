@@ -21,6 +21,32 @@ import CategoryBtn from "@/components/CategoryBtn";
 import RenderBtn from "@/components/RenderBtn";
 import { Link } from "expo-router";
 
+const EmptyOrder = () => {
+  const { theme } = useContext(ThemeContext);
+  let activeColor = Colors[theme.mode];
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: activeColor.background,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: "Poppins-Bold",
+          fontSize: 16,
+          color: activeColor.icon,
+          alignSelf: 'center'
+        }}
+      >
+        No Order yet
+      </Text>
+    </View>
+  )
+}
+
 const index = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
@@ -145,31 +171,31 @@ const index = () => {
       </Text>
     </View>;
   }
-  if (
-    !packageOrdersQuery?.data?.data ||
-    !foodOrdersQuery?.data?.data ||
-    !laundryOrdersQuery?.data?.data
-  ) {
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: activeColor.background,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text
-        style={{
-          fontFamily: "Poppins-Bold",
-          fontSize: 16,
-          color: activeColor.icon,
-          alignSelf: 'center'
-        }}
-      >
-        No Order yet
-      </Text>
-    </View>;
-  }
+  // if (
+  //   !packageOrdersQuery?.data?.data ||
+  //   !foodOrdersQuery?.data?.data ||
+  //   !laundryOrdersQuery?.data?.data
+  // ) {
+  //   <View
+  //     style={{
+  //       flex: 1,
+  //       backgroundColor: activeColor.background,
+  //       alignItems: "center",
+  //       justifyContent: "center",
+  //     }}
+  //   >
+  //     <Text
+  //       style={{
+  //         fontFamily: "Poppins-Bold",
+  //         fontSize: 16,
+  //         color: activeColor.icon,
+  //         alignSelf: 'center'
+  //       }}
+  //     >
+  //       No Order yet
+  //     </Text>
+  //   </View>;
+  // }
 
   return (
     <View style={{ flex: 1, backgroundColor: activeColor.background }}>
@@ -213,6 +239,7 @@ const index = () => {
         vertical
         refreshing={refreshing}
         onRefresh={handleRefretch}
+        ListEmptyComponent={() => <EmptyOrder />}
       />
 
     </View>

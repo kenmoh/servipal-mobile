@@ -147,6 +147,19 @@ export default function RootLayout() {
               <Stack.Screen name="(order)" options={{ headerShown: false }} />
               <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
               <Stack.Screen name="sendItem" options={{ headerShown: false }} />
+              <Stack.Screen name="payment" options={{
+                title: "Make Payment",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+                headerTitleAlign: "center",
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
             </Stack>
           </CartProvider>
         </AuthProvider>

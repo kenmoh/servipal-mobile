@@ -23,12 +23,12 @@ export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-  const { error, isSuccess, mutate, isPending, data } = useMutation({
+  const { error, mutate, isPending, data, isSuccess } = useMutation({
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
+
   });
 
   useEffect(() => {
-
     if (error) {
       showMessage({
         message: error.message,
@@ -37,9 +37,9 @@ export default function HomeScreen() {
           alignItems: "center",
         },
       });
-      router.push("/(order)/createOrder");
+      router.push("/(order)/createOrder");;
     }
-    if (isSuccess) {
+    if (isSuccess && data.item_order) {
       showMessage({
         message: "Order added successfully.",
         type: "success",
@@ -48,11 +48,20 @@ export default function HomeScreen() {
         },
       });
       router.push({
-        pathname: "/(order)/payment",
-        params: { paymentUrl: data?.payment_url, id: data?.id, totalCost: data?.total_cost },
+        pathname: "payment",
+        params: {
+          paymentUrl: data?.item_order.payment_url,
+          orderType: data?.item_order.order_type,
+          id: data?.item_order.id,
+          totalCost: data?.item_order.total_cost,
+          deliveryFee: data?.item_order.delivery_fee,
+
+        },
       });
     }
-  }, [error, isSuccess])
+  }, [isSuccess, error]);
+
+  console.log(data?.item_order)
   return (
     <View
       style={{

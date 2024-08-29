@@ -112,8 +112,7 @@ const fundWallet = () => {
                                     <View style={{ marginVertical: 25 }}>
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
-                                            label="Send"
-                                            btnBorderRadius={5}
+                                            label="Top Up"
                                             onPress={handleSubmit}
                                         />
                                     </View>

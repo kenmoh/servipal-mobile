@@ -282,7 +282,6 @@ const payment = () => {
                             <View
                                 style={{
                                     flexDirection: "row",
-
                                     gap: 5,
                                 }}
                             >
@@ -316,7 +315,7 @@ const payment = () => {
                                             color={activeColor.icon}
                                         />
                                     }
-                                    label="BANK TRANSFER"
+                                    label="TRANSFER"
                                     color={activeColor.text}
                                     backgroundColor={activeColor.profileCard}
                                     onPress={handleGetTransferDetails}

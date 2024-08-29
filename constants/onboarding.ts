@@ -35,7 +35,7 @@ export const onboardingSlides = [
     id: 5,
     name: "Safe & Secure Shopping",
     description:
-      "Browse, buy, and sell items securely with confidence using our built-in escrow service. What you ordered is what you get!",
+      "Browse, buy, and sell items securely with confidence using our built-in escrow service. What you ordered is what you get! 😊",
     image: p2p,
   },
 ];

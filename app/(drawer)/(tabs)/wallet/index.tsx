@@ -15,14 +15,14 @@ import { Colors } from "@/constants/Colors";
 import WalletCard from "@/components/WalletCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { focusManager, useQuery } from "@tanstack/react-query";
+import { focusManager, useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/auth/authContext";
 import walletApi from "@/api/wallet";
 import TransactionCard from "@/components/TransactionCard";
 import { Transactions } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { LinearGradient } from "expo-linear-gradient";
 import { SIZES } from "@/constants/Sizes";
+import { showMessage } from "react-native-flash-message";
 
 const wallet = () => {
   const { theme } = useContext(ThemeContext);
@@ -33,6 +33,11 @@ const wallet = () => {
     queryKey: ["wallet", user?.id],
     queryFn: walletApi.getUserWallet,
   });
+
+  const { data: fund, mutate, isPending } = useMutation({
+    mutationFn: walletApi.withdrawFunds
+  })
+
 
   const walletData: Transactions[] = data?.data?.transactions;
 
@@ -52,6 +57,21 @@ const wallet = () => {
 
   useRefreshOnFocus(refetch);
 
+
+  if (isPending) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: activeColor.background,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
+      </View>
+    );
+  }
   if (isLoading || isFetching) {
     return (
       <View
@@ -79,12 +99,32 @@ const wallet = () => {
     </View>;
   }
 
+  if (fund?.problem) {
+    showMessage({
+      message: fund?.data.detail,
+      type: "danger",
+      style: {
+        alignItems: "center",
+      },
+    });
+  }
+  if (fund?.ok) {
+    showMessage({
+      message: 'Withrawal Successful!',
+      type: "success",
+      style: {
+        alignItems: "center",
+      },
+    });
+  }
+
+
   return (
     <>
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
 
 
-      <WalletCard wallet={data?.data} user={user!} />
+      <WalletCard onPress={mutate} wallet={data?.data} user={user!} />
 
       <View
         style={[styles.container, { backgroundColor: activeColor.background }]}
@@ -125,5 +165,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: SIZES.paddingSmall,
+    borderTopEndRadius: 25,
+    borderTopLeftRadius: 25
+
   },
 });

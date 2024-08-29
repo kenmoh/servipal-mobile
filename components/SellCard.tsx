@@ -12,8 +12,8 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { router } from "expo-router";
 
-const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.18;
-const IMAGE_WIDTH = Dimensions.get("screen").width * 0.30;
+const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.22;
+const IMAGE_WIDTH = Dimensions.get("screen").width * 0.45;
 
 type CardType = {
     id: number;

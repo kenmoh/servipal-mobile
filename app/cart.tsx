@@ -2,7 +2,6 @@ import {
     StyleSheet,
     Text,
     View,
-    FlatList,
     ScrollView,
     TouchableOpacity,
     Dimensions,
@@ -14,7 +13,7 @@ import { Colors } from "@/constants/Colors";
 import CartItem from "@/components/CartItem";
 import OrderBtn from "@/components/OrderBtn";
 import { useMutation } from "@tanstack/react-query";
-import { LaundryOrderData, OrderData } from "@/auth/cartContext";
+import { OrderData } from "@/auth/cartContext";
 import orderApi from "@/api/orders";
 import { router, Stack } from "expo-router";
 import { showMessage } from "react-native-flash-message";
@@ -22,6 +21,7 @@ import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 
 const ClearCart = ({ onPress }: { onPress: () => void }) => {
+
     return (
         <TouchableOpacity
             onPress={onPress}
@@ -55,11 +55,9 @@ const Cart = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    type FoodLaundryOrderData = OrderData | LaundryOrderData
-
-
 
     const { cart, getTotalPrice, clearCart, clearDeliveryInfo } = useCart();
+
     const { mutate, data, error, isSuccess, isPending } = useMutation({
         mutationFn: (orderData: OrderData) =>
             orderApi.orderFood(orderData.foods[0].vendor_id, orderData),
@@ -75,6 +73,7 @@ const Cart = () => {
 
         }
     };
+
     useEffect(() => {
         if (error) {
             showMessage({
@@ -95,18 +94,20 @@ const Cart = () => {
                 },
             });
             router.push({
-                pathname: "/(restaurant)/payment",
+                pathname: "/payment",
                 params: {
                     paymentUrl: data?.payment_url,
+                    orderType: data?.order_type,
                     id: data?.id,
                     totalCost: data?.total_cost,
                     deliveryFee: data?.delivery_fee,
-                    foodCost: data?.food_cost,
-                    foods: JSON.stringify(data?.foods),
+                    itemCost: data?.food_cost,
+                    items: JSON.stringify(data?.foods),
                 },
             });
         }
     }, [isSuccess, error]);
+
 
     return (
         <>

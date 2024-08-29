@@ -43,11 +43,11 @@ export default function HomeScreen() {
   //   queryKey: ["orders", id],
   //   queryFn: () => ordersApi.orderItemDetails(id),
   // });
-  console.log(orderType)
+  console.log(orderType);
   const fetchOrder = useMemo(() => {
-    if (orderType === 'delivery') {
+    if (orderType === "delivery") {
       return ordersApi.orderItemDetails;
-    } else if (orderType === 'food') {
+    } else if (orderType === "food") {
       return ordersApi.getFoodDetails;
     } else {
       return ordersApi.getLaundryDetails;
@@ -66,13 +66,16 @@ export default function HomeScreen() {
 
   // Fetch order details
   const { data, isLoading, isError, error, isFetching } = useQuery({
-    queryKey: ['order', orderType, id],
+    queryKey: ["order", orderType, id],
     queryFn: () => fetchOrder(id),
   });
 
-
   // Handle order Pickup
-  const { mutate: handlePickup, data: pickupData, isPending } = useMutation({
+  const {
+    mutate: handlePickup,
+    data: pickupData,
+    isPending,
+  } = useMutation({
     mutationFn: () => ordersApi.pickUpOrder(id),
   });
 
@@ -101,10 +104,6 @@ export default function HomeScreen() {
     mutationFn: () => ordersApi.relistOrderByVendor(id),
   });
 
-
-
-
-
   if (isFetching) {
     return (
       <View
@@ -122,6 +121,8 @@ export default function HomeScreen() {
 
   const order: ItemOrderType = data?.data;
 
+  console.log(order.foods);
+
   return (
     <View
       style={{
@@ -130,15 +131,17 @@ export default function HomeScreen() {
         justifyContent: "center",
       }}
     >
-      <StatusBar style={theme.mode === 'dark' ? 'light' : 'dark'} backgroundColor={activeColor.background} />
+      <StatusBar
+        style={theme.mode === "dark" ? "light" : "dark"}
+        backgroundColor={activeColor.background}
+      />
       <View style={[styles.mainContainer]}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
         >
           <Image
-            source={order?.image_url}
-            // placeholder={{ blurhash }}
+            source={order?.image_url || order?.foods[0].image_url}
             contentFit="cover"
             transition={1000}
             style={styles.image}
@@ -246,7 +249,10 @@ export default function HomeScreen() {
                 Order Details
               </Text>
               <View>
-                <DetailLabel lable="Name" value={order?.package_name || order?.order_owner_username!} />
+                <DetailLabel
+                  lable="Name"
+                  value={order?.package_name || order?.order_owner_username!}
+                />
                 <DetailLabel lable="Origin" value={order?.origin || ""} />
                 <DetailLabel
                   lable="Destination"
@@ -254,7 +260,10 @@ export default function HomeScreen() {
                 />
                 <DetailLabel lable="Distance" value={order?.distance || ""} />
                 <DetailLabel lable="Total Cost" value={order?.total_cost} />
-                <DetailLabel lable="Commission" value={order?.commission_delivery!} />
+                <DetailLabel
+                  lable="Commission"
+                  value={order?.commission_delivery!}
+                />
                 <DetailLabel
                   lable="Amount payable"
                   value={order?.amount_payable_delivery}
@@ -265,13 +274,17 @@ export default function HomeScreen() {
                       fontSize: 14,
                       color: activeColor.tabIconDefault,
                       marginBottom: 5,
-                      fontFamily: 'Poppins-Light'
+                      fontFamily: "Poppins-Light",
                     }}
                   >
                     Description:
                   </Text>
                   <Text
-                    style={{ fontSize: 13, color: activeColor.tabIconDefault, fontFamily: 'Poppins-Light' }}
+                    style={{
+                      fontSize: 13,
+                      color: activeColor.tabIconDefault,
+                      fontFamily: "Poppins-Light",
+                    }}
                   >
                     {order?.description}
                   </Text>
@@ -279,74 +292,98 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-          {order.order_status !== 'Pending' && (<View style={styles.container}>
-            <View style={{ alignItems: "center" }}>
-              <MaterialCommunityIcons name="bike-fast" size={30} color="grey" />
-              <Divider />
+          {order.order_status !== "Pending" && (
+            <View style={styles.container}>
+              <View style={{ alignItems: "center" }}>
+                <MaterialCommunityIcons
+                  name="bike-fast"
+                  size={30}
+                  color="grey"
+                />
+                <Divider />
+              </View>
+              <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                <Text style={[styles.text, { color: activeColor.text }]}>
+                  Rider Details
+                </Text>
+                <DetailLabel
+                  lable="Rider Name"
+                  value={order?.rider_name || ""}
+                />
+                <DetailLabel
+                  lable="Phone Number"
+                  value={order?.rider_phone_number!}
+                />
+                <DetailLabel
+                  lable="Company Name"
+                  value={order?.dispatch_company_name || ""}
+                />
+              </View>
             </View>
-            <View style={{ flex: 1, paddingHorizontal: 5 }}>
-              <Text style={[styles.text, { color: activeColor.text }]}>
-                Rider Details
-              </Text>
-              <DetailLabel lable="Rider Name" value={order?.rider_name || ""} />
-              <DetailLabel
-                lable="Phone Number"
-                value={order?.rider_phone_number!}
-              />
-              <DetailLabel
-                lable="Company Name"
-                value={order?.dispatch_company_name || ""}
-              />
-
-            </View>
-          </View>)}
+          )}
         </ScrollView>
       </View>
       <View style={styles.btnContainer}>
         <View style={{ flex: 1 }}>
-          {
-            (order?.order_status === 'Pending' && user?.user_type === 'rider') ? (<CustomBtn
+          {order?.order_status === "Pending" && user?.user_type === "rider" ? (
+            <CustomBtn
               disabled={isPending}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Pickup"
               onPress={handlePickup}
-            />) : (order?.order_status === 'Picked up' && user?.user_type === 'rider') ? (<CustomBtn
+            />
+          ) : order?.order_status === "Picked up" &&
+            user?.user_type === "rider" ? (
+            <CustomBtn
               disabled={delivered}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Delivered"
               onPress={handleDelivered}
-            />) : (order?.order_status === 'Delivered' && user?.user_type === 'vendor') ? (<CustomBtn
+            />
+          ) : order?.order_status === "Delivered" &&
+            user?.user_type === "vendor" ? (
+            <CustomBtn
               disabled={received}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Received"
               onPress={handleReceived}
-            />) : order.order_status === 'Received' && (
+            />
+          ) : (
+            order.order_status === "Received" && (
               <CustomBtn
                 btnBorderRadius={50}
                 btnColor={Colors.btnPrimaryColor}
                 label="Completed"
-
               />
             )
-          }
+          )}
         </View>
 
-        {order?.payment_status != 'paid' && (<View style={{ width: 100 }}>
-          <CustomBtn
-            btnBorderRadius={50}
-            btnColor={Colors.primaryBtnColor}
-            label="Pay"
-            onPress={
-              () => router.push({
-                pathname: "/payment",
-                params: { paymentUrl: order?.payment_url, id: order?.id, totalCost: order?.total_cost },
-              })
-            }
-          />
-        </View>)}
+        {order?.payment_status != "paid" && (
+          <View style={{ width: 100 }}>
+            <CustomBtn
+              btnBorderRadius={50}
+              btnColor={Colors.primaryBtnColor}
+              label="Pay"
+              onPress={() =>
+                router.push({
+                  pathname: "/payment",
+                  params: {
+                    paymentUrl: order?.payment_url,
+                    orderType: order.order_type,
+                    id: order?.id,
+                    totalCost: order?.total_cost,
+                    items: JSON.stringify(order?.foods),
+                    itemCost: "",
+                  },
+                })
+              }
+            />
+          </View>
+        )}
       </View>
     </View>
   );
@@ -368,16 +405,15 @@ const styles = StyleSheet.create({
 
     marginVertical: 10,
     textTransform: "uppercase",
-    fontFamily: 'Poppins-SemiBold'
+    fontFamily: "Poppins-SemiBold",
   },
   btnContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 10,
-    flexDirection: 'row',
-    gap: 10
-
+    flexDirection: "row",
+    gap: 10,
   },
   image: {
     height: IMG_HEIGHT,

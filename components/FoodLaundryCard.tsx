@@ -70,7 +70,7 @@ const FoodLaundryCard = ({ item, isLaundry }: { item: CardProps, isLaundry: bool
                     </Text>
                 </View>
                 {
-                    reviews?.data?.reviews.length > 0 && (
+                    reviews?.data?.reviews?.length > 0 && (
                         <Text style={[styles.locationText, { color: activeColor.text }]}>
                             <Text style={styles.locationText}>{reviews?.data?.average_rating}</Text>{" "}
                             <AntDesign name="staro" style={{ color: "gold" }} size={10} />{" "}
