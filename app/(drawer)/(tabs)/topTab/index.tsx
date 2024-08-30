@@ -37,7 +37,7 @@ const EmptyOrder = () => {
         style={{
           fontFamily: "Poppins-Bold",
           fontSize: 16,
-          color: activeColor.icon,
+          color: activeColor.text,
           alignSelf: 'center'
         }}
       >

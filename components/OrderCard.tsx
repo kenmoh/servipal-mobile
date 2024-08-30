@@ -6,8 +6,6 @@ import dayjs from "dayjs";
 
 import { Colors } from "@/constants/Colors";
 import {
-  AntDesign,
-  EvilIcons,
   FontAwesome,
   Fontisto,
   Ionicons,
@@ -17,23 +15,20 @@ import { ItemOrderType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
-import HDivider from "./HDivider";
+
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-const imageUrl =
-  "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png";
+
 dayjs.extend(relativeTime);
 
 
 const OrderCard = ({
   order,
   isHomeScreen,
-  image,
 }: {
   order: ItemOrderType;
   isHomeScreen?: boolean;
-  image?: string;
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
@@ -71,7 +66,7 @@ const OrderCard = ({
         </View>
         <View>
           <Image
-            source={image ? image : order?.image_url || imageUrl}
+            source={order?.image_url || order.foods[0].image_url}
             placeholder={{ blurhash }}
             contentFit="cover"
             transition={1000}

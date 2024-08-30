@@ -73,6 +73,10 @@ export interface LaundryOrderType extends IOrderBase {
 //   item_order: Item;
 // };
 
+type FoodUserType = {
+  image_url: string;
+};
+
 export type ItemOrderType = {
   id?: string;
   package_name?: string;
@@ -99,6 +103,7 @@ export type ItemOrderType = {
   deduction: number;
   payment_status: PaymentStatus;
   payment_url: string;
+  foods: FoodUserType[];
 };
 
 export type CreateOrderType = {

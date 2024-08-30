@@ -19,6 +19,12 @@ import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { StatusBar } from "expo-status-bar";
 import RenderBtn from "@/components/RenderBtn";
 import OrderCard from "@/components/OrderCard";
+import { number } from "yup";
+
+type StatType = {
+    total_order: number,
+    pending_orders: number
+}
 
 const index = () => {
     const { theme } = useContext(ThemeContext);
@@ -27,16 +33,23 @@ const index = () => {
 
     const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
 
-    const {
-        data: order,
-        error,
-        isLoading,
-        isFetching,
-        refetch,
-    } = useQuery({
-        queryKey: ["orders"],
-        queryFn: ordersApi.getItemOrders,
-    });
+    // const {
+    //     data: order,
+    //     error,
+    //     isLoading,
+    //     isFetching,
+    //     refetch,
+    // } = useQuery({
+    //     queryKey: ["orders"],
+    //     queryFn: ordersApi.getItemOrders,
+    // });
+
+    const { data } = useQuery({
+        queryKey: ['stats', user?.id],
+        queryFn: ordersApi.getUserOrderStats
+    })
+
+
 
     const packageOrdersQuery = useQuery({
         queryKey: ["packageOrders"],
@@ -104,11 +117,13 @@ const index = () => {
         handleFetchOrders("package");
     }, []);
 
-    const handleRefresch = () => refetch();
 
-    useRefreshOnFocus(refetch);
-
+    let isFetching = true
     const activeQuery = getActiveQuery();
+    if (activeQuery) {
+        isFetching = activeQuery.isFetching
+    }
+    const handleRefresch = () => activeQuery?.refetch();
 
     if (packageOrdersQuery.isFetching || foodOrdersQuery.isFetching || laundryOrdersQuery.isFetching) {
         return (
@@ -166,7 +181,7 @@ const index = () => {
                             { backgroundColor: activeColor.profileCard },
                         ]}
                     >
-                        <Text style={[styles.number, { color: activeColor.text }]}>30</Text>
+                        <Text style={[styles.number, { color: activeColor.text }]}>{data?.data?.total_order}</Text>
                         <Text style={[styles.text, { color: activeColor.icon }]}>
                             Total Deliveries
                         </Text>
@@ -177,7 +192,7 @@ const index = () => {
                             { backgroundColor: activeColor.profileCard },
                         ]}
                     >
-                        <Text style={[styles.number, { color: activeColor.text }]}>4</Text>
+                        <Text style={[styles.number, { color: activeColor.text }]}>{data?.data?.pending_orders}</Text>
                         <Text style={[styles.text, { color: activeColor.icon }]}>
                             Pending Deliveries
                         </Text>

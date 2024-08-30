@@ -21,6 +21,9 @@ const getVendorListings = async () =>
 // Get order by Dispatch
 const getUserListings = () => client.get(`${endpoint}/user-orders`);
 
+// Get user order stats
+const getUserOrderStats = () => client.get(`${endpoint}/user-order-stats`);
+
 // get package details
 const orderItemDetails = async (orderId: string) =>
   await client.get(`${endpoint}/${orderId}/item-order`);
@@ -145,4 +148,5 @@ export default {
   orderLaundry,
   getFoodDetails,
   getLaundryDetails,
+  getUserOrderStats,
 };
