@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { StatusBar, View } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
@@ -35,7 +35,9 @@ export default function RootLayout() {
   const [theme, setTheme] = useState<ThemeMode>({ mode: "light" });
   let activeColor = Colors[theme.mode];
 
-  SystemUI.setBackgroundColorAsync(activeColor.background)
+  if (Platform.OS === 'android') {
+    SystemUI.setBackgroundColorAsync(activeColor.background)
+  }
 
 
 

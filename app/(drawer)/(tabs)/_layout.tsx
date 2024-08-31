@@ -1,10 +1,15 @@
-import { useContext, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { ReactNode, useContext, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { router, Tabs } from "expo-router";
-import { Entypo, AntDesign, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Entypo,
+  AntDesign,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 
 import { Colors } from "@/constants/Colors";
 import AppHeader from "@/components/AppHeader";
@@ -12,16 +17,42 @@ import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import { registerNotification } from "@/api/notification";
 import { DrawerToggleButton } from "@react-navigation/drawer";
+import { SIZES } from "@/constants/Sizes";
 
+const TAB_BAR_ICON_SIZE = 25;
 
-
-
-export default function TabLayout() {
-
+const CustomTabBarIcon = ({
+  children,
+  focused,
+}: {
+  children: ReactNode;
+  focused: boolean;
+}) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  const { user } = useAuth()
+  return (
+    <View
+      style={{
+        backgroundColor: focused
+          ? Colors.btnPrimaryColor
+          : activeColor.background,
+        padding: 5,
+        borderRadius: 80,
+        height: 40,
+        width: 40,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      {children}
+    </View>
+  );
+};
 
+export default function TabLayout() {
+  const { theme } = useContext(ThemeContext);
+  let activeColor = Colors[theme.mode];
+  const { user } = useAuth();
 
   const registerForPushNotification = async () => {
     if (Device.isDevice) {
@@ -40,12 +71,11 @@ export default function TabLayout() {
           alert("Failed to get push token for push notification!");
           return;
         }
-        const token = await Notifications.getExpoPushTokenAsync(
-          {
-            projectId: Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId,
-
-          }
-        );
+        const token = await Notifications.getExpoPushTokenAsync({
+          projectId:
+            Constants?.expoConfig?.extra?.eas?.projectId ??
+            Constants?.easConfig?.projectId,
+        });
 
         if (!user?.notification_token) {
           registerNotification(token.data);
@@ -70,117 +100,135 @@ export default function TabLayout() {
         tabBarActiveTintColor: activeColor.text,
         headerTitleAlign: "center",
         headerTintColor: activeColor.text,
+        tabBarShowLabel: false,
         tabBarStyle: {
-          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopWidth: 0,
           backgroundColor: activeColor.background,
           height: 70,
-          borderTopColor: activeColor.profileCard,
+          // borderTopColor: activeColor.profileCard,
+          // justifyContent: 'center',
+          alignItems: "center",
+          borderRadius: 50,
+          marginBottom: 5,
+          paddingHorizontal: SIZES.paddingMedium,
+          position: "absolute",
         },
-        tabBarLabelStyle: {
-          fontSize: 12,
-          marginBottom: 10,
+        // tabBarLabelStyle: {
+        //   fontSize: 12,
+        //   marginBottom: 10,
 
-        },
-        tabBarIconStyle: {
-          marginTop: 10
-        }
-
+        // },
+        // tabBarIconStyle: {
+        //   // marginTop: 10
+        // }
       }}
     >
-
       <Tabs.Screen
         name="topTab"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <AntDesign name="home" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, focused }) => (<CustomTabBarIcon focused={focused}>
+            <AntDesign name="home" size={TAB_BAR_ICON_SIZE} color={color} />
+          </CustomTabBarIcon>),
           headerTitle: () => <AppHeader />,
           headerStyle: {
             backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
-
-          }
+          },
         }}
-
       />
-
 
       <Tabs.Screen
         name="food"
         options={{
-          title: 'Food',
+          title: "Food",
           headerTitle: () => <AppHeader />,
           headerStyle: {
             elevation: 0,
             shadowOpacity: 0,
             backgroundColor: activeColor.background,
-
           },
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="restaurant" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            (<CustomTabBarIcon focused={focused}>
+              <MaterialIcons
+                name="restaurant"
+                size={TAB_BAR_ICON_SIZE}
+                color={color}
+              />
+            </CustomTabBarIcon>)
+
           ),
-          href: (user?.user_type === 'vendor' ? undefined : null)
+          href: user?.user_type === "vendor" ? undefined : null,
         }}
       />
 
       <Tabs.Screen
         name="laundry"
         options={{
-          title: 'Laudry',
+          title: "Laudry",
           headerTitle: () => <AppHeader />,
           headerStyle: {
             backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
-
           },
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="washing-machine" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <CustomTabBarIcon focused={focused}>
+
+              <MaterialCommunityIcons
+                name="washing-machine"
+                size={TAB_BAR_ICON_SIZE}
+                color={color}
+              />
+            </CustomTabBarIcon>
           ),
-          href: (user?.user_type === 'vendor' ? undefined : null)
+          href: user?.user_type === "vendor" ? undefined : null,
         }}
       />
 
       <Tabs.Screen
         name="buySell"
         options={{
-          title: 'Buy/Sell',
+          title: "Buy/Sell",
           headerTitle: () => <AppHeader />,
           headerStyle: {
             backgroundColor: activeColor.background,
             elevation: 0,
             shadowOpacity: 0,
-
           },
-          tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="sell" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <CustomTabBarIcon focused={focused}>
+
+              <MaterialIcons name="sell" size={TAB_BAR_ICON_SIZE} color={color} />
+            </CustomTabBarIcon>
           ),
-          href: (user?.user_type === 'vendor' ? undefined : null)
-
-
+          href: user?.user_type === "vendor" ? undefined : null,
         }}
       />
-
 
       <Tabs.Screen
         name="wallet"
         options={{
-          title: 'Wallet',
-          href: (user?.user_type === 'dispatcher' || user?.user_type === 'vendor' ? undefined : null),
-          tabBarIcon: ({ color, size }) => (
-            <Entypo name="wallet" size={size} color={color} />
+          title: "Wallet",
+          href:
+            user?.user_type === "dispatcher" || user?.user_type === "vendor"
+              ? undefined
+              : null,
+          tabBarIcon: ({ color, focused }) => (
+            <CustomTabBarIcon focused={focused}>
+
+              <Entypo name="wallet" size={TAB_BAR_ICON_SIZE} color={color} />
+            </CustomTabBarIcon>
           ),
-          headerShown: false
+          headerShown: false,
         }}
       />
-
 
       <Tabs.Screen
         name="stats"
         options={{
-          title: 'Stats',
+          title: "Stats",
           headerShown: true,
           headerTintColor: activeColor.text,
           headerStyle: {
@@ -188,18 +236,20 @@ export default function TabLayout() {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: StyleSheet.hairlineWidth,
-            borderBottomColor: activeColor.borderColor
+            borderBottomColor: activeColor.borderColor,
           },
-          tabBarIcon: ({ color, size }) =>
-            <MaterialIcons name="bar-chart" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <CustomTabBarIcon focused={focused}>
+
+              <MaterialIcons
+                name="bar-chart"
+                size={TAB_BAR_ICON_SIZE}
+                color={color}
+              />
+            </CustomTabBarIcon>
+          ),
         }}
-
-
-
       />
-
-
-
     </Tabs>
   );
 }

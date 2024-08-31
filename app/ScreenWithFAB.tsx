@@ -21,7 +21,7 @@ const ScreenWithFAB = ({ children, showFAB = true, onPressFAB }: ScreenWithFABTy
             {children}
             <View style={{
                 position: "absolute",
-                bottom: 20,
+                bottom: 90,
                 right: 10,
             }}>
                 {user?.user_type === 'vendor' && showFAB && <FloatingActionButton
