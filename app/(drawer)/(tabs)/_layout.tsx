@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
-import { StatusBar, StyleSheet } from "react-native";
-import { Link, router, Tabs } from "expo-router";
+import { StyleSheet } from "react-native";
+import { router, Tabs } from "expo-router";
 import { Entypo, AntDesign, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -46,10 +46,12 @@ export default function TabLayout() {
 
           }
         );
-        console.log(token.data)
-        registerNotification(token.data);
+
+        if (!user?.notification_token) {
+          registerNotification(token.data);
+        }
       } catch (error) {
-        console.log("Error getting notification token", error);
+        throw new Error(`Error getting notification token. \n ERROR: ${error}`);
       }
     }
   };

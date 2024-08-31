@@ -1,5 +1,6 @@
 import { router, useSegments } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 
 import { UserReturn } from "@/utils/types";
 type AuthContextType = {
@@ -44,7 +45,7 @@ export function useProtectedRoute(user: {} | null) {
 
     // If isFirstLaunch, display onboarding
     if (isFirstLaunch && !user && !inAuthGroup) {
-      router.replace("onboarding");
+      router.replace("(auth)/welcome");
     } else if (
       // If the user is not signed in and the initial segment is not anything in the auth group.
       !user &&

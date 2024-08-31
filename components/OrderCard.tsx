@@ -9,7 +9,7 @@ import {
   FontAwesome,
   Fontisto,
   Ionicons,
-  MaterialIcons,
+
 } from "@expo/vector-icons";
 import { ItemOrderType } from "@/utils/types";
 import { memo, useContext } from "react";

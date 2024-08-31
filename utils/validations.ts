@@ -81,3 +81,15 @@ export const accountValidationSchema = Yup.object().shape({
   emailCode: Yup.string().required().min(5).max(6).label("Email Code"),
   phoneCode: Yup.string().required().min(5).max(6).label("Phone Code"),
 });
+
+export const userUpdateValidationSchema = Yup.object().shape({
+  fullName: Yup.string(),
+  companyRegNum: Yup.string(),
+  bankAccountNumber: Yup.number()
+    .required()
+    .max(9999999999)
+    .positive()
+    .label("Account Number"),
+  accountHolderName: Yup.string().required().label("Account Holder Name"),
+  bankName: Yup.string().required().label("Bank Name"),
+});

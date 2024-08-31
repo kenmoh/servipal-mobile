@@ -168,11 +168,12 @@ export type UserReturn = {
   id: string;
   dispatch_id: string;
   full_name: string;
-  first_name: string;
-  last_name: string;
+  bank_name: string;
   email: string;
   username: string;
   phone_number: string;
+  account_number: string;
+  account_holder_name: string;
   location: string;
   photo_url: string;
   user_type: Role;
@@ -193,14 +194,6 @@ export type UpdateDispatch = {
   companyRegNumber: string;
   location: string;
   bankName: string;
-  accountHolderName: string;
-  bankAccountNumber: string;
-};
-
-export type UpdateUser = {
-  firstName: string;
-  lastName: string;
-  location: string;
   accountHolderName: string;
   bankAccountNumber: string;
 };
@@ -316,4 +309,23 @@ export type CreateLaundryResponse = {
   id: string;
   vendor_id: string;
   detail?: string;
+};
+
+type Comment = {
+  rating: number;
+  comment: string;
+};
+
+export type ReviewType = {
+  rating: number;
+  average_rating: string;
+  comments: Comment[];
+};
+
+export type UpdateUser = {
+  fullName?: string;
+  bankName: string;
+  bankAccountNumber: string;
+  accountHolderName: string;
+  companyRegNum?: string;
 };

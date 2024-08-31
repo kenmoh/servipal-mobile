@@ -12,9 +12,12 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { router } from "expo-router";
 
-const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.22;
+const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.20;
 const IMAGE_WIDTH = Dimensions.get("screen").width * 0.45;
 
+type SellerType = {
+    username: string
+}
 type CardType = {
     id: number;
     name: string;
@@ -25,6 +28,7 @@ type CardType = {
     description: string;
     avgRating?: number;
     numReviews?: number;
+    seller: SellerType
 };
 const SellCard = ({ item }: { item: CardType }) => {
     const { theme } = useContext(ThemeContext);
@@ -43,6 +47,7 @@ const SellCard = ({ item }: { item: CardType }) => {
                         description: item.description,
                         price: item.price,
                         stock: item.stock,
+                        seller: item.seller.username
                     },
                 })
             }
@@ -51,19 +56,22 @@ const SellCard = ({ item }: { item: CardType }) => {
                 <Image source={item.image_url} style={styles.image} contentFit="fill" />
             </View>
             <View style={{ marginTop: 5 }}>
-                <Text style={[styles.text, { color: Colors.btnPrimaryColor }]}>
-                    ₦ {item?.price}
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+
+                    <Text style={[styles.text, { color: Colors.btnPrimaryColor }]}>
+                        ₦ {item?.price}
+                    </Text>
+                    <Text style={[styles.text, { color: activeColor.icon, fontSize: 10 }]}>
+                        4{item.avgRating}
+                        <AntDesign name="staro" color={Colors.btnPrimaryColor} size={8} />
+
+                    </Text>
+                </View>
                 <View>
                     <Text style={[styles.text, { color: activeColor.icon }]}>
                         {item?.name}
                     </Text>
                 </View>
-                <Text style={[styles.text, { color: activeColor.icon, fontSize: 10 }]}>
-                    {item.avgRating}{" "}
-                    <AntDesign name="staro" color={Colors.btnPrimaryColor} size={8} /> ({" "}
-                    {item?.numReviews} reviews)
-                </Text>
             </View>
         </TouchableOpacity>
     );
@@ -80,7 +88,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        borderRadius: 15,
+        borderRadius: 10,
         borderCurve: "continuous",
     },
     text: {

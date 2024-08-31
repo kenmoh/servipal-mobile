@@ -96,7 +96,6 @@ const riders = () => {
                     keyExtractor={(item: UserReturn) => item?.id?.toString()}
                     renderItem={({ item }) => <RiderCard rider={item} />}
                     estimatedItemSize={200}
-                    showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                     vertical
                     refreshing={isFetching}

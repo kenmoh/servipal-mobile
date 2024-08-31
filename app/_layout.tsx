@@ -16,7 +16,6 @@ import { getTheme, storeTheme } from "@/auth/storage";
 import AuthProvider from "@/components/AuthProvider";
 import CartProvider from "@/components/CartProvider";
 import { Colors } from "@/constants/Colors";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -134,7 +133,6 @@ export default function RootLayout() {
                 }}
               />
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
               <Stack.Screen
                 name="(restaurant)"
                 options={{ headerShown: false }}

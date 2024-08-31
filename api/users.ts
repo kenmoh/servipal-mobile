@@ -4,6 +4,7 @@ import {
   CreateRider,
   CreateUser,
   UpdateProfileImage,
+  UpdateUser,
 } from "@/utils/types";
 
 const dispatchEndpoint = "/users/register-dispatch";
@@ -32,7 +33,7 @@ const createUser = async (user: CreateUser) => {
   };
 
   const result = await client.post(userEndpoint, reqData);
-  if (!result.ok) throw new Error(result.data.detail);
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
 };
 
@@ -47,7 +48,7 @@ const createDispatch = async (user: CreateDispatch) => {
 
   const result = await client.post(dispatchEndpoint, reqData);
 
-  if (!result.ok) throw new Error(result.data.detail);
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
 };
 
@@ -63,7 +64,23 @@ const vendorAddRider = async (rider: CreateRider) => {
 
   const result = await client.post(riderEndpoint, riderData);
 
-  if (!result.ok) throw new Error(result.data.detail);
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  return result.data;
+};
+
+// Update user(Dispatch and Vendor)
+const updateUser = async (data: UpdateUser) => {
+  const userData = {
+    full_name: data.fullName,
+    bank_account_number: data.bankAccountNumber,
+    bank_name: data.bankName,
+    account_holder_name: data.accountHolderName,
+    company_reg_number: data.companyRegNum,
+  };
+
+  const result = await client.patch(`${user}/me/dispatcher`, userData);
+
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
 };
 
@@ -76,7 +93,7 @@ const confirmAccount = async (emailCode: string, phoneCode: string) => {
 
   const result = await client.patch(`${user}/confirm-account`, data);
 
-  if (!result.ok) throw new Error(result.data.detail);
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
 };
 
@@ -96,7 +113,7 @@ const updateProfileImage = async (img: UpdateProfileImage) => {
     },
   });
   if (!response.ok) {
-    throw new Error(response.data?.detail);
+    throw new Error(response?.data.detail.split(":")[1]);
   }
   return response.data;
 };
@@ -109,7 +126,7 @@ const recoverPassword = async (email: string) => {
 
   const result = await client.post("/password/recover", data);
 
-  if (!result.ok) throw new Error(result.data.detail);
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
 };
 
@@ -119,7 +136,7 @@ const fundWallet = async ({ amount }: { amount: number }) => {
 
   const result = await client.post("/top-up", reqData);
 
-  if (!result.ok) throw new Error(result.data.detail);
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
 };
 
@@ -134,4 +151,5 @@ export default {
   vendorAddRider,
   updateProfileImage,
   getUserReviews,
+  updateUser,
 };

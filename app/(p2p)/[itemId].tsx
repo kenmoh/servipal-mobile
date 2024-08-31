@@ -1,6 +1,6 @@
-import { Dimensions, ScrollView, StyleSheet, Text, View, Image } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 // import { Image } from "expo-image";
 import { AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
@@ -17,7 +17,7 @@ const IMG_WIDTH = Dimensions.get("screen").width;
 const ItemDetails = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { imageUrls, name, price, description, stock } = useLocalSearchParams();
+    const { imageUrls, name, price, description, stock, seller } = useLocalSearchParams();
     const images = JSON.parse(imageUrls)
     return (
         <>
@@ -41,7 +41,7 @@ const ItemDetails = () => {
                     <View style={{ width: '100%', alignSelf: "center" }}>
                         <View style={{ marginTop: 20 }}>
                             <Text style={[styles.lightText, { color: activeColor.icon }]}>
-                                Store Name
+                                {seller}
                             </Text>
                             <Text style={[styles.largeText, { color: activeColor.text }]}>
                                 {name}
@@ -74,9 +74,11 @@ const ItemDetails = () => {
                                 <Text style={[styles.lightText, { color: activeColor.text }]}>
                                     Description
                                 </Text>
-                                <Text style={[styles.lightText, { color: activeColor.text, textDecorationLine: 'underline' }]}>
-                                    Reviews
-                                </Text>
+                                <TouchableOpacity activeOpacity={0.7} onPress={() => router.push({ pathname: '(p2p)/reviews', params: { seller, name } })}>
+                                    <Text style={[styles.lightText, { color: activeColor.text, textDecorationLine: 'underline' }]}>
+                                        Reviews
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                             <Text style={[styles.lightText, { color: activeColor.icon, marginVertical: 10, textAlign: 'justify' }]}>
                                 {description}

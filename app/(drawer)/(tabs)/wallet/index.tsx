@@ -34,10 +34,9 @@ const wallet = () => {
     queryFn: walletApi.getUserWallet,
   });
 
-  const { data: fund, mutate, isPending } = useMutation({
+  const { isSuccess: fundSuccess, mutate, isPending, error: fundError } = useMutation({
     mutationFn: walletApi.withdrawFunds
   })
-
 
   const walletData: Transactions[] = data?.data?.transactions;
 
@@ -53,9 +52,32 @@ const wallet = () => {
     return () => subscription.remove();
   }, []);
 
+  useEffect(() => {
+    if (fundError) {
+      showMessage({
+        message: fundError.message,
+        type: "danger",
+        style: {
+          alignItems: "center",
+        },
+      });
+    }
+    if (fundSuccess) {
+      showMessage({
+        message: 'Withrawal Successful!',
+        type: "success",
+        style: {
+          alignItems: "center",
+        },
+      });
+    }
+  }, [fundError, fundSuccess])
+
   const handleRefresch = () => refetch();
 
   useRefreshOnFocus(refetch);
+
+
 
 
   if (isPending) {
@@ -99,24 +121,7 @@ const wallet = () => {
     </View>;
   }
 
-  if (fund?.problem) {
-    showMessage({
-      message: fund?.data.detail,
-      type: "danger",
-      style: {
-        alignItems: "center",
-      },
-    });
-  }
-  if (fund?.ok) {
-    showMessage({
-      message: 'Withrawal Successful!',
-      type: "success",
-      style: {
-        alignItems: "center",
-      },
-    });
-  }
+
 
 
   return (

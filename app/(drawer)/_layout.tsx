@@ -20,7 +20,6 @@ import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import client from "@/api/client";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation } from "@tanstack/react-query";
-import { string } from "yup";
 import { showMessage } from "react-native-flash-message";
 
 type BackArrowType = {
@@ -172,7 +171,7 @@ const CustomDrawerContent = (props: any) => {
                             </Text>
                         </View>
                     </View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('(dawer)/me')}>
+                    <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('(drawer)/me')}>
                         <Feather name="edit" color={activeColor.icon} size={18} />
                     </TouchableOpacity>
                 </View>
@@ -302,6 +301,12 @@ const DrawerLayout = () => {
                 name="(tabs)"
                 options={{
                     headerShown: false,
+                }}
+            />
+            <Drawer.Screen
+                name="me"
+                options={{
+                    title: 'Update Profile',
                 }}
             />
 

@@ -24,7 +24,7 @@ const addRider = () => {
     let activeColor = Colors[theme.mode];
 
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
+    const { error, isSuccess, mutate, isPending } = useMutation({
         mutationFn: (rider: CreateRider) => usersApi.vendorAddRider(rider),
     });
 

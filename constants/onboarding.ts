@@ -1,7 +1,7 @@
-import rider from "@/assets/images/rider.jpg";
-import foodOrdering from "@/assets/images/food-ordering.jpg";
-import p2p from "@/assets/images/p2p.jpg";
-import laundry from "@/assets/images/laundry.jpg";
+import rider from "@/assets/images/rider1.jpg";
+import foodOrdering from "@/assets/images/restaurant.jpg";
+import p2p from "@/assets/images/mkt.jpg";
+import laundry from "@/assets/images/laundry1.jpg";
 
 export const onboardingSlides = [
   {
@@ -21,7 +21,7 @@ export const onboardingSlides = [
     id: 3,
     name: "Delicious Meals at Your Doorstep",
     description:
-      "Order from your favorite restaurants and enjoy fast, fresh food delivery.",
+      "Order from your favourite restaurants and enjoy fast, fresh food delivery.",
     image: foodOrdering,
   },
   {

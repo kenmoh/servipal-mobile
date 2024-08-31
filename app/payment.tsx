@@ -182,7 +182,7 @@ const payment = () => {
     const handleGetTransferDetails = async () => {
         setIsLoading(true);
         const result = (await transfer.transferPaymentDetail(
-            id as string
+            params.id as string
         )) as TransferDetailResponse;
         setIsLoading(false);
         router.push({
@@ -199,7 +199,7 @@ const payment = () => {
 
     useEffect(() => {
         if (status?.[0] === "status=successful") {
-            router.push("/success");
+            router.push("success");
             showMessage({
                 message: "Payment Successful!",
                 type: "success",
@@ -209,7 +209,7 @@ const payment = () => {
             }, TIME_OUT);
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
-            router.push("/failed");
+            router.push("failed");
             showMessage({
                 message: "Payment failed to complete!",
                 type: "danger",
@@ -261,7 +261,7 @@ const payment = () => {
                             label="WALLET"
                             color={activeColor.text}
                             backgroundColor={activeColor.profileCard}
-                            onPress={() => handlePayWithWallet(id as string)}
+                            onPress={() => handlePayWithWallet(params.id as string)}
                         />
                         <TransferBtn
                             icon={

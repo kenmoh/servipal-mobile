@@ -18,6 +18,15 @@ const BuySellLayout = () => {
                     backgroundColor: activeColor.background,
                 }
             }} />
+            <Stack.Screen name='reviews' options={{
+                title: 'Reviews',
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerTintColor: activeColor.text,
+                headerStyle: {
+                    backgroundColor: activeColor.background,
+                }
+            }} />
             <Stack.Screen name='[itemId]' options={{
                 title: 'Item Details',
                 headerShadowVisible: false,

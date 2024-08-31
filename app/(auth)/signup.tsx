@@ -1,31 +1,31 @@
 import { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, View, ScrollView } from "react-native";
+
 
 import { Formik } from "formik";
 
 import AccountLinkText from "@/components/AcountLink";
 import CustomBtn from "@/components/CustomBtn";
 import CustomTextInput from "@/components/CustomTextInput";
-import TitleText from "@/components/TitleText";
+
 
 import usersApi from "@/api/users";
 import { CreateUser } from "@/utils/types";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { vendorValidationSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { showMessage } from "react-native-flash-message";
 import { useMutation } from "@tanstack/react-query";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import { Colors, themeMode } from "@/constants/Colors";
+import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { SIZES } from "@/constants/Sizes";
 
 const SenderSignup = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  const { error, isSuccess, mutate, isPending, data } = useMutation({
+  const { error, isSuccess, mutate, isPending } = useMutation({
     mutationFn: (user: CreateUser) => usersApi.createUser(user),
   });
 

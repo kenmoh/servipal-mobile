@@ -19,7 +19,7 @@ const Onboarding = () => {
                 loop={false}
                 dot={
                     <View
-                        style={[styles.dot, { backgroundColor: activeColor.icon, width: 15 }]}
+                        style={[styles.dot, { backgroundColor: '#ddd', width: 10 }]}
                     />
 
                 }
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     },
     dot: {
         width: 25,
-        height: 5,
+        height: 10,
         borderRadius: 10,
         marginLeft: 10
     },

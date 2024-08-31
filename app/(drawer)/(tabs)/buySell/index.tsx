@@ -29,7 +29,7 @@ const index = () => {
                 contentContainerStyle={{
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    gap: 20,
+                    gap: 15,
 
                 }}
                 columnWrapperStyle={{ gap: 10 }}
