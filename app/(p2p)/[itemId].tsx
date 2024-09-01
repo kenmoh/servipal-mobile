@@ -1,4 +1,12 @@
-import { Dimensions, ScrollView, StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import {
+    Dimensions,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TouchableOpacity,
+} from "react-native";
 import React, { useContext } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 // import { Image } from "expo-image";
@@ -9,25 +17,23 @@ import { Colors } from "@/constants/Colors";
 import CustomBtn from "@/components/CustomBtn";
 import { StatusBar } from "expo-status-bar";
 
-
 const IMG_HEIGHT = Dimensions.get("screen").height * 0.38;
 const IMG_WIDTH = Dimensions.get("screen").width;
-
 
 const ItemDetails = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { imageUrls, name, price, description, stock, seller } = useLocalSearchParams();
-    const images = JSON.parse(imageUrls)
+    const { imageUrls, name, price, description, stock, seller, id } =
+        useLocalSearchParams();
+    const images = JSON.parse(imageUrls);
     return (
         <>
-
-            <Stack.Screen options={{
-                headerShown: false
-
-            }} />
+            <Stack.Screen
+                options={{
+                    headerShown: false,
+                }}
+            />
             <ScrollView style={{ flex: 1 }}>
-
                 <View>
                     <Swiper style={{ height: IMG_HEIGHT }}>
                         {images?.map((image: string) => (
@@ -36,9 +42,12 @@ const ItemDetails = () => {
                     </Swiper>
                 </View>
                 <View
-                    style={[styles.container, { backgroundColor: activeColor.background }]}
+                    style={[
+                        styles.container,
+                        { backgroundColor: activeColor.background },
+                    ]}
                 >
-                    <View style={{ width: '100%', alignSelf: "center" }}>
+                    <View style={{ width: "100%", alignSelf: "center" }}>
                         <View style={{ marginTop: 20 }}>
                             <Text style={[styles.lightText, { color: activeColor.icon }]}>
                                 {seller}
@@ -48,12 +57,19 @@ const ItemDetails = () => {
                             </Text>
                         </View>
                         <View
-                            style={{ flexDirection: "row", justifyContent: "space-between", marginVertical: 10, }}
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                marginVertical: 10,
+                            }}
                         >
-                            <View
-                                style={{ flexDirection: "row", gap: 5, }}
-                            >
-                                <AntDesign name="staro" color={"gold"} size={10} style={{ marginTop: 2 }} />
+                            <View style={{ flexDirection: "row", gap: 5 }}>
+                                <AntDesign
+                                    name="staro"
+                                    color={"gold"}
+                                    size={10}
+                                    style={{ marginTop: 2 }}
+                                />
                                 <Text style={[styles.lightText, { color: activeColor.icon }]}>
                                     4.5
                                 </Text>
@@ -70,24 +86,51 @@ const ItemDetails = () => {
                         </View>
 
                         <View style={{ marginTop: 15 }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                }}
+                            >
                                 <Text style={[styles.lightText, { color: activeColor.text }]}>
                                     Description
                                 </Text>
-                                <TouchableOpacity activeOpacity={0.7} onPress={() => router.push({ pathname: '(p2p)/reviews', params: { seller, name } })}>
-                                    <Text style={[styles.lightText, { color: activeColor.text, textDecorationLine: 'underline' }]}>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    onPress={() =>
+                                        router.push({
+                                            pathname: "(p2p)/reviews",
+                                            params: { seller, name },
+                                        })
+                                    }
+                                >
+                                    <Text
+                                        style={[
+                                            styles.lightText,
+                                            {
+                                                color: activeColor.text,
+                                                textDecorationLine: "underline",
+                                            },
+                                        ]}
+                                    >
                                         Reviews
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                            <Text style={[styles.lightText, { color: activeColor.icon, marginVertical: 10, textAlign: 'justify' }]}>
+                            <Text
+                                style={[
+                                    styles.lightText,
+                                    {
+                                        color: activeColor.icon,
+                                        marginVertical: 10,
+                                        textAlign: "justify",
+                                    },
+                                ]}
+                            >
                                 {description}
                             </Text>
                         </View>
-
-
                     </View>
-
                 </View>
             </ScrollView>
             <View
@@ -96,14 +139,26 @@ const ItemDetails = () => {
                     width: IMG_WIDTH,
                     alignSelf: "center",
                     justifyContent: "space-between",
-                    position: 'absolute',
+                    position: "absolute",
                     bottom: 0,
-                    padding: 10
+                    padding: 10,
                 }}
             >
-                <Text style={[styles.largeText, { color: activeColor.text, alignSelf: 'flex-end' }]}>₦ {price}</Text>
+                <Text
+                    style={[
+                        styles.largeText,
+                        { color: activeColor.text, alignSelf: "flex-end" },
+                    ]}
+                >
+                    ₦ {price}
+                </Text>
                 <View>
-                    <CustomBtn btnBorderRadius={50} btnColor={Colors.btnPrimaryColor} label="Buy" />
+                    <CustomBtn
+                        btnBorderRadius={50}
+                        btnColor={Colors.btnPrimaryColor}
+                        label="Add Info"
+                        onPress={() => router.push({ pathname: '/(p2p)/buyItem', params: { price, id } })}
+                    />
                 </View>
             </View>
         </>
@@ -116,14 +171,12 @@ const styles = StyleSheet.create({
     image: {
         width: IMG_WIDTH,
         height: IMG_HEIGHT,
-        objectFit: 'fill'
-
+        objectFit: "fill",
     },
     container: {
         flex: 1,
-        width: '90%',
-        alignSelf: 'center',
-
+        width: "90%",
+        alignSelf: "center",
     },
     lightText: {
         fontFamily: "Poppins-Regular",

@@ -16,7 +16,7 @@ import userApi from '@/api/users'
 import { showMessage } from 'react-native-flash-message';
 import { UpdateUser } from '@/utils/types';
 
-const me = () => {
+const updateProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth()
@@ -25,6 +25,8 @@ const me = () => {
         mutationFn: (data: UpdateUser) => userApi.updateUser(data),
 
     })
+
+
 
 
     useEffect(() => {
@@ -173,6 +175,6 @@ const me = () => {
     );
 }
 
-export default me
+export default updateProfile
 
 const styles = StyleSheet.create({})

@@ -93,3 +93,8 @@ export const userUpdateValidationSchema = Yup.object().shape({
   accountHolderName: Yup.string().required().label("Account Holder Name"),
   bankName: Yup.string().required().label("Bank Name"),
 });
+
+export const buyItemValidationSchema = Yup.object().shape({
+  quantity: Yup.number().required().min(1).label("Quantity"),
+  additionalInfo: Yup.string(),
+});
