@@ -1,6 +1,6 @@
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import { Platform, StatusBar, View } from "react-native";
+import { Platform } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import "react-native-reanimated";
@@ -8,7 +8,6 @@ import FlashMessage from "react-native-flash-message";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import * as NavigationBar from "expo-navigation-bar";
 import * as SystemUI from 'expo-system-ui'
-import { Drawer } from 'expo-router/drawer';
 import * as Network from 'expo-network';
 
 import { ThemeContext, ThemeModeType } from "@/context/themeContext";

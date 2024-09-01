@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { router, Tabs } from "expo-router";
 import {
   Entypo,
@@ -24,28 +24,33 @@ const TAB_BAR_ICON_SIZE = 25;
 const CustomTabBarIcon = ({
   children,
   focused,
+  label
 }: {
   children: ReactNode;
   focused: boolean;
+  label: string
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   return (
-    <View
-      style={{
-        backgroundColor: focused
-          ? Colors.btnPrimaryColor
-          : activeColor.background,
-        padding: 5,
-        borderRadius: 80,
-        height: 40,
-        width: 40,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      {children}
-    </View>
+    <>
+      <View
+        style={{
+          backgroundColor: focused
+            ? Colors.btnPrimaryColor
+            : activeColor.background,
+          padding: 5,
+          borderRadius: 80,
+          height: 40,
+          width: 40,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {children}
+      </View>
+      <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 12, color: focused ? activeColor.text : activeColor.icon }}>{label}</Text>
+    </>
   );
 };
 
@@ -102,34 +107,21 @@ export default function TabLayout() {
         headerTintColor: activeColor.text,
         tabBarShowLabel: false,
         tabBarStyle: {
-          borderTopWidth: 0,
-          backgroundColor: activeColor.profileCard,
-          height: 60,
-          // borderTopColor: activeColor.profileCard,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          backgroundColor: activeColor.background,
+          borderTopColor: activeColor.profileCard,
+          height: 70,
           justifyContent: 'center',
           alignItems: "center",
-          borderRadius: 50,
-          marginBottom: 5,
-          paddingHorizontal: SIZES.paddingMedium,
-          position: "absolute",
-          marginHorizontal: SIZES.marginSmall,
-
         },
-        // tabBarLabelStyle: {
-        //   fontSize: 12,
-        //   marginBottom: 10,
 
-        // },
-        // tabBarIconStyle: {
-        //   // marginTop: 10
-        // }
       }}
     >
       <Tabs.Screen
         name="topTab"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (<CustomTabBarIcon focused={focused}>
+          tabBarIcon: ({ color, focused }) => (<CustomTabBarIcon focused={focused} label="Home">
             <AntDesign name="home" size={TAB_BAR_ICON_SIZE} color={color} />
           </CustomTabBarIcon>),
           headerTitle: () => <AppHeader />,
@@ -152,11 +144,12 @@ export default function TabLayout() {
             backgroundColor: activeColor.background,
           },
           tabBarIcon: ({ color, focused }) => (
-            (<CustomTabBarIcon focused={focused}>
+            (<CustomTabBarIcon focused={focused} label="Food">
               <MaterialIcons
                 name="restaurant"
                 size={TAB_BAR_ICON_SIZE}
                 color={color}
+
               />
             </CustomTabBarIcon>)
 
@@ -176,7 +169,7 @@ export default function TabLayout() {
             shadowOpacity: 0,
           },
           tabBarIcon: ({ color, focused }) => (
-            <CustomTabBarIcon focused={focused}>
+            <CustomTabBarIcon focused={focused} label="Laundry">
 
               <MaterialCommunityIcons
                 name="washing-machine"
@@ -200,7 +193,7 @@ export default function TabLayout() {
             shadowOpacity: 0,
           },
           tabBarIcon: ({ color, focused }) => (
-            <CustomTabBarIcon focused={focused}>
+            <CustomTabBarIcon focused={focused} label="Buy">
 
               <MaterialIcons name="sell" size={TAB_BAR_ICON_SIZE} color={color} />
             </CustomTabBarIcon>
@@ -218,7 +211,7 @@ export default function TabLayout() {
               ? undefined
               : null,
           tabBarIcon: ({ color, focused }) => (
-            <CustomTabBarIcon focused={focused}>
+            <CustomTabBarIcon focused={focused} label="Wallet">
 
               <Entypo name="wallet" size={TAB_BAR_ICON_SIZE} color={color} />
             </CustomTabBarIcon>
@@ -241,7 +234,7 @@ export default function TabLayout() {
             borderBottomColor: activeColor.borderColor,
           },
           tabBarIcon: ({ color, focused }) => (
-            <CustomTabBarIcon focused={focused}>
+            <CustomTabBarIcon focused={focused} label="Stats">
 
               <MaterialIcons
                 name="bar-chart"

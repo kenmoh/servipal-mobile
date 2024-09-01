@@ -5,7 +5,7 @@ export type OrderStatus =
   | "Received"
   | "Cancelled";
 
-type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
+export type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
 type OrderType = "delivery" | "food" | "laundry";
 
 type AccountStatus = "pending" | "confirmed";

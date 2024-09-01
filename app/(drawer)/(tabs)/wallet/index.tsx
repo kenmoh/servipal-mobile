@@ -19,10 +19,10 @@ import { focusManager, useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/auth/authContext";
 import walletApi from "@/api/wallet";
 import TransactionCard from "@/components/TransactionCard";
-import { Transactions } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { SIZES } from "@/constants/Sizes";
 import { showMessage } from "react-native-flash-message";
+import { router } from "expo-router";
 
 const wallet = () => {
   const { theme } = useContext(ThemeContext);
@@ -34,9 +34,17 @@ const wallet = () => {
     queryFn: walletApi.getUserWallet,
   });
 
-  const { isSuccess: fundSuccess, mutate, isPending, error: fundError } = useMutation({
-    mutationFn: walletApi.withdrawFunds
-  })
+  const {
+    isSuccess: fundSuccess,
+    mutate,
+    isPending,
+    data: wallet,
+    error: fundError,
+  } = useMutation({
+    mutationFn: walletApi.withdrawFunds,
+  });
+
+  console.log(wallet)
 
   const walletData = data?.data?.transactions;
 
@@ -52,7 +60,6 @@ const wallet = () => {
     return () => subscription.remove();
   }, []);
 
-
   useEffect(() => {
     if (fundError) {
       showMessage({
@@ -65,21 +72,18 @@ const wallet = () => {
     }
     if (fundSuccess) {
       showMessage({
-        message: 'Withrawal Successful!',
+        message: "Withrawal Successful!",
         type: "success",
         style: {
           alignItems: "center",
         },
       });
     }
-  }, [fundError, fundSuccess])
+  }, [fundError, fundSuccess]);
 
   const handleRefresch = () => refetch();
 
   useRefreshOnFocus(refetch);
-
-
-
 
   if (isPending) {
     return (
@@ -122,30 +126,48 @@ const wallet = () => {
     </View>;
   }
 
-
-
-
   return (
     <>
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
-
 
       <WalletCard onPress={mutate} wallet={data?.data} user={user!} />
 
       <View
         style={[styles.container, { backgroundColor: activeColor.background }]}
       >
-        <Text
+        <View
           style={{
-            color: activeColor.text,
-            fontFamily: "Poppins-SemiBold",
-            fontSize: 16,
-            letterSpacing: 2.5,
-            marginTop: 10
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: SIZES.marginSmall,
+            paddingHorizontal: SIZES.paddingSmall,
           }}
         >
-          Transactions
-        </Text>
+          <Text
+            style={{
+              color: activeColor.text,
+              fontFamily: "Poppins-SemiBold",
+              fontSize: 16,
+              letterSpacing: 2.5,
+            }}
+          >
+            Transactions
+          </Text>
+
+          {user?.user_type === 'vendor' && <Text
+            onPress={() => router.push('/(tabs)/wallet/failedTranx')}
+            style={{
+              color: activeColor.text,
+              fontFamily: "Poppins-Light",
+              fontSize: 12,
+
+              marginTop: 10,
+            }}
+          >
+            Top-up Transactions
+          </Text>}
+        </View>
         <FlatList
           data={walletData}
           keyExtractor={(item) => item?.id?.toString()}
@@ -172,7 +194,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: SIZES.paddingSmall,
     borderTopEndRadius: 25,
-    borderTopLeftRadius: 25
-
+    borderTopLeftRadius: 25,
   },
 });

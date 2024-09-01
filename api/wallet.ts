@@ -9,8 +9,15 @@ const withdrawFunds = async () => {
   if (!respose.ok) throw new Error(respose?.data.detail);
   return respose.data;
 };
+const getUserTopUps = async () => {
+  const respose = await client.get(`/top-up`);
+  console.log(respose);
+  if (!respose.ok) throw new Error(respose?.data.detail);
+  return respose.data;
+};
 
 export default {
   getUserWallet,
   withdrawFunds,
+  getUserTopUps,
 };

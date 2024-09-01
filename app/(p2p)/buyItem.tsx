@@ -26,6 +26,7 @@ const buyItem = () => {
             mutationFn: (info: ItemInfo) => makePayment(id, info),
         });
     console.log(data?.total_cost, data?.id)
+    console.log(data)
 
     useEffect(() => {
         if (error) {

@@ -19,7 +19,7 @@ const paymentSuccess = () => {
                 }}
             >
                 <LottieView
-                    source={require("../assets/animations/paymentSuccess.json")}
+                    source={require("../assets/animations/paymentFailed.json")}
                     autoPlay
                     loop
                     style={{

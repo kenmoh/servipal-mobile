@@ -126,9 +126,10 @@ const CustomDrawerContent = (props: any) => {
                         padding: 15,
                         borderBottomWidth: StyleSheet.hairlineWidth,
                         borderBottomColor: activeColor.icon,
+
                     }}
                 >
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", }}>
                         <TouchableOpacity
                             onPress={pickImage}
                             style={{ width: 80, height: 80, borderRadius: 100 }}
@@ -154,7 +155,7 @@ const CustomDrawerContent = (props: any) => {
                                 }}
                             />
                         </TouchableOpacity>
-                        <View>
+                        <View >
                             <Text
                                 style={[
                                     styles.profileText,
@@ -366,6 +367,5 @@ const styles = StyleSheet.create({
     profileText: {
         fontFamily: "Poppins-Light",
         fontSize: 12,
-        lineHeight: 15,
     },
 });
