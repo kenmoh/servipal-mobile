@@ -38,7 +38,7 @@ const wallet = () => {
     mutationFn: walletApi.withdrawFunds
   })
 
-  const walletData: Transactions[] = data?.data?.transactions;
+  const walletData = data?.data?.transactions;
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -51,6 +51,7 @@ const wallet = () => {
 
     return () => subscription.remove();
   }, []);
+
 
   useEffect(() => {
     if (fundError) {

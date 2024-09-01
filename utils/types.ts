@@ -153,6 +153,7 @@ export type Transaction = {
   username: string;
   transaction_type: TransactionType;
   payment_transaction_type: PaymentTransactionType;
+  fund_status: PaymentStatus;
   created_at: string;
 };
 

@@ -30,7 +30,7 @@ type CardType = {
     numReviews?: number;
     seller: SellerType
 };
-const SellCard = ({ item }: { item: CardType }) => {
+const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
@@ -51,6 +51,7 @@ const SellCard = ({ item }: { item: CardType }) => {
                     },
                 })
             }
+            style={{ marginBottom: isLastItem ? 80 : 0 }}
         >
             <View style={styles.container}>
                 <Image source={item.image_url} style={styles.image} contentFit="fill" />

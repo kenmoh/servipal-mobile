@@ -26,7 +26,7 @@ export type CardProps = {
 };
 const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.3;
 
-const FoodLaundryCard = ({ item, isLaundry }: { item: CardProps, isLaundry: boolean }) => {
+const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isLaundry: boolean, isLastItem: boolean }) => {
 
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
@@ -54,7 +54,7 @@ const FoodLaundryCard = ({ item, isLaundry }: { item: CardProps, isLaundry: bool
                     },
                 })
             }
-            style={{ marginVertical: 5 }}
+            style={{ marginVertical: 5, marginBottom: isLastItem ? 80 : 0, }}
         >
             <View style={[styles.container]}>
                 <Image source={item.sample_company_image} style={styles.image} />

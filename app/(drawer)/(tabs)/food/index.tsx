@@ -141,7 +141,12 @@ const index = () => {
                 keyExtractor={(item) => item.id.toString()}
                 key={1}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => <FoodLaundryCard item={item} isLaundry={false} />}
+                renderItem={({ item, index }) => {
+                    const isLastItem = index === restaurants?.data.length - 1
+                    return (
+                        <FoodLaundryCard item={item} isLaundry={false} isLastItem={isLastItem} />
+                    )
+                }}
             />
         </View>
     );

@@ -104,14 +104,16 @@ export default function TabLayout() {
         tabBarStyle: {
           borderTopWidth: 0,
           backgroundColor: activeColor.profileCard,
-          height: 70,
+          height: 60,
           // borderTopColor: activeColor.profileCard,
-          // justifyContent: 'center',
+          justifyContent: 'center',
           alignItems: "center",
           borderRadius: 50,
           marginBottom: 5,
           paddingHorizontal: SIZES.paddingMedium,
           position: "absolute",
+          marginHorizontal: SIZES.marginSmall,
+
         },
         // tabBarLabelStyle: {
         //   fontSize: 12,

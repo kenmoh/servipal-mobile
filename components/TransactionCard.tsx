@@ -17,52 +17,56 @@ const TransactionCard = ({
 
     return (
         <>
-            <View
-                style={[
-                    styles.container,
-                    {
-                        backgroundColor: activeColor.profileCard,
-                        marginBottom: isLastTranx ? 20 : 0,
-                    },
-                ]}
-            >
-                <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                    {parseInt(transaction.amount) < 0 ? (
-                        <Feather name="arrow-up-right" size={15} color={Colors.error} />
-                    ) : (
-                        <Feather name="arrow-down-left" size={15} color={"green"} />
-                    )}
-                    <View>
-                        <Text style={[styles.text, { color: activeColor.text }]}>
-                            {transaction.username}
-                        </Text>
+            {
+                transaction.fund_status !== 'pending' && (
+                    <View
+                        style={[
+                            styles.container,
+                            {
+                                backgroundColor: activeColor.profileCard,
+                                marginBottom: isLastTranx ? 20 : 0,
+                            },
+                        ]}
+                    >
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+                            {parseInt(transaction.amount) < 0 ? (
+                                <Feather name="arrow-up-right" size={15} color={Colors.error} />
+                            ) : (
+                                <Feather name="arrow-down-left" size={15} color={"green"} />
+                            )}
+                            <View>
+                                <Text style={[styles.text, { color: activeColor.text }]}>
+                                    {transaction.username}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: "Poppins-Thin",
+                                        fontSize: 12,
+                                        color: activeColor.text,
+                                    }}
+                                >
+                                    {transaction.created_at.split("T")[0]}{" "}
+                                    {transaction.created_at.split("T")[1].split(".")[0]}
+                                </Text>
+                            </View>
+                        </View>
+
                         <Text
-                            style={{
-                                fontFamily: "Poppins-Thin",
-                                fontSize: 12,
-                                color: activeColor.text,
-                            }}
+                            style={[
+                                styles.text,
+                                {
+                                    color:
+                                        parseInt(transaction.amount) < 1
+                                            ? Colors.error
+                                            : activeColor.text,
+                                },
+                            ]}
                         >
-                            {transaction.created_at.split("T")[0]}{" "}
-                            {transaction.created_at.split("T")[1].split(".")[0]}
+                            {transaction.amount}
                         </Text>
                     </View>
-                </View>
-
-                <Text
-                    style={[
-                        styles.text,
-                        {
-                            color:
-                                parseInt(transaction.amount) < 1
-                                    ? Colors.error
-                                    : activeColor.text,
-                        },
-                    ]}
-                >
-                    {transaction.amount}
-                </Text>
-            </View>
+                )
+            }
         </>
     );
 };

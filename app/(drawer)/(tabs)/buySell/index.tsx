@@ -33,7 +33,12 @@ const index = () => {
 
                 }}
                 columnWrapperStyle={{ gap: 10 }}
-                renderItem={({ item }) => (<SellCard item={item} />)}
+                renderItem={({ item, index }) => {
+                    const isLastItem = index === data?.data.length - 1
+                    return (
+                        <SellCard item={item} isLastItem={isLastItem} />
+                    )
+                }}
             />
         </View>
     )
