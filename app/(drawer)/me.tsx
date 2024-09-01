@@ -71,7 +71,7 @@ const updateProfile = () => {
                         initialValues={{
                             fullName: user?.full_name ? user.full_name : "",
                             companyRegNum: user?.company_reg_number ? user.company_reg_number : "",
-                            bankAccountNumber: user?.account_number ? user.account_number : "",
+                            bankAccountNumber: user?.bank_account_number ? user.bank_account_number : "",
                             accountHolderName: user?.account_holder_name ? user.account_holder_name : "",
                             bankName: user?.bank_name ? user.bank_name : "",
 

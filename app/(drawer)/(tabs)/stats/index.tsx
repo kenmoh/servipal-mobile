@@ -33,17 +33,6 @@ const index = () => {
 
     const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
 
-    // const {
-    //     data: order,
-    //     error,
-    //     isLoading,
-    //     isFetching,
-    //     refetch,
-    // } = useQuery({
-    //     queryKey: ["orders"],
-    //     queryFn: ordersApi.getItemOrders,
-    // });
-
     const { data } = useQuery({
         queryKey: ['stats', user?.id],
         queryFn: ordersApi.getUserOrderStats
@@ -199,7 +188,7 @@ const index = () => {
                     </View>
                 </View>
 
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", justifyContent: 'space-between', width: '95%', alignSelf: 'center' }}>
                     <RenderBtn
                         title="Package"
                         orderType="package"

@@ -171,31 +171,8 @@ const index = () => {
       </Text>
     </View>;
   }
-  // if (
-  //   !packageOrdersQuery?.data?.data ||
-  //   !foodOrdersQuery?.data?.data ||
-  //   !laundryOrdersQuery?.data?.data
-  // ) {
-  //   <View
-  //     style={{
-  //       flex: 1,
-  //       backgroundColor: activeColor.background,
-  //       alignItems: "center",
-  //       justifyContent: "center",
-  //     }}
-  //   >
-  //     <Text
-  //       style={{
-  //         fontFamily: "Poppins-Bold",
-  //         fontSize: 16,
-  //         color: activeColor.icon,
-  //         alignSelf: 'center'
-  //       }}
-  //     >
-  //       No Order yet
-  //     </Text>
-  //   </View>;
-  // }
+
+  console.log(activeQuery?.data?.data)
 
   return (
     <View style={{ flex: 1, backgroundColor: activeColor.background }}>
@@ -204,7 +181,7 @@ const index = () => {
         backgroundColor={activeColor.background}
         style={theme.mode === "dark" ? "light" : "dark"}
       />
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", justifyContent: 'space-around' }}>
         <RenderBtn
           title="Package"
           orderType="package"
@@ -229,10 +206,11 @@ const index = () => {
         data={activeQuery?.data?.data}
         keyExtractor={(item) => item?.id}
         renderItem={({ item }) =>
-          item.order_status === "Pending" &&
-          item.payment_status === "paid" && (
-            <OrderCard order={item} isHomeScreen={isHomeScreen} />
-          )
+          (item.order_status === "Pending" &&
+            item.payment_status === "paid") &&
+          <OrderCard order={item} isHomeScreen={isHomeScreen} />
+
+
         }
         estimatedItemSize={200}
         showsVerticalScrollIndicator={false}

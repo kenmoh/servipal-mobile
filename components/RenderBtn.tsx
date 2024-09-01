@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
     container: {
         marginVertical: 10,
         borderRadius: 5,
-        marginLeft: 10
+
     },
 });

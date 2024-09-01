@@ -27,6 +27,7 @@ import CustomBtn from "@/components/CustomBtn";
 import { useContext, useMemo } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
+import { showMessage } from "react-native-flash-message";
 
 const IMG_HEIGHT = 300;
 
@@ -85,9 +86,25 @@ export default function HomeScreen() {
   });
 
   // Handle order Received
-  const { mutate: handleReceived, isPending: received } = useMutation({
+  const { mutate: handleReceived, isPending: received, data: receivedData } = useMutation({
     mutationFn: () => ordersApi.orderReceived(id),
+    onSuccess: () => {
+      showMessage({
+        message: 'Order Completed',
+        type: 'success'
+      })
+      router.push('(tabs)/stats')
+    },
+    onError: () => {
+      showMessage({
+        message: 'Fail to complete',
+        type: 'danger'
+      })
+      router.push('(tabs)/stats')
+    }
   });
+
+  console.log(receivedData)
 
   // Handle vendor cancel order
   const { mutate: handleCancelOrderByVebdor } = useMutation({
@@ -176,7 +193,7 @@ export default function HomeScreen() {
                     : order?.order_status === "Received"
                       ? "#25a18e"
                       : order?.order_status === "Delivered"
-                        ? "#27187e"
+                        ? "skyblue"
                         : "#e8ac65"
                 }
               />

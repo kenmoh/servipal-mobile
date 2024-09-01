@@ -5,21 +5,15 @@ import CustomBtn from "./CustomBtn";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { SIZES } from "@/constants/Sizes";
+import { router } from "expo-router";
 
-[
-    {
-        amount: "string",
-        current_username_or_company_name: "string",
-        fund_status: "failed",
-        payment_url: "string",
-        created_at: "2024-09-01T10:20:38.956Z",
-    },
-];
 
 type FundCardType = {
     amount: number;
     current_username_or_company_name: string;
     fund_status: PaymentStatus;
+    payment_url: string
+    id: string
     created_at: string;
 };
 
@@ -48,7 +42,7 @@ const FundCard = ({
                         Username: {item.current_username_or_company_name}
                     </Text>
                     <Text style={[styles.text, { color: activeColor.icon }]}>
-                        Amount: {item.amount}
+                        Amount: ₦{item.amount}
                     </Text>
                     <Text
                         style={[
@@ -58,7 +52,7 @@ const FundCard = ({
                                     item.fund_status === "pending"
                                         ? Colors.delivered
                                         : item.fund_status === "paid"
-                                            ? Colors.success
+                                            ? 'teal'
                                             : item.fund_status === "failed"
                                                 ? Colors.error
                                                 : Colors.error,
@@ -72,9 +66,22 @@ const FundCard = ({
                     {item.created_at.split('T')[0]} {item.created_at.split('T')[1].split('.')[0]}
                 </Text>
             </View>
-            {/* <TouchableOpacity style={[styles.btn]}>
-                <Text style={[styles.text, { color: activeColor.text }]}>Re-Try</Text>
-            </TouchableOpacity> */}
+            {
+                item.fund_status === 'pending' && (
+                    <TouchableOpacity activeOpacity={0.7} style={[styles.btn]} onPress={() => router.push({
+                        pathname: "payment",
+                        params: {
+                            paymentUrl: item.payment_url,
+                            orderType: 'delivery',
+                            id: item.id,
+                            totalCost: item.amount,
+                            paymentType: 'fundWallet'
+                        },
+                    })}>
+                        <Text style={[styles.text, { color: '#fff' }]}>Re-Try</Text>
+                    </TouchableOpacity>
+                )
+            }
         </View>
     );
 };

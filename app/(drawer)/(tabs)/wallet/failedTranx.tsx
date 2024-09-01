@@ -13,6 +13,7 @@ const failedTranx = () => {
     let activeColor = Colors[theme.mode];
     const { user } = useAuth()
 
+
     const { data } = useQuery({
         queryKey: ['funds', user?.id],
         queryFn: walletApi.getUserTopUps

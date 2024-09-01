@@ -173,7 +173,7 @@ export type UserReturn = {
   email: string;
   username: string;
   phone_number: string;
-  account_number: string;
+  bank_account_number: string;
   account_holder_name: string;
   location: string;
   photo_url: string;

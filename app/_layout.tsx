@@ -159,6 +159,32 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
+              <Stack.Screen name="success" options={{
+                title: "Payment Successful",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+                headerTitleAlign: "center",
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
+              <Stack.Screen name="failed" options={{
+                title: "Make Payment",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+                headerTitleAlign: "center",
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
             </Stack>
           </CartProvider>
         </AuthProvider>

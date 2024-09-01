@@ -29,6 +29,7 @@ type OrderParams = {
     itemCost: string;
     items: [];
     deliveryFee: string;
+    paymentType: string
 };
 type OrderItemType = {
     label: string;
@@ -148,12 +149,13 @@ const payment = () => {
         setIsLoading(true);
         const response = await client.post(`${orderId}/pay-with-wallet`);
 
+        console.log(response.data)
         setIsLoading(false);
 
         if (!response.ok) {
             router.push("/failed");
             showMessage({
-                message: response.data?.detail,
+                message: 'Payment failed',
                 type: "danger",
                 textStyle: {
                     alignItems: "center",
@@ -256,13 +258,15 @@ const payment = () => {
                             backgroundColor={activeColor.profileCard}
                             onPress={handleOpenWebView}
                         />
-                        <TransferBtn
-                            icon={<Entypo name="wallet" size={24} color={activeColor.icon} />}
-                            label="WALLET"
-                            color={activeColor.text}
-                            backgroundColor={activeColor.profileCard}
-                            onPress={() => handlePayWithWallet(params.id as string)}
-                        />
+                        {params.paymentType !== 'fundWallet' && (
+                            <TransferBtn
+                                icon={<Entypo name="wallet" size={24} color={activeColor.icon} />}
+                                label="WALLET"
+                                color={activeColor.text}
+                                backgroundColor={activeColor.profileCard}
+                                onPress={() => handlePayWithWallet(params.id as string)}
+                            />
+                        )}
                         <TransferBtn
                             icon={
                                 <MaterialCommunityIcons
