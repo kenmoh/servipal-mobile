@@ -6,7 +6,7 @@ import {
 } from "react-native";
 
 type CustomBtnProps = {
-  btnBorderRadius: number;
+  btnBorderRadius?: number;
   btnColor: string;
   label: string;
   btnHeight?: number;
@@ -27,7 +27,7 @@ const CustomBtn = ({
   return (
     <TouchableOpacity
       disabled={disabled}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
       onPress={onPress}
       style={[
         styles.btn,
@@ -39,7 +39,7 @@ const CustomBtn = ({
         { ...props },
       ]}
     >
-      {disabled ? <ActivityIndicator size={30} color={'grey'} /> : <Text style={styles.text}>{label}</Text>}
+      <Text style={[styles.text, { color: disabled ? 'grey' : 'white' }]}>{label}</Text>
 
     </TouchableOpacity>
   );

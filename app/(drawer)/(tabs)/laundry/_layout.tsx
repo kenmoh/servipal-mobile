@@ -15,16 +15,15 @@ const LaundryTabLayout = () => {
         <LaundryTopTabBar
             screenOptions={{
                 tabBarLabelStyle: {
-                    color: activeColor.tabIconDefault,
+                    // color: activeColor.tabIconDefault,
                     fontSize: 12,
                     textAlign: 'center',
                     textTransform: 'capitalize',
-                    fontFamily: 'Poppins-Bold',
-
-                    marginBottom: -15,
-                    marginLeft: -10
+                    fontFamily: 'Poppins-Bold'
 
                 },
+                tabBarActiveTintColor: activeColor.text,
+                tabBarInactiveTintColor: activeColor.icon,
                 tabBarAndroidRipple: { borderless: false },
                 tabBarPressColor: "gray",
                 tabBarStyle: {
@@ -37,7 +36,7 @@ const LaundryTabLayout = () => {
             }}
         >
             <LaundryTopTabBar.Screen name="index" options={{ title: "Orders" }} />
-            <LaundryTopTabBar.Screen name="orders" options={{ title: "My Orders" }} />
+            <LaundryTopTabBar.Screen name="orders" options={{ title: "New Order(s)" }} />
 
         </LaundryTopTabBar>
     );

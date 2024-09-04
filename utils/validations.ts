@@ -96,5 +96,5 @@ export const userUpdateValidationSchema = Yup.object().shape({
 
 export const buyItemValidationSchema = Yup.object().shape({
   quantity: Yup.number().required().min(1).label("Quantity"),
-  additionalInfo: Yup.string(),
+  deliveryInfo: Yup.string().required().label("Delivery Info"),
 });

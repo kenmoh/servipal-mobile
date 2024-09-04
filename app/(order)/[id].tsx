@@ -78,47 +78,121 @@ export default function HomeScreen() {
     isPending,
   } = useMutation({
     mutationFn: () => ordersApi.pickUpOrder(id),
+    onSuccess: () => {
+      showMessage({
+        message: "Order Picked up",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
+    },
+    onError: () => {
+      showMessage({
+        message: "Fail to complete",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
   });
 
   // Handle order Delivered
   const { mutate: handleDelivered, isPending: delivered } = useMutation({
     mutationFn: () => ordersApi.orderDelievered(id),
-  });
-
-  // Handle order Received
-  const { mutate: handleReceived, isPending: received, data: receivedData } = useMutation({
-    mutationFn: () => ordersApi.orderReceived(id),
     onSuccess: () => {
       showMessage({
-        message: 'Order Completed',
-        type: 'success'
-      })
-      router.push('(tabs)/stats')
+        message: "Order Delivered",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
     },
     onError: () => {
       showMessage({
-        message: 'Fail to complete',
-        type: 'danger'
-      })
-      router.push('(tabs)/stats')
-    }
+        message: "Fail to complete",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
   });
 
-  console.log(receivedData)
+  // Handle order Received
+  const {
+    mutate: handleReceived,
+    isPending: received,
+    data: receivedData,
+  } = useMutation({
+    mutationFn: () => ordersApi.orderReceived(id),
+    onSuccess: () => {
+      showMessage({
+        message: "Order Completed",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
+    },
+    onError: () => {
+      showMessage({
+        message: "Fail to complete",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
+  });
+
+
 
   // Handle vendor cancel order
-  const { mutate: handleCancelOrderByVebdor } = useMutation({
+  const { mutate: handleCancelOrderByVendor } = useMutation({
     mutationFn: () => ordersApi.cancelOrderByVendor(id),
+    onSuccess: () => {
+      showMessage({
+        message: "Order Cancelled",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
+    },
+    onError: () => {
+      showMessage({
+        message: "Fail to cancel",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
   });
 
   // Handle rider cancel order
   const { mutate: handleRiderCancelOrder } = useMutation({
     mutationFn: () => ordersApi.cancelOrder(id),
+    onSuccess: () => {
+      showMessage({
+        message: "Order Cancelled",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
+    },
+    onError: () => {
+      showMessage({
+        message: "Fail to cancel",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
   });
 
   // Handle vendor relist order
-  const { mutate: handleRelistOrderByVebdor } = useMutation({
+  const { mutate: handleRelistOrderByVendor } = useMutation({
     mutationFn: () => ordersApi.relistOrderByVendor(id),
+    onSuccess: () => {
+      showMessage({
+        message: "Order listed for delivery",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
+    },
+    onError: () => {
+      showMessage({
+        message: "Something went wrong. Please try again!",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
   });
 
   if (isFetching) {
@@ -137,8 +211,6 @@ export default function HomeScreen() {
   }
 
   const order: ItemOrderType = data?.data;
-
-  console.log(order.foods);
 
   return (
     <View
@@ -342,7 +414,9 @@ export default function HomeScreen() {
       </View>
       <View style={styles.btnContainer}>
         <View style={{ flex: 1 }}>
-          {order?.order_status === "Pending" && user?.user_type === "rider" ? (
+          {order?.order_status === "Pending" &&
+            order?.payment_status === "paid" &&
+            user?.user_type === "rider" ? (
             <CustomBtn
               disabled={isPending}
               btnBorderRadius={50}
@@ -359,12 +433,44 @@ export default function HomeScreen() {
               label="Delivered"
               onPress={handleDelivered}
             />
-          ) : order?.order_status === "Delivered" &&
+          ) : order?.order_status !== "Picked up" &&
             user?.user_type === "vendor" ? (
             <CustomBtn
-              disabled={received}
+              disabled={delivered}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
+              label="Cancel"
+              onPress={handleCancelOrderByVendor}
+            />
+          ) : order?.order_status === "Picked up" &&
+            user?.user_type === "rider" ? (
+            <CustomBtn
+              disabled={delivered}
+              btnBorderRadius={50}
+              btnColor={Colors.btnPrimaryColor}
+              label="Cancel"
+              onPress={handleRiderCancelOrder}
+            />
+          ) : order?.order_status !== "Picked up" &&
+            user?.user_type === "vendor" ? (
+            <CustomBtn
+              disabled={delivered}
+              btnBorderRadius={50}
+              btnColor={Colors.btnPrimaryColor}
+              label="Cancel"
+              onPress={handleRelistOrderByVendor}
+            />
+          ) : user?.user_type === "vendor" ? (
+            <CustomBtn
+              disabled={order?.order_status !== "Delivered"}
+              btnBorderRadius={50}
+              btnColor={
+                order.order_status === "Received"
+                  ? activeColor.profileCard
+                  : order.order_status !== "Delivered"
+                    ? activeColor.profileCard
+                    : Colors.btnPrimaryColor
+              }
               label="Received"
               onPress={handleReceived}
             />
@@ -372,36 +478,43 @@ export default function HomeScreen() {
             order.order_status === "Received" && (
               <CustomBtn
                 btnBorderRadius={50}
-                btnColor={Colors.btnPrimaryColor}
+                btnColor={"teal"}
                 label="Completed"
               />
             )
           )}
         </View>
-
-        {order?.payment_status != "paid" && (
-          <View style={{ width: 100 }}>
-            <CustomBtn
-              btnBorderRadius={50}
-              btnColor={Colors.primaryBtnColor}
-              label="Pay"
-              onPress={() =>
-                router.push({
-                  pathname: "/payment",
-                  params: {
-                    paymentUrl: order?.payment_url,
-                    orderType: order.order_type,
-                    id: order?.id,
-                    totalCost: order?.total_cost,
-                    items: JSON.stringify(order?.foods),
-                    itemCost: "",
-                  },
-                })
-              }
-            />
-          </View>
-        )}
       </View>
+      {order?.payment_status != "paid" && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 10,
+            zIndex: 999,
+            width: "90%",
+            alignSelf: "center",
+          }}
+        >
+          <CustomBtn
+            btnBorderRadius={50}
+            btnColor={Colors.primaryBtnColor}
+            label="Pay"
+            onPress={() =>
+              router.push({
+                pathname: "/payment",
+                params: {
+                  paymentUrl: order?.payment_url,
+                  orderType: order.order_type,
+                  id: order?.id,
+                  totalCost: order?.total_cost,
+                  items: JSON.stringify(order?.foods),
+                  itemCost: "",
+                },
+              })
+            }
+          />
+        </View>
+      )}
     </View>
   );
 }
@@ -416,21 +529,20 @@ const styles = StyleSheet.create({
     flex: 6,
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 50,
   },
   text: {
     fontSize: 12,
-
     marginVertical: 10,
     textTransform: "uppercase",
     fontFamily: "Poppins-SemiBold",
   },
   btnContainer: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    gap: 10,
+    position: "absolute",
+    bottom: 10,
+    zIndex: 999,
+    width: "90%",
+    alignSelf: "center",
   },
   image: {
     height: IMG_HEIGHT,

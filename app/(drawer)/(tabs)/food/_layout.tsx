@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import ScreenWithFAB from "@/app/ScreenWithFAB";
+import { useAuth } from "@/auth/authContext";
 
 const FoodTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 const handlePress = () => router.push("sendItem")
@@ -12,44 +13,70 @@ const handlePress = () => router.push("sendItem")
 const FoodOrderLayout = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+  const { user } = useAuth()
   return (
 
-    <FoodTabBar
-      screenOptions={{
-        tabBarLabelStyle: {
-          color: activeColor.icon,
-          fontSize: 12,
-          textTransform: 'capitalize',
-          fontFamily: 'Poppins-SemiBold',
-          textAlign: 'center',
-          marginBottom: -15,
+    <>
+      {
+        user?.user_type === 'vendor' ? (
+          <FoodTabBar
+            screenOptions={{
+              tabBarLabelStyle: {
+                fontSize: 12,
+                textAlign: 'center',
+                textTransform: 'capitalize',
+                fontFamily: 'Poppins-Bold',
 
-        },
+              },
+              tabBarActiveTintColor: activeColor.text,
+              tabBarInactiveTintColor: activeColor.icon,
+              tabBarAndroidRipple: { borderless: false },
+              tabBarPressColor: "gray",
+              tabBarStyle: {
+                borderBottomColor: activeColor.borderColor,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                elevation: 0,
+                shadowOpacity: 0,
+                backgroundColor: activeColor.background,
+              },
+            }}
+          >
+            <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
+            <FoodTabBar.Screen name="delivery" options={{ title: "New Food Orders" }} />
 
-        tabBarItemStyle: {
-          width: 100,
-          // alignContent: 'center'
-        },
-        tabBarScrollEnabled: true,
-        tabBarAndroidRipple: {
-          borderless: false
-        },
-        tabBarPressColor: activeColor.profileCard,
-        tabBarStyle: {
-          borderBottomColor: activeColor.borderColor,
-          borderBottomWidth: StyleSheet.hairlineWidth,
-          elevation: 0,
-          shadowOpacity: 0,
-          backgroundColor: activeColor.background,
-        },
+          </FoodTabBar>
+        ) : (
+          <FoodTabBar
+            screenOptions={{
+              tabBarLabelStyle: {
+                color: activeColor.tabIconDefault,
+                fontSize: 12,
+                textAlign: 'center',
+                textTransform: 'capitalize',
+                fontFamily: 'Poppins-Bold',
 
+                marginBottom: -15,
+                marginLeft: -10
 
-      }}
-    >
-      <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
-      <FoodTabBar.Screen name="delivery" options={{ title: "Orders" }} />
+              },
+              tabBarAndroidRipple: { borderless: false },
+              tabBarPressColor: "gray",
+              tabBarStyle: {
+                borderBottomColor: activeColor.borderColor,
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                elevation: 0,
+                shadowOpacity: 0,
+                backgroundColor: activeColor.background,
+              },
+            }}
+          >
+            <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
+            {/* <FoodTabBar.Screen name="delivery" options={{ title: "New Food Orders" }} /> */}
 
-    </FoodTabBar>
+          </FoodTabBar>
+        )
+      }
+    </>
 
   );
 };

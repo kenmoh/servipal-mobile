@@ -62,3 +62,8 @@ export const DeliverySchema = Yup.object().shape({
     .typeError("Enter a valid number!"),
   additionalInfo: Yup.string(),
 });
+
+export const RatingValidationSchema = Yup.object().shape({
+  rating: Yup.number().min(1).max(5).positive("Rating"),
+  comment: Yup.string().required(),
+});

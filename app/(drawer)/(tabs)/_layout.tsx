@@ -195,7 +195,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <CustomTabBarIcon focused={focused} label="Buy">
 
-              <MaterialIcons name="sell" size={TAB_BAR_ICON_SIZE} color={color} />
+              <Entypo name="shop" size={TAB_BAR_ICON_SIZE} color={color} />
             </CustomTabBarIcon>
           ),
           href: user?.user_type === "vendor" ? undefined : null,

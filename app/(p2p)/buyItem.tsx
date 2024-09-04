@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useEffect } from 'react'
 import CustomActivityIndicator from '@/components/CustomActivityIndicator';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -14,19 +14,20 @@ import CustomTextInput from '@/components/CustomTextInput';
 import InputErrorMessage from '@/components/InputErrorMessage';
 import CustomBtn from '@/components/CustomBtn';
 import { ItemInfo, makePayment } from '@/api/items';
+import { Entypo } from '@expo/vector-icons';
 
 const buyItem = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { price, id } = useLocalSearchParams()
+    const { price, id, image, name, seller } = useLocalSearchParams()
 
 
     const { error, isSuccess, mutate, isPending, data } =
         useMutation({
             mutationFn: (info: ItemInfo) => makePayment(id, info),
         });
-    console.log(data?.total_cost, data?.id)
-    console.log(data)
+
+    console.log(data, error)
 
     useEffect(() => {
         if (error) {
@@ -66,16 +67,31 @@ const buyItem = () => {
                 flex: 1,
                 paddingHorizontal: SIZES.paddingSmall
             }}>
-                <KeyboardAvoidingView
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{
+                        flex: 1
+                    }}
 
                 >
                     <StatusBar style="inverted" />
+
+                    <View style={{ width: '100%', height: 200, borderRadius: SIZES.paddingSmall, overflow: 'hidden' }}>
+                        <Image src={image} style={{ width: '100%', height: '100%' }} />
+                    </View>
+                    <View style={{ marginVertical: SIZES.marginSmall }}>
+                        <Text style={[styles.label, { color: activeColor.icon }]}>{name}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: SIZES.marginSmall }}>
+                            <Entypo name='shop' color={activeColor.icon} size={20} />
+                            <Text style={[styles.label, { color: activeColor.icon, textTransform: 'capitalize' }]}>{seller}</Text>
+                        </View>
+                    </View>
 
 
                     <Formik
                         initialValues={{
                             quantity: "",
-                            additionalInfo: "",
+                            deliveryInfo: "",
 
 
                         }}
@@ -113,16 +129,17 @@ const buyItem = () => {
 
                                 <CustomTextInput
 
-                                    onChangeText={handleChange("additionalInfo")}
-                                    value={values.additionalInfo}
+                                    onChangeText={handleChange("deliveryInfo")}
+                                    value={values.deliveryInfo}
                                     labelColor={activeColor.text}
-                                    label="Additional Info"
+                                    label="Delivery Info"
                                     inputBackgroundColor={activeColor.inputBackground}
                                     inputTextColor={activeColor.text}
                                     multiline
-
-
                                 />
+                                {touched.deliveryInfo && errors.deliveryInfo && (
+                                    <InputErrorMessage error={errors.deliveryInfo} />
+                                )}
 
                                 <View style={{ marginVertical: 30 }}>
                                     <CustomBtn
@@ -138,7 +155,7 @@ const buyItem = () => {
                         )}
                     </Formik>
 
-                </KeyboardAvoidingView>
+                </ScrollView>
             </View>
         </>
     );
@@ -157,5 +174,10 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Medium',
         fontSize: 14,
         textTransform: 'uppercase'
+    },
+    label: {
+        fontFamily: 'Poppins-Light',
+        fontSize: 14
     }
+
 })

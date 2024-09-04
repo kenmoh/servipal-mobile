@@ -17,6 +17,7 @@ import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
+import Empty from "@/components/Empty";
 
 const laundry = () => {
     const { theme } = useContext(ThemeContext);
@@ -88,7 +89,7 @@ const laundry = () => {
         </View>;
     }
 
-
+    console.log(orders?.data)
     return (
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
             <StatusBar
@@ -100,7 +101,7 @@ const laundry = () => {
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }) => (
                     item.order_status === "Pending" &&
-                    item.payment_status === "paid" && item.order_type === 'food' && (
+                    item.payment_status === "paid" && item.order_type === 'laundry' && (
                         <OrderCard order={item} isHomeScreen={isHomeScreen} />
                     )
                 )
@@ -111,6 +112,7 @@ const laundry = () => {
                 vertical
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
+                ListEmptyComponent={() => <Empty />}
             />
         </View>
     );

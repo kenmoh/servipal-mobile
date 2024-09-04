@@ -40,6 +40,12 @@ const index = () => {
 
 
 
+    const newOrdersQuery = useQuery({
+        queryKey: ["newOrders"],
+        queryFn: ordersApi.getItemOrders,
+        enabled: false,
+    });
+
     const packageOrdersQuery = useQuery({
         queryKey: ["packageOrders"],
         queryFn: ordersApi.getItemOrders,
@@ -64,6 +70,9 @@ const index = () => {
         (orderType: string) => {
             setActiveOrderType(orderType);
             switch (orderType) {
+                case "new":
+                    newOrdersQuery.refetch();
+                    break;
                 case "package":
                     packageOrdersQuery.refetch();
                     break;

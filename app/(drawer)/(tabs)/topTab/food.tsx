@@ -17,6 +17,7 @@ import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
+import Empty from "@/components/Empty";
 
 const food = () => {
     const { theme } = useContext(ThemeContext);
@@ -32,7 +33,6 @@ const food = () => {
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
     });
-
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -75,19 +75,6 @@ const food = () => {
             <Text>Something went wrong!</Text>
         </View>;
     }
-    if (!orders?.data) {
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: activeColor.background,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Text>No Order yet</Text>
-        </View>;
-    }
-
 
     return (
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
@@ -111,6 +98,7 @@ const food = () => {
                 vertical
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
+                ListEmptyComponent={() => <Empty />}
             />
         </View>
     );

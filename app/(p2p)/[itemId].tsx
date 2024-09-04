@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-// import { Image } from "expo-image";
 import { AntDesign } from "@expo/vector-icons";
 import Swiper from "react-native-swiper";
 import { ThemeContext } from "@/context/themeContext";
@@ -100,7 +99,7 @@ const ItemDetails = () => {
                                     onPress={() =>
                                         router.push({
                                             pathname: "(p2p)/reviews",
-                                            params: { seller, name },
+                                            params: { seller, name, id },
                                         })
                                     }
                                 >
@@ -156,8 +155,13 @@ const ItemDetails = () => {
                     <CustomBtn
                         btnBorderRadius={50}
                         btnColor={Colors.btnPrimaryColor}
-                        label="Add Info"
-                        onPress={() => router.push({ pathname: '/(p2p)/buyItem', params: { price, id } })}
+                        label="View Cart"
+                        onPress={() =>
+                            router.push({
+                                pathname: "/(p2p)/buyItem",
+                                params: { price, id, image: images[0], name, seller },
+                            })
+                        }
                     />
                 </View>
             </View>

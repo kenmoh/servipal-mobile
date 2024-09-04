@@ -21,54 +21,28 @@ import CategoryBtn from "@/components/CategoryBtn";
 import RenderBtn from "@/components/RenderBtn";
 import { Link } from "expo-router";
 import { ItemOrderType } from "@/utils/types";
-
-const EmptyOrder = () => {
-    const { theme } = useContext(ThemeContext);
-    let activeColor = Colors[theme.mode];
-    return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: activeColor.background,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Text
-                style={{
-                    fontFamily: "Poppins-Bold",
-                    fontSize: 16,
-                    color: activeColor.text,
-                    alignSelf: 'center'
-                }}
-            >
-                No Order yet
-            </Text>
-        </View>
-    )
-}
+import Empty from "@/components/Empty";
 
 const index = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [isHomeScreen, setIsHomeScreen] = useState(true);
+    // const [isHomeScreen, setIsHomeScreen] = useState(true);
     const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState(false);
-
+    const { user } = useAuth();
 
     const laundryOrdersQuery = useQuery({
         queryKey: ["laundryOrders"],
-        queryFn: ordersApi.getLaundryOrders,
-        enabled: false,
+        queryFn: ordersApi.getVendorNewLaundryOrder,
     });
 
-    const handleFetchOrders = useCallback(
-        (orderType: string) => {
-            setActiveOrderType(orderType);
-            laundryOrdersQuery.refetch();
-        },
-        [laundryOrdersQuery]
-    );
+    // const handleFetchOrders = useCallback(
+    //     (orderType: string) => {
+    //         setActiveOrderType(orderType);
+    //         laundryOrdersQuery.refetch();
+    //     },
+    //     [laundryOrdersQuery]
+    // );
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -82,24 +56,19 @@ const index = () => {
         return () => subscription.remove();
     }, []);
 
-    useEffect(() => {
-        handleFetchOrders("package");
-    }, []);
-
-
+    // useEffect(() => {
+    //     handleFetchOrders("package");
+    // }, []);
 
     const handleRefretch = () => {
         setRefreshing(true);
-        laundryOrdersQuery.refetch()
+        laundryOrdersQuery.refetch();
         setRefreshing(false);
     };
 
     useRefreshOnFocus(laundryOrdersQuery?.refetch!);
 
-    if (
-
-        laundryOrdersQuery.isFetching
-    ) {
+    if (laundryOrdersQuery.isFetching) {
         return (
             <View
                 style={{
@@ -113,10 +82,7 @@ const index = () => {
             </View>
         );
     }
-    if (
-
-        laundryOrdersQuery.error
-    ) {
+    if (laundryOrdersQuery.error) {
         <View
             style={{
                 flex: 1,
@@ -130,17 +96,16 @@ const index = () => {
                     fontFamily: "Poppins-Light",
                     fontSize: 12,
                     color: Colors.error,
-                    alignSelf: 'center'
+                    alignSelf: "center",
                 }}
             >
                 Something went wrong!
             </Text>
         </View>;
     }
-
+    console.log(laundryOrdersQuery.data?.data);
     return (
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
-
             <StatusBar
                 backgroundColor={activeColor.background}
                 style={theme.mode === "dark" ? "light" : "dark"}
@@ -150,19 +115,19 @@ const index = () => {
                 data={laundryOrdersQuery?.data?.data}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }: { item: ItemOrderType }) =>
-                    item.order_type === "laundry" && item.order_status === 'Pending' &&
-                    (<OrderCard order={item} isHomeScreen={true} />)
-
-
+                    item.order_type === "laundry" &&
+                    item.order_status === "Pending" &&
+                    item.payment_status === "paid" && (
+                        <OrderCard order={item} isHomeScreen={true} />
+                    )
                 }
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}
                 vertical
                 refreshing={refreshing}
                 onRefresh={handleRefretch}
-                ListEmptyComponent={() => <EmptyOrder />}
+                ListEmptyComponent={() => <Empty />}
             />
-
         </View>
     );
 };

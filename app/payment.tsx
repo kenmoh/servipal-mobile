@@ -282,7 +282,7 @@ const payment = () => {
                         />
                     </View>
                 ) : (
-                    params.orderType === "food" && (
+                    (params.orderType === "food" || params.orderType === 'laundry') && (
                         <>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -332,12 +332,14 @@ const payment = () => {
                                 <View
                                     style={{
                                         flexDirection: "row",
-                                        gap: 5,
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        gap: 5
                                     }}
                                 >
                                     <View style={styles.btnContainer}>
                                         <TransferBtn
-                                            fontSize={12}
+                                            fontSize={10}
                                             icon={
                                                 <AntDesign
                                                     name="creditcard"
@@ -353,7 +355,7 @@ const payment = () => {
                                     </View>
                                     <View style={styles.btnContainer}>
                                         <TransferBtn
-                                            fontSize={12}
+                                            fontSize={10}
                                             icon={
                                                 <Entypo
                                                     name="wallet"
@@ -369,7 +371,7 @@ const payment = () => {
                                     </View>
                                     <View style={[styles.btnContainer, { width: '35%', marginLeft: 5 }]}>
                                         <TransferBtn
-                                            fontSize={12}
+                                            fontSize={10}
                                             icon={
                                                 <MaterialCommunityIcons
                                                     name="bank-transfer"
@@ -412,6 +414,8 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: "row",
         gap: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
 
     btnText: {

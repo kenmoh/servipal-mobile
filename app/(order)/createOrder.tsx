@@ -39,7 +39,7 @@ export default function HomeScreen() {
       });
       router.push("/(order)/createOrder");;
     }
-    if (isSuccess && data.item_order) {
+    if (isSuccess && data?.item_order) {
       showMessage({
         message: "Order added successfully.",
         type: "success",
@@ -61,7 +61,6 @@ export default function HomeScreen() {
     }
   }, [isSuccess, error]);
 
-  console.log(data?.item_order)
   return (
     <View
       style={{
@@ -97,7 +96,6 @@ export default function HomeScreen() {
                       value={values.origin}
                       labelColor={activeColor.text}
                       label="Pickup Location"
-                      hasBorder={theme.mode !== "dark"}
                       inputBackgroundColor={activeColor.inputBackground}
                       inputTextColor={activeColor.text}
                     />
@@ -109,7 +107,6 @@ export default function HomeScreen() {
                       value={values.destination}
                       labelColor={activeColor.text}
                       label="Destination"
-                      hasBorder={theme.mode !== "dark"}
                       inputBackgroundColor={activeColor.inputBackground}
                       inputTextColor={activeColor.text}
                     />
@@ -121,7 +118,6 @@ export default function HomeScreen() {
                       value={values.distance}
                       labelColor={activeColor.text}
                       label="Distance"
-                      hasBorder={theme.mode !== "dark"}
                       // editable={false}
                       inputBackgroundColor={activeColor.inputBackground}
                       inputTextColor={activeColor.text}
@@ -137,7 +133,6 @@ export default function HomeScreen() {
                       onChangeText={handleChange("name")}
                       value={values.name}
                       label="Name"
-                      hasBorder={theme.mode !== "dark"}
                       inputBackgroundColor={activeColor.inputBackground}
                       inputTextColor={activeColor.text}
                       labelColor={activeColor.text}
@@ -148,8 +143,7 @@ export default function HomeScreen() {
                     <CustomTextInput
                       label="Description"
                       onChangeText={handleChange("description")}
-                      value={values.desription}
-                      hasBorder={theme.mode !== "dark"}
+                      value={values.description}
                       multiline
                       numberOfLines={4}
                       textAlignVertical="top"
@@ -165,7 +159,6 @@ export default function HomeScreen() {
                     <View style={styles.btnContainer}>
                       <CustomBtn
                         label="submit"
-
                         btnColor="orange"
                         onPress={handleSubmit}
                       />

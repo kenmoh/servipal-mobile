@@ -7,9 +7,10 @@ import {
   View,
   TextInput,
   KeyboardTypeOptions,
+  TextInputProps,
 } from "react-native";
 
-type InputProps = {
+interface InputProps extends TextInputProps {
   label?: string;
   placeholder?: string;
   secureTextEntry?: boolean;
@@ -18,6 +19,8 @@ type InputProps = {
   labelColor?: string;
   inputTextColor: string;
   borderRadius?: number
+  inputBackgroundColor?: string
+  onChangeText?: (text: string) => void
 };
 
 const CustomTextInput = ({

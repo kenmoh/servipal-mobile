@@ -161,7 +161,7 @@ const wallet = () => {
               color: activeColor.text,
               fontFamily: "Poppins-Light",
               fontSize: 12,
-
+              textDecorationLine: 'underline',
               marginTop: 10,
             }}
           >
@@ -180,7 +180,7 @@ const wallet = () => {
           showsVerticalScrollIndicator={false}
           refreshing={isFetching}
           onRefresh={handleRefresch}
-          stickyHeaderIndices={[0]}
+        // stickyHeaderIndices={[0]}
         />
       </View>
     </>

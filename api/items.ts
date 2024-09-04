@@ -7,7 +7,7 @@ const endpoint = "/listings";
 
 export type ItemInfo = {
   quantity: number;
-  additionalInfo: string;
+  deliveryInfo: string;
 };
 
 // Get all item listings
@@ -70,3 +70,21 @@ export const makePayment = async (id: number, data: ItemInfo) => {
 
   return response?.data;
 };
+
+export const rateItem = async (
+  id: string,
+  data: { rating: string; comment: string }
+) => {
+  const ratingData = {
+    rating: data.rating,
+    comment: data.comment,
+  };
+  const response = await client.post(`${endpoint}/${id}/rate-item`, ratingData);
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+
+  return response?.data;
+};
+
+export const getReviews = (id: string) => {};

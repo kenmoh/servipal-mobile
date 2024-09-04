@@ -33,27 +33,6 @@ const AddMeal = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const tabs = [
-        {
-            title: 'Tab 1',
-            content: (
-                <View>
-                    <Text>This is the content for Tab 1.</Text>
-                    <Text>You can put any components here.</Text>
-                </View>
-            ),
-        },
-        {
-            title: 'Tab 2',
-            content: (
-                <View>
-                    <Text>Welcome to Tab 2 content!</Text>
-                    <Text>Feel free to add more complex components.</Text>
-                </View>
-            ),
-        },
-    ];
-
     const { error, isSuccess, mutate, isPending, data } = useMutation({
         mutationFn: (meal: AddMealType) => addMeal(meal),
     });
@@ -190,7 +169,6 @@ const AddMeal = () => {
 
                                         <ImagePickerForm field={"image"} />
 
-                                        <Accordion tabs={tabs} />
 
                                         <View style={styles.btnContainer}>
                                             <CustomBtn
