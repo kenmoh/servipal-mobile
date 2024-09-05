@@ -1,12 +1,19 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Stack } from 'expo-router'
+import { Stack, withLayoutContext } from 'expo-router'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+const StatTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 
 const StatLayout = () => {
     return (
-        <Stack>
-            <Stack.Screen name='index' options={{ headerShown: false }} />
+        <Stack
+            screenOptions={{
+                headerShown: false,
+            }}
+        >
         </Stack>
+
     )
 }
 

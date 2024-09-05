@@ -17,7 +17,7 @@ import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import { registerNotification } from "@/api/notification";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import { SIZES } from "@/constants/Sizes";
+import authStorage from '@/auth/storage'
 
 const TAB_BAR_ICON_SIZE = 25;
 
@@ -84,6 +84,8 @@ export default function TabLayout() {
 
         if (!user?.notification_token) {
           registerNotification(token.data);
+
+
         }
       } catch (error) {
         throw new Error(`Error getting notification token. \n ERROR: ${error}`);
@@ -107,9 +109,9 @@ export default function TabLayout() {
         headerTintColor: activeColor.text,
         tabBarShowLabel: false,
         tabBarStyle: {
-          borderTopWidth: StyleSheet.hairlineWidth,
           backgroundColor: activeColor.background,
           borderTopColor: activeColor.profileCard,
+          borderTopWidth: 0,
           height: 70,
           justifyContent: 'center',
           alignItems: "center",

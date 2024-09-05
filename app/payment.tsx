@@ -319,10 +319,7 @@ const payment = () => {
                             </ScrollView>
                             <View
                                 style={{
-                                    bottom: 35,
-                                    left: 10,
-                                    right: 10,
-                                    position: "absolute",
+                                    marginTop: SIZES.marginLarge,
                                     alignItems: "center",
                                 }}
                             >
@@ -343,7 +340,7 @@ const payment = () => {
                                             icon={
                                                 <AntDesign
                                                     name="creditcard"
-                                                    size={24}
+                                                    size={22}
                                                     color={activeColor.icon}
                                                 />
                                             }
@@ -359,7 +356,7 @@ const payment = () => {
                                             icon={
                                                 <Entypo
                                                     name="wallet"
-                                                    size={24}
+                                                    size={22}
                                                     color={activeColor.icon}
                                                 />
                                             }
@@ -375,7 +372,7 @@ const payment = () => {
                                             icon={
                                                 <MaterialCommunityIcons
                                                     name="bank-transfer"
-                                                    size={24}
+                                                    size={22}
                                                     color={activeColor.icon}
                                                 />
                                             }

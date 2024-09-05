@@ -1,25 +1,28 @@
-import { ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
-import walletApi from '@/api/wallet'
-import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@/auth/authContext';
-import TransactionCard from '@/components/TransactionCard';
-import FundCard from '@/components/FundCard';
-import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
+import SellCard from '@/components/SellCard';
 import Empty from '@/components/Empty';
+import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
+import { getUserTransactions } from '@/api/items';
+import { useAuth } from '@/auth/authContext';
+import { useQuery } from '@tanstack/react-query';
+import TransactionCard from '@/components/TransactionCard';
+import TransactionDetail from '@/components/TransactionDetail';
 
-const failedTranx = () => {
+const orders = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth()
 
 
     const { data, refetch, isFetching, isLoading, isPending, error } = useQuery({
-        queryKey: ['funds', user?.id],
-        queryFn: walletApi.getUserTopUps
+        queryKey: ['transactions', user?.id],
+        queryFn: getUserTransactions
     })
+
+
 
     const handleRefresch = () => refetch();
 
@@ -77,7 +80,7 @@ const failedTranx = () => {
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.length - 1;
                     return (
-                        <FundCard isLastItem={isLastItem} item={item} />
+                        <TransactionDetail isLastItem={isLastItem} transaction={item} />
                     );
                 }}
                 showsVerticalScrollIndicator={false}
@@ -90,6 +93,10 @@ const failedTranx = () => {
     )
 }
 
-export default failedTranx
+export default orders
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    }
+})

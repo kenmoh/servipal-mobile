@@ -10,6 +10,18 @@ export type ItemInfo = {
   deliveryInfo: string;
 };
 
+interface TransactionResponseType {
+  additional_info: string;
+  quantity: 1;
+  id: string;
+  buyer_id: string;
+  total_cost: string;
+  payment_status: string;
+  status: string;
+  payment_url: string;
+  transaction_date: string;
+}
+
 // Get all item listings
 export const getItemListings = async () => await client.get(`${endpoint}`);
 
@@ -88,3 +100,14 @@ export const rateItem = async (
 };
 
 export const getReviews = (id: string) => {};
+
+export const getUserTransactions = async (): Promise<
+  TransactionResponseType[]
+> => {
+  const response = await client.get(`${endpoint}/user-transactions`);
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+
+  return response?.data;
+};

@@ -8,7 +8,7 @@ import ScreenWithFAB from "@/app/ScreenWithFAB";
 import { useAuth } from "@/auth/authContext";
 
 const FoodTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
-const handlePress = () => router.push("sendItem")
+
 
 const FoodOrderLayout = () => {
   const { theme } = useContext(ThemeContext);

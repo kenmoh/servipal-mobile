@@ -24,9 +24,6 @@ const ItemTabLayout = () => {
                         textTransform: 'capitalize',
                         fontFamily: 'Poppins-Bold',
 
-                        marginBottom: -15,
-                        marginLeft: -10
-
                     },
                     tabBarAndroidRipple: { borderless: false },
                     tabBarPressColor: "gray",
@@ -41,7 +38,8 @@ const ItemTabLayout = () => {
                 }}
             >
                 <ItemTopTabBar.Screen name="index" options={{ title: "Buy" }} />
-                <ItemTopTabBar.Screen name="items" options={{ title: "Transactions" }} />
+                <ItemTopTabBar.Screen name="items" options={{ title: "Items" }} />
+                <ItemTopTabBar.Screen name="orders" options={{ title: "New Order(s)" }} />
 
             </ItemTopTabBar>
         </ScreenWithFAB>

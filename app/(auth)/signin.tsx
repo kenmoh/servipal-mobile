@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
@@ -9,7 +9,6 @@ import AccountLinkText from "@/components/AcountLink";
 import CustomBtn from "@/components/CustomBtn";
 import CustomTextInput from "@/components/CustomTextInput";
 import TitleText from "@/components/TitleText";
-import usersApi from "@/api/users";
 import authApi from "@/api/auth";
 import { Login, UserReturn } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
