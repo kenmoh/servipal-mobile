@@ -20,6 +20,7 @@ import { StatusBar } from "expo-status-bar";
 import RenderBtn from "@/components/RenderBtn";
 import OrderCard from "@/components/OrderCard";
 import { number } from "yup";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 
 type StatType = {
     total_order: number,
@@ -176,23 +177,24 @@ const index = () => {
                     <View
                         style={[
                             styles.statContainer,
-                            { backgroundColor: activeColor.profileCard },
+                            // { backgroundColor: activeColor.profileCard },
                         ]}
                     >
-                        <Text style={[styles.number, { color: activeColor.text }]}>{data?.data?.total_order}</Text>
-                        <Text style={[styles.text, { color: activeColor.icon }]}>
-                            Total Deliveries
+                        <Feather name="package" color={activeColor.icon} size={18} />
+                        <Text style={[styles.text, { color: activeColor.text }]}>
+                            Total Deliveries: {data?.data?.total_order}
                         </Text>
                     </View>
                     <View
                         style={[
                             styles.statContainer,
-                            { backgroundColor: activeColor.profileCard },
+                            // { backgroundColor: activeColor.profileCard },
                         ]}
                     >
-                        <Text style={[styles.number, { color: activeColor.text }]}>{data?.data?.pending_orders}</Text>
-                        <Text style={[styles.text, { color: activeColor.icon }]}>
-                            Pending Deliveries
+
+                        <MaterialIcons name="pending" color={activeColor.icon} size={18} />
+                        <Text style={[styles.text, { color: activeColor.text }]}>
+                            Pending Deliveries: {data?.data?.pending_orders}
                         </Text>
                     </View>
                 </View>
@@ -263,11 +265,13 @@ const styles = StyleSheet.create({
     },
     number: {
         fontFamily: "Poppins-Bold",
-        fontSize: 20,
+        fontSize: 14,
     },
     statContainer: {
-        paddingVertical: SIZES.paddingSmall,
-        paddingHorizontal: SIZES.paddingMedium,
-        borderRadius: SIZES.smallRadius,
+        // paddingVertical: SIZES.paddingSmall,
+        // paddingHorizontal: SIZES.paddingMedium,
+        // borderRadius: SIZES.smallRadius,
+        flexDirection: 'row',
+        gap: 5
     },
 });

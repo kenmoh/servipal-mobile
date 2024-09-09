@@ -75,6 +75,8 @@ const payment = () => {
         setIsLoading(true);
         const response = await client.post(`${orderId}/pay-with-wallet`);
 
+
+
         setIsLoading(false);
 
         if (!response.ok) {

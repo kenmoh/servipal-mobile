@@ -24,7 +24,7 @@ const laundry = () => {
     let activeColor = Colors[theme.mode];
     const [isHomeScreen, setIsHomeScreen] = useState(true);
     const {
-        data: orders,
+        data,
         error,
         isLoading,
         isFetching,
@@ -32,6 +32,10 @@ const laundry = () => {
     } = useQuery({
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
+        select: (data) => data?.data?.filter((order: any) =>
+            (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'delivery')
+
+        ),
     });
 
 
@@ -76,7 +80,7 @@ const laundry = () => {
             <Text>Something went wrong!</Text>
         </View>;
     }
-    if (!orders?.data) {
+    if (!data) {
         <View
             style={{
                 flex: 1,
@@ -89,7 +93,7 @@ const laundry = () => {
         </View>;
     }
 
-    console.log(orders?.data)
+
     return (
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
             <StatusBar
@@ -97,7 +101,7 @@ const laundry = () => {
                 style={theme.mode === "dark" ? "light" : "dark"}
             />
             <FlatList
-                data={orders?.data}
+                data={data}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }) => (
                     item.order_status === "Pending" &&

@@ -18,6 +18,8 @@ import client from "@/api/client";
 import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
 import { SIZES } from "@/constants/Sizes";
+import { useMutation } from "@tanstack/react-query";
+import { payWithWallet } from "@/api/payment";
 
 const TIME_OUT = 1500;
 
@@ -145,41 +147,40 @@ const payment = () => {
         setShowWebView(true);
     };
 
-    const handlePayWithWallet = async (orderId: string) => {
-        setIsLoading(true);
-        const response = await client.post(`${orderId}/pay-with-wallet`);
+    const { data, error, isSuccess, mutate: handlePayWithWallet } = useMutation({
+        mutationFn: (orderId: string) => payWithWallet(orderId)
+    })
 
-        console.log(response.data)
-        setIsLoading(false);
+    console.log(data)
 
-        if (!response.ok) {
-            router.push("/failed");
-            showMessage({
-                message: 'Payment failed',
-                type: "danger",
-                textStyle: {
-                    alignItems: "center",
-                },
-            });
-            setTimeout(() => {
-                router.push("/(drawer)/stats");
-            }, TIME_OUT);
-        }
-        if (response.ok) {
-            router.push("/success");
-            showMessage({
-                message: response.data?.message,
-                type: "success",
-                textStyle: {
-                    alignItems: "center",
-                },
-            });
+    if (error) {
+        router.push("/failed");
+        showMessage({
+            message: error?.message,
+            type: "danger",
+            textStyle: {
+                alignItems: "center",
+            },
+        });
+        setTimeout(() => {
+            router.push("/(drawer)/stats");
+        }, TIME_OUT);
+    }
+    if (isSuccess) {
+        router.push("/success");
+        showMessage({
+            message: data?.message,
+            type: "success",
+            textStyle: {
+                alignItems: "center",
+            },
+        });
 
-            setTimeout(() => {
-                router.push("/(drawer)/topTab");
-            }, TIME_OUT);
-        }
-    };
+        setTimeout(() => {
+            router.push("/(drawer)/topTab");
+        }, TIME_OUT);
+    }
+
 
     const handleGetTransferDetails = async () => {
         setIsLoading(true);
@@ -366,7 +367,7 @@ const payment = () => {
                                                 onPress={() => handlePayWithWallet(params.id as string)}
                                             />
                                         </View>
-                                        <View style={[styles.btnContainer, { width: '35%', marginLeft: 5 }]}>
+                                        <View style={[styles.btnContainer, { width: '35%' }]}>
                                             <TransferBtn
                                                 fontSize={10}
                                                 icon={

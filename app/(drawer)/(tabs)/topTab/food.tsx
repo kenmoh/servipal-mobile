@@ -24,7 +24,7 @@ const food = () => {
     let activeColor = Colors[theme.mode];
     const [isHomeScreen, setIsHomeScreen] = useState(true);
     const {
-        data: orders,
+        data,
         error,
         isLoading,
         isFetching,
@@ -32,6 +32,10 @@ const food = () => {
     } = useQuery({
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
+        select: (data) => data?.data?.filter((order: any) =>
+            (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'delivery')
+
+        ),
     });
 
 
@@ -84,7 +88,7 @@ const food = () => {
                 style={theme.mode === "dark" ? "light" : "dark"}
             />
             <FlatList
-                data={orders?.data}
+                data={data}
                 keyExtractor={(item) => item?.id.toString()}
                 renderItem={({ item }) => (
                     item.order_status === "Pending" &&

@@ -32,8 +32,11 @@ const index = () => {
     queryKey: ["packageOrders"],
     queryFn: ordersApi.getItemOrders,
     enabled: false,
-  });
+    select: (data) => data?.data?.filter((order: any) =>
+      (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'delivery')
 
+    ),
+  });
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -103,7 +106,7 @@ const index = () => {
       />
 
       <FlatList
-        data={data?.data}
+        data={data}
         keyExtractor={(item,) => item?.id.toString()}
         renderItem={({ item }) =>
           (item.order_status === "Pending" &&
