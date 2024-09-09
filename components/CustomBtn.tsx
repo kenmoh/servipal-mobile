@@ -39,7 +39,7 @@ const CustomBtn = ({
         { ...props },
       ]}
     >
-      <Text style={[styles.text, { color: disabled ? 'grey' : 'white' }]}>{label}</Text>
+      <Text style={[styles.text, { color: disabled ? '#ccc' : 'white' }]}>{label}</Text>
 
     </TouchableOpacity>
   );

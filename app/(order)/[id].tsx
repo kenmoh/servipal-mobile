@@ -68,7 +68,7 @@ export default function HomeScreen() {
   // Fetch order details
   const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: ["order", orderType, id],
-    queryFn: () => fetchOrder(id),
+    queryFn: () => fetchOrder(id as string),
   });
 
   // Handle order Pickup
@@ -77,7 +77,7 @@ export default function HomeScreen() {
     data: pickupData,
     isPending,
   } = useMutation({
-    mutationFn: () => ordersApi.pickUpOrder(id),
+    mutationFn: () => ordersApi.pickUpOrder(id as string),
     onSuccess: () => {
       showMessage({
         message: "Order Picked up",
@@ -95,8 +95,8 @@ export default function HomeScreen() {
   });
 
   // Handle order Delivered
-  const { mutate: handleDelivered, isPending: delivered } = useMutation({
-    mutationFn: () => ordersApi.orderDelievered(id),
+  const { mutate: handleDelivered } = useMutation({
+    mutationFn: () => ordersApi.orderDelievered(id as string),
     onSuccess: () => {
       showMessage({
         message: "Order Delivered",
@@ -116,10 +116,10 @@ export default function HomeScreen() {
   // Handle order Received
   const {
     mutate: handleReceived,
-    isPending: received,
+    isPending: orderRecivedPending,
     data: receivedData,
   } = useMutation({
-    mutationFn: () => ordersApi.orderReceived(id),
+    mutationFn: () => ordersApi.orderReceived(id as string),
     onSuccess: () => {
       showMessage({
         message: "Order Completed",
@@ -135,8 +135,28 @@ export default function HomeScreen() {
       router.push("(tabs)/stats");
     },
   });
-
-
+  // Handle order Received
+  const {
+    mutate: handleLaundryReceived,
+    isPending: laundryReceivedPending,
+    data: laundryData,
+  } = useMutation({
+    mutationFn: () => ordersApi.laundryOrderReceived(id as string),
+    onSuccess: () => {
+      showMessage({
+        message: "Order Completed",
+        type: "success",
+      });
+      router.push("(tabs)/stats");
+    },
+    onError: () => {
+      showMessage({
+        message: "Fail to complete",
+        type: "danger",
+      });
+      router.push("(tabs)/stats");
+    },
+  });
 
   // Handle vendor cancel order
   const { mutate: handleCancelOrderByVendor } = useMutation({
@@ -195,7 +215,7 @@ export default function HomeScreen() {
     },
   });
 
-  if (isFetching) {
+  if (isFetching || isPending || orderRecivedPending || laundryReceivedPending) {
     return (
       <View
         style={{
@@ -308,7 +328,7 @@ export default function HomeScreen() {
           </View>
           <View style={styles.container}>
             <View style={{ alignItems: "center" }}>
-              <AntDesign name="user" size={30} color="gray" />
+              <AntDesign name="user" size={20} color="gray" />
               <Divider />
             </View>
             <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -330,7 +350,7 @@ export default function HomeScreen() {
           </View>
           <View style={styles.container}>
             <View style={{ alignItems: "center" }}>
-              <Feather name="box" size={30} color={activeColor.icon} />
+              <Feather name="box" size={20} color={activeColor.icon} />
               <Divider />
             </View>
             <View style={{ flex: 1, paddingHorizontal: 5 }}>
@@ -350,7 +370,7 @@ export default function HomeScreen() {
                 <DetailLabel lable="Distance" value={order?.distance || ""} />
                 <DetailLabel lable="Total Cost" value={order?.total_cost} />
                 <DetailLabel
-                  lable="Commission"
+                  lable="Service Charge"
                   value={order?.commission_delivery!}
                 />
                 <DetailLabel
@@ -386,7 +406,7 @@ export default function HomeScreen() {
               <View style={{ alignItems: "center" }}>
                 <MaterialCommunityIcons
                   name="bike-fast"
-                  size={30}
+                  size={20}
                   color="grey"
                 />
                 <Divider />
@@ -418,7 +438,7 @@ export default function HomeScreen() {
             order?.payment_status === "paid" &&
             user?.user_type === "rider" ? (
             <CustomBtn
-              disabled={isPending}
+              disabled={order?.order_status === "Pending" ? false : true}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Pickup"
@@ -427,56 +447,70 @@ export default function HomeScreen() {
           ) : order?.order_status === "Picked up" &&
             user?.user_type === "rider" ? (
             <CustomBtn
-              disabled={delivered}
+              disabled={order?.order_status === "Picked up" ? false : true}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Delivered"
               onPress={handleDelivered}
             />
-          ) : order?.order_status !== "Picked up" &&
+          ) : order?.order_status === "Pending" &&
+            order?.vendor_username === user?.username &&
             user?.user_type === "vendor" ? (
             <CustomBtn
-              disabled={delivered}
+              disabled={false}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Cancel"
               onPress={handleCancelOrderByVendor}
             />
           ) : order?.order_status === "Picked up" &&
-            user?.user_type === "rider" ? (
+            user?.user_type === "rider" &&
+            order?.rider_phone_number === user?.phone_number ? (
             <CustomBtn
-              disabled={delivered}
+              disabled={false}
               btnBorderRadius={50}
-              btnColor={Colors.btnPrimaryColor}
+              btnColor={Colors.error}
               label="Cancel"
               onPress={handleRiderCancelOrder}
             />
-          ) : order?.order_status !== "Picked up" &&
-            user?.user_type === "vendor" ? (
+          ) : order?.order_status === "Pending" &&
+            user?.user_type === "vendor" &&
+            order?.vendor_username === user?.username ? (
             <CustomBtn
-              disabled={delivered}
+              disabled={false}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
-              label="Cancel"
+              label="List order"
               onPress={handleRelistOrderByVendor}
             />
-          ) : user?.user_type === "vendor" ? (
+          ) : user?.user_type === "vendor" &&
+            order?.order_status === 'Delivered' ? (
             <CustomBtn
-              disabled={order?.order_status !== "Delivered"}
+              disabled={false}
               btnBorderRadius={50}
-              btnColor={
-                order.order_status === "Received"
-                  ? activeColor.profileCard
-                  : order.order_status !== "Delivered"
-                    ? activeColor.profileCard
-                    : Colors.btnPrimaryColor
-              }
+              btnColor={Colors.btnPrimaryColor}
               label="Received"
               onPress={handleReceived}
+            />
+          ) : order?.order_type === "laundry" &&
+            order.order_status === "Delivered" &&
+            order?.vendor_username === user?.username ? (
+            <CustomBtn
+              disabled={false}
+              btnBorderRadius={50}
+              btnColor={
+                order.order_status === "Delivered"
+                  ? activeColor.profileCard
+
+                  : Colors.btnPrimaryColor
+              }
+              label="Laundry Received"
+              onPress={handleLaundryReceived}
             />
           ) : (
             order.order_status === "Received" && (
               <CustomBtn
+                disabled
                 btnBorderRadius={50}
                 btnColor={"teal"}
                 label="Completed"

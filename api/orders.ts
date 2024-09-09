@@ -73,6 +73,10 @@ const relistOrderByVendor = (order_id: string) =>
 const orderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/order-received`);
 
+// Mark laundry order as received [vendor users only]
+const laundryOrderReceived = (order_id: string) =>
+  client.put(`${endpoint}/${order_id}/laundry-order-received`);
+
 // Order food
 const orderFood = async (vendorId: string, item: OrderData) => {
   const data = {
@@ -159,4 +163,5 @@ export default {
   getUserOrderStats,
   getVendorNewFoodOrder,
   getVendorNewLaundryOrder,
+  laundryOrderReceived,
 };

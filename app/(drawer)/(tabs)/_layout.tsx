@@ -138,7 +138,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="food"
         options={{
-          title: "Food",
+          title: "Restaurants",
           headerTitle: () => <AppHeader />,
           headerStyle: {
             elevation: 0,

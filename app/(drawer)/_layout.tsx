@@ -21,6 +21,7 @@ import client from "@/api/client";
 import * as ImagePicker from "expo-image-picker";
 import { useMutation } from "@tanstack/react-query";
 import { showMessage } from "react-native-flash-message";
+import profileImage from "@/assets/images/profile.jpg"
 
 type BackArrowType = {
     color: string;
@@ -129,7 +130,7 @@ const CustomDrawerContent = (props: any) => {
 
                     }}
                 >
-                    <View style={{ flexDirection: "row", alignItems: "center", }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
                         <TouchableOpacity
                             onPress={pickImage}
                             style={{ width: 80, height: 80, borderRadius: 100 }}
@@ -145,15 +146,27 @@ const CustomDrawerContent = (props: any) => {
                                     }}
                                 />
                             )}
-                            <Image
-                                source={{ uri: user?.photo_url ? user.photo_url : image! }}
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    borderRadius: 100,
-                                    objectFit: "cover",
-                                }}
-                            />
+                            {user?.photo_url ? (
+                                <Image
+                                    source={{ uri: user?.photo_url ? user.photo_url : image! }}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: 100,
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            ) : (
+                                <Image
+                                    source={profileImage}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: 100,
+                                        objectFit: "cover",
+                                    }}
+                                />
+                            )}
                         </TouchableOpacity>
                         <View >
                             <Text
