@@ -131,7 +131,6 @@ const styles = StyleSheet.create<Styles>({
         borderRadius: SIZES.paddingSmall,
         padding: SIZES.paddingLarge,
         width: '90%',
-        maxWidth: 400,
         maxHeight: '80%',
     },
     optionItem: {

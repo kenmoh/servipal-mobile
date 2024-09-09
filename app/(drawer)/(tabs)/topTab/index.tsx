@@ -26,16 +26,14 @@ const index = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   const [isHomeScreen, setIsHomeScreen] = useState(true);
-  const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  const { data, isSuccess, isFetching, refetch, error } = useQuery({
+  const { data, isFetching, refetch, error } = useQuery({
     queryKey: ["packageOrders"],
     queryFn: ordersApi.getItemOrders,
     enabled: false,
   });
 
-  console.log(data?.data)
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -50,11 +48,6 @@ const index = () => {
     return () => subscription.remove();
   }, []);
 
-  // useEffect(() => {
-  //   handleFetchOrders("package");
-  // }, []);
-
-  // const activeQuery = getActiveQuery();
 
   const handleRefretch = () => {
     setRefreshing(true);
@@ -111,7 +104,7 @@ const index = () => {
 
       <FlatList
         data={data?.data}
-        keyExtractor={(item) => item?.id}
+        keyExtractor={(item,) => item?.id.toString()}
         renderItem={({ item }) =>
           (item.order_status === "Pending" &&
             item.payment_status === "paid" && item.order_type === 'delivery') &&

@@ -34,11 +34,6 @@ export const addListing = async (
   data.append("price", item.price);
   data.append("stock", item.stock);
   data.append("description", item.description);
-  data.append("image", {
-    type: "image/jpeg",
-    uri: item.image,
-    name: item.image.split("/").slice(-1)[0],
-  });
 
   // Handle multiple images
   if (Array.isArray(item.images)) {

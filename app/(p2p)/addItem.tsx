@@ -5,14 +5,13 @@ import { useMutation } from "@tanstack/react-query";
 import CustomTextInput from "@/components/CustomTextInput";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import CustomBtn from "@/components/CustomBtn";
-import ImagePickerForm from "@/components/ImageFormPicker";
-import { Formik, useFormikContext } from "formik";
+import { Formik, } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
-import { addItem } from "@/utils/orderValidation";
+import { addItemValidationSchema } from "@/utils/orderValidation";
 import { CreateListingType } from "@/utils/types";
 
 import { SIZES } from "@/constants/Sizes";
@@ -75,14 +74,14 @@ const AddItem = () => {
                         initialValues={{
                             name: "",
                             price: "",
-                            image: "",
+
                             images: [],
                             stock: "",
                             description: "",
 
                         }}
                         onSubmit={(values, { resetForm }) => mutate(values, { onSuccess: () => resetForm() })}
-                        validationSchema={addItem}
+                        validationSchema={addItemValidationSchema}
                     >
                         {({
                             handleChange,
@@ -152,7 +151,7 @@ const AddItem = () => {
                                     <InputErrorMessage error={errors.description} />
                                 )}
 
-                                <ImagePickerForm field="image" />
+
                                 <ImageListForm field="images" />
 
                                 <View style={{ marginVertical: 30 }}>

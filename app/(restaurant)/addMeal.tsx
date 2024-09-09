@@ -55,7 +55,7 @@ const AddMeal = () => {
         }
         if (isSuccess) {
             showMessage({
-                message: "Meal successfully.",
+                message: "Meal added successfully.",
                 type: "success",
                 style: {
                     alignItems: "center",
@@ -106,7 +106,6 @@ const AddMeal = () => {
                                             value={values.name}
                                             labelColor={activeColor.text}
                                             label="Name"
-                                            hasBorder={theme.mode !== "dark"}
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                         />
@@ -118,7 +117,6 @@ const AddMeal = () => {
                                             value={values.price}
                                             labelColor={activeColor.text}
                                             label="Price"
-                                            hasBorder={theme.mode !== "dark"}
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                         />
@@ -134,7 +132,6 @@ const AddMeal = () => {
                                             onChangeText={handleChange("side")}
                                             value={values.side}
                                             label="Side"
-                                            hasBorder={theme.mode !== "dark"}
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                             labelColor={activeColor.text}
@@ -146,7 +143,6 @@ const AddMeal = () => {
                                             label="Ingredients"
                                             onChangeText={handleChange("ingredients")}
                                             value={values.ingredients}
-                                            hasBorder={theme.mode !== "dark"}
                                             multiline
                                             numberOfLines={4}
                                             textAlignVertical="top"

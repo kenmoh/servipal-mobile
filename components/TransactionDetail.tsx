@@ -8,8 +8,8 @@ import { Colors } from "@/constants/Colors";
 type Transaction = {
     additional_info: string;
     quantity: number;
-    total_cost: number;
-    payment_status: "pending" | "paid" | "failed";
+    total_cost: string;
+    payment_status: string;
     status: string;
     transaction_date: string;
 };
@@ -25,7 +25,7 @@ const TransactionDetail = ({
     let activeColor = Colors[theme.mode];
     return (
         <View
-            style={[styles.container, { backgroundColor: activeColor.profileCard }]}
+            style={[styles.container, { backgroundColor: activeColor.profileCard, marginBottom: isLastItem ? SIZES.marginLarge : 5 }]}
         >
             <Text style={[styles.text, { color: activeColor.text }]}>
                 Quantity: {transaction.quantity}

@@ -78,7 +78,7 @@ const items = () => {
                 data={data}
                 keyExtractor={(item) => item?.id?.toString()}
                 renderItem={({ item, index }) => {
-                    const isLastItem = index === data?.length - 1;
+                    const isLastItem = index === data?.length! - 1;
                     return (
                         <TransactionDetail isLastItem={isLastItem} transaction={item} />
                     );

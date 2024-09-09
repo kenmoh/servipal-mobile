@@ -21,7 +21,6 @@ const CategoryPicker = ({
 }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    // const [selectedLanguage, setSelectedLanguage] = useState();
     const { setFieldValue, touched, errors, values } = useFormikContext();
 
     return (

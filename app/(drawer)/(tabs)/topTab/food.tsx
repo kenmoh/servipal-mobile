@@ -34,6 +34,7 @@ const food = () => {
         queryFn: ordersApi.getFoodOrders,
     });
 
+
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
             focusManager.setFocused(status === "active");
@@ -84,10 +85,10 @@ const food = () => {
             />
             <FlatList
                 data={orders?.data}
-                keyExtractor={(item) => item?.id}
+                keyExtractor={(item) => item?.id.toString()}
                 renderItem={({ item }) => (
                     item.order_status === "Pending" &&
-                    item.payment_status === "paid" && item.order_type === 'food' && (
+                    item.order_type === 'food' && item.payment_status === 'paid' && (
                         <OrderCard order={item} isHomeScreen={isHomeScreen} />
                     )
                 )
@@ -99,6 +100,7 @@ const food = () => {
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
                 ListEmptyComponent={() => <Empty />}
+
             />
         </View>
     );

@@ -241,7 +241,7 @@ const payment = () => {
                         />
                     </>
                 ) : params.orderType === "delivery" ? (
-                    <View style={{ paddingHorizontal: SIZES.paddingMedium, width: '100%', gap: 25, }}>
+                    <View style={{ paddingHorizontal: SIZES.paddingMedium, width: '100%', gap: 25, alignItems: 'center' }}>
                         <Text style={[styles.btnText, { color: activeColor.text }]}>
                             TOTAL: ₦{params.totalCost}
                         </Text>
@@ -316,74 +316,75 @@ const payment = () => {
                                         textColor={activeColor.text}
                                     />
                                 </View>
-                            </ScrollView>
-                            <View
-                                style={{
-                                    marginTop: SIZES.marginLarge,
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Text style={[styles.btnText, { color: activeColor.text }]}>
-                                    PAY WITH
-                                </Text>
+
                                 <View
                                     style={{
-                                        flexDirection: "row",
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        gap: 5
+                                        marginTop: SIZES.marginLarge,
+                                        alignItems: "center",
                                     }}
                                 >
-                                    <View style={styles.btnContainer}>
-                                        <TransferBtn
-                                            fontSize={10}
-                                            icon={
-                                                <AntDesign
-                                                    name="creditcard"
-                                                    size={22}
-                                                    color={activeColor.icon}
-                                                />
-                                            }
-                                            label="CARD"
-                                            color={activeColor.text}
-                                            backgroundColor={activeColor.profileCard}
-                                            onPress={handleOpenWebView}
-                                        />
-                                    </View>
-                                    <View style={styles.btnContainer}>
-                                        <TransferBtn
-                                            fontSize={10}
-                                            icon={
-                                                <Entypo
-                                                    name="wallet"
-                                                    size={22}
-                                                    color={activeColor.icon}
-                                                />
-                                            }
-                                            label="WALLET"
-                                            color={activeColor.text}
-                                            backgroundColor={activeColor.profileCard}
-                                            onPress={() => handlePayWithWallet(params.id as string)}
-                                        />
-                                    </View>
-                                    <View style={[styles.btnContainer, { width: '35%', marginLeft: 5 }]}>
-                                        <TransferBtn
-                                            fontSize={10}
-                                            icon={
-                                                <MaterialCommunityIcons
-                                                    name="bank-transfer"
-                                                    size={22}
-                                                    color={activeColor.icon}
-                                                />
-                                            }
-                                            label="TRANSFER"
-                                            color={activeColor.text}
-                                            backgroundColor={activeColor.profileCard}
-                                            onPress={handleGetTransferDetails}
-                                        />
+                                    <Text style={[styles.btnText, { color: activeColor.text }]}>
+                                        PAY WITH
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            gap: 5
+                                        }}
+                                    >
+                                        <View style={styles.btnContainer}>
+                                            <TransferBtn
+                                                fontSize={10}
+                                                icon={
+                                                    <AntDesign
+                                                        name="creditcard"
+                                                        size={22}
+                                                        color={activeColor.icon}
+                                                    />
+                                                }
+                                                label="CARD"
+                                                color={activeColor.text}
+                                                backgroundColor={activeColor.profileCard}
+                                                onPress={handleOpenWebView}
+                                            />
+                                        </View>
+                                        <View style={styles.btnContainer}>
+                                            <TransferBtn
+                                                fontSize={10}
+                                                icon={
+                                                    <Entypo
+                                                        name="wallet"
+                                                        size={22}
+                                                        color={activeColor.icon}
+                                                    />
+                                                }
+                                                label="WALLET"
+                                                color={activeColor.text}
+                                                backgroundColor={activeColor.profileCard}
+                                                onPress={() => handlePayWithWallet(params.id as string)}
+                                            />
+                                        </View>
+                                        <View style={[styles.btnContainer, { width: '35%', marginLeft: 5 }]}>
+                                            <TransferBtn
+                                                fontSize={10}
+                                                icon={
+                                                    <MaterialCommunityIcons
+                                                        name="bank-transfer"
+                                                        size={22}
+                                                        color={activeColor.icon}
+                                                    />
+                                                }
+                                                label="TRANSFER"
+                                                color={activeColor.text}
+                                                backgroundColor={activeColor.profileCard}
+                                                onPress={handleGetTransferDetails}
+                                            />
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
+                            </ScrollView>
                         </>
                     )
                 )}

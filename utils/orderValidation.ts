@@ -36,7 +36,7 @@ export const addLaundryValidation = Yup.object().shape({
   image: Yup.string().required().label("Image"),
 });
 
-export const addItem = Yup.object().shape({
+export const addItemValidationSchema = Yup.object().shape({
   name: Yup.string().required().label("Item name"),
   price: Yup.number()
     .required()
@@ -49,7 +49,6 @@ export const addItem = Yup.object().shape({
     .label("Stock")
     .typeError("Enter a valid number!"),
   description: Yup.string().required().label("Description"),
-  image: Yup.string().required().label("Image"),
   images: Yup.array().min(1, "At least one image is required."),
 });
 
@@ -66,4 +65,7 @@ export const DeliverySchema = Yup.object().shape({
 export const RatingValidationSchema = Yup.object().shape({
   rating: Yup.number().min(1).max(5).positive("Rating"),
   comment: Yup.string().required(),
+});
+export const CategoryValidationSchema = Yup.object().shape({
+  name: Yup.string().required(),
 });

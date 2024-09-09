@@ -21,6 +21,7 @@ import ViewCartBtn from "@/components/ViewCartBtn";
 import { useCart } from "@/components/CartProvider";
 import { AntDesign } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
+import restaurant from '@/assets/images/restaurant.jpg'
 
 const Menu = () => {
     const { theme } = useContext(ThemeContext);
@@ -67,6 +68,7 @@ const RestaurantDetails = () => {
         queryKey: ["restaurant", id],
         queryFn: () => getRestaurantMeals(id),
     });
+
 
     if (isLoading || isFetching) {
         return (
@@ -115,7 +117,7 @@ const RestaurantDetails = () => {
                 backgroundColor={activeColor.background}
             />
             <Image
-                source={imageUrl}
+                source={imageUrl || restaurant}
                 contentFit="cover"
                 transition={1000}
                 style={styles.image}
@@ -197,8 +199,9 @@ const RestaurantDetails = () => {
                     ListHeaderComponent={<Menu />}
                     showsVerticalScrollIndicator={false}
                     data={meals?.data}
-                    keyExtractor={(item) => item?.id?.toString()}
-                    renderItem={({ item }) => <FoodCard meal={item} />}
+                    keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+                    renderItem={({ item, index }) => <FoodCard key={item?.id?.toString() || index.toString()} meal={item} />}
+
                 />
                 {cart.foods?.length >= 1 && (
                     <View style={{ paddingHorizontal: 10 }}>

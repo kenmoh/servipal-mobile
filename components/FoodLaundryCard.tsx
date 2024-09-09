@@ -5,7 +5,8 @@ import {
     View,
     Dimensions,
 } from "react-native";
-import { router, usePathname } from "expo-router";
+import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { Image } from "expo-image";
@@ -13,7 +14,8 @@ import { Image } from "expo-image";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import userApi from '@/api/users'
-import { useQuery } from "@tanstack/react-query";
+import restaurant from '@/assets/images/restaurant.jpg'
+
 
 export type CardProps = {
     id: string;
@@ -57,7 +59,7 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
             style={{ marginVertical: 5, marginBottom: isLastItem ? 80 : 0, }}
         >
             <View style={[styles.container]}>
-                <Image source={item.sample_company_image} style={styles.image} />
+                <Image source={item.sample_company_image || restaurant} style={styles.image} />
             </View>
             <View style={[styles.wrapper]}>
                 <View>

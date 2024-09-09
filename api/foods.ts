@@ -51,3 +51,14 @@ export const addMeal = async (meal: AddMealType) => {
   }
   return response.data;
 };
+
+export const addMealCategory = async ({ name }: { name: string }) => {
+  const data = {
+    name,
+  };
+  const response = await client.post(`${food}/category`, data);
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  return response.data;
+};
