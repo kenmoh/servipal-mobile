@@ -63,7 +63,8 @@
     "react-native-webview": "13.8.6",
     "yup": "^1.4.0",
     "@sentry/react-native": "~5.22.0",
-    "@react-native-community/datetimepicker": "8.0.1"
+    "@react-native-community/datetimepicker": "8.0.1",
+    "expo-clipboard": "~6.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

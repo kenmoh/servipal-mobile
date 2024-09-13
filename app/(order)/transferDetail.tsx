@@ -1,7 +1,9 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import ProfileContainer from '@/components/ProfileContainer'
+import * as Clipboard from 'expo-clipboard';
 import { router, useLocalSearchParams } from 'expo-router';
+import { FontAwesome6 } from '@expo/vector-icons';
 import { showMessage } from 'react-native-flash-message';
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
@@ -15,9 +17,13 @@ const transferDetail = () => {
     const params = useLocalSearchParams();
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const [copiedText, setCopiedText] = useState('');
     const { transfer_reference, account_number, bank_name, amount, mode } =
         params;
 
+    const copyToClipboard = async (text: string) => {
+        await Clipboard.setStringAsync(text);
+    };
 
     const trasactionArray = [
         {
@@ -72,11 +78,17 @@ const transferDetail = () => {
                 {
                     trasactionArray.map((transaction, index) => (
                         <React.Fragment key={transaction.title}>
-                            <TransferCard
-                                title={transaction.title}
-                                details={transaction?.detail}
+                            <View style={{ alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+                                <TransferCard
+                                    title={transaction.title}
+                                    details={transaction?.detail}
 
-                            />
+                                />
+                                <TouchableOpacity hitSlop={25} onPress={() => copyToClipboard(transaction?.detail)}>
+
+                                    <FontAwesome6 name="copy" size={24} color={activeColor.icon} />
+                                </TouchableOpacity>
+                            </View>
                             {(index < trasactionArray.length - 1) && <HDivider />}
 
                         </React.Fragment>

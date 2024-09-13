@@ -192,7 +192,9 @@ const AddMeal = () => {
                         color: activeColor.icon,
                         fontFamily: "Poppins-Regular",
                         fontSize: 12,
-                        textDecorationLine: 'underline'
+                        textDecorationLine: 'underline',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                     }}
                 >
                     Setup company profile image, opening and closing hours.
