@@ -11,11 +11,9 @@ import { getLaundryServiceUsers } from '@/api/laundry';
 import { usePathname } from 'expo-router';
 
 const index = () => {
-    const { user } = useAuth();
+
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [isHomeScreen, setIsHomeScreen] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState('');
 
 
     const { data: users, isLoading, isFetching, error } = useQuery({
@@ -79,12 +77,16 @@ const index = () => {
             />
             <FlatList
                 data={users?.data}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item?.id?.toString()}
                 key={1}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <FoodLaundryCard item={item} isLaundry />
-                )}
+                renderItem={({ item, index }) => {
+                    const isLastItem = index === users?.data!.length - 1
+                    return (
+                        <FoodLaundryCard item={item} isLaundry isLastItem={isLastItem} />
+                    )
+                }
+                }
             />
         </View>
     );

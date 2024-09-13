@@ -23,8 +23,6 @@ import CategoryPicker from "@/components/CategoryPicker";
 import CustomPickerTextInput from "@/components/AppModal";
 import Accordion from "@/components/Accordion";
 
-
-
 type CategoryType = {
     id: number;
     name: string;
@@ -70,8 +68,20 @@ const AddMeal = () => {
                 backgroundColor: activeColor.background,
                 flex: 1,
                 justifyContent: "center",
+
             }}
         >
+            <Text
+                onPress={() => router.push("setupCompanyProfile")}
+                style={{
+                    color: activeColor.icon,
+                    fontFamily: "Poppins-Regular",
+                    fontSize: 12,
+                    textDecorationLine: 'underline'
+                }}
+            >
+                Setup company profile image, opening and closing hours.
+            </Text>
             <CustomActivityIndicator visible={isPending} />
             <StatusBar style="inverted" />
             <View style={styles.mainContainer}>
@@ -123,7 +133,6 @@ const AddMeal = () => {
                                         {touched.price && errors.price && (
                                             <InputErrorMessage error={errors.price} />
                                         )}
-
                                     </View>
                                 </View>
                                 <View style={styles.container}>
@@ -157,14 +166,15 @@ const AddMeal = () => {
                                         <CustomPickerTextInput
                                             label="Category"
                                             categories={categoriesData?.data}
-                                            onSelect={(item: CategoryType) => setFieldValue("category", item.name)}
+                                            onSelect={(item: CategoryType) =>
+                                                setFieldValue("category", item.name)
+                                            }
                                         />
                                         {touched.category && errors.category && (
                                             <InputErrorMessage error={errors.category} />
                                         )}
 
                                         <ImagePickerForm field={"image"} />
-
 
                                         <View style={styles.btnContainer}>
                                             <CustomBtn

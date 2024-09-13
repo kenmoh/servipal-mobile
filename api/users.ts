@@ -3,6 +3,7 @@ import {
   CreateDispatch,
   CreateRider,
   CreateUser,
+  SetupCompany,
   UpdateProfileImage,
   UpdateUser,
 } from "@/utils/types";
@@ -118,6 +119,28 @@ const updateProfileImage = async (img: UpdateProfileImage) => {
   return response.data;
 };
 
+// Update Profile Image
+const setupCompanyProfile = async (profile: SetupCompany) => {
+  const data = new FormData();
+  data.append("opening_hour", profile.openingHour);
+  data.append("closing_hour", profile.closingHour);
+  data.append("image", {
+    type: "image/jpeg",
+    uri: profile.image,
+    name: profile.image.split("/").slice(-1)[0],
+  });
+
+  const response = await client.post(`${user}/update-profile-image`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  if (!response.ok) {
+    throw new Error(response?.data.detail.split(":")[1]);
+  }
+  return response.data;
+};
+
 // Recover Password
 const recoverPassword = async (email: string) => {
   const data = {
@@ -152,4 +175,5 @@ export default {
   updateProfileImage,
   getUserReviews,
   updateUser,
+  setupCompanyProfile,
 };

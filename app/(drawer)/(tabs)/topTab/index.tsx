@@ -38,6 +38,8 @@ const index = () => {
     ),
   });
 
+
+
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
       focusManager.setFocused(status === "active");
@@ -107,15 +109,12 @@ const index = () => {
 
       <FlatList
         data={data}
-        keyExtractor={(item,) => item?.id.toString()}
+        keyExtractor={(item,) => item?.id?.toString()}
         renderItem={({ item }) =>
-          (item.order_status === "Pending" &&
-            item.payment_status === "paid" && item.order_type === 'delivery') &&
           <OrderCard order={item} isHomeScreen={isHomeScreen} />
         }
         estimatedItemSize={300}
         showsVerticalScrollIndicator={false}
-        vertical
         refreshing={isFetching}
         onRefresh={handleRefretch}
         ListEmptyComponent={() => <Empty />}

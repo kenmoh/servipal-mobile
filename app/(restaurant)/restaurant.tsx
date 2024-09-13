@@ -199,8 +199,8 @@ const RestaurantDetails = () => {
                     ListHeaderComponent={<Menu />}
                     showsVerticalScrollIndicator={false}
                     data={meals?.data}
-                    keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
-                    renderItem={({ item, index }) => <FoodCard key={item?.id?.toString() || index.toString()} meal={item} />}
+                    keyExtractor={(item) => item?.id?.toString()}
+                    renderItem={({ item }) => <FoodCard meal={item} />}
 
                 />
                 {cart.foods?.length >= 1 && (

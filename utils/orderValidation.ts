@@ -69,3 +69,9 @@ export const RatingValidationSchema = Yup.object().shape({
 export const CategoryValidationSchema = Yup.object().shape({
   name: Yup.string().required(),
 });
+
+export const SetupCompanyValidation = Yup.object().shape({
+  openingHour: Yup.string().required().label("Opening hour"),
+  closingHour: Yup.string().required().label("Closing hour"),
+  image: Yup.string().required().label("Image"),
+});

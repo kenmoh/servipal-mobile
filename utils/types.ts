@@ -143,6 +143,11 @@ export type CreateRider = {
 export type UpdateProfileImage = {
   profileImageUrl: string;
 };
+export type SetupCompany = {
+  image: string;
+  openingHour: string;
+  closingHour: string;
+};
 
 type TransactionType = "deposit" | "withdrawal" | string;
 type PaymentTransactionType = "pay_with_wallet" | "fund_wallet" | string;

@@ -33,7 +33,7 @@ const laundry = () => {
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
         select: (data) => data?.data?.filter((order: any) =>
-            (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'delivery')
+            (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'laundry')
 
         ),
     });
@@ -103,12 +103,7 @@ const laundry = () => {
             <FlatList
                 data={data}
                 keyExtractor={(item) => item?.id}
-                renderItem={({ item }) => (
-                    item.order_status === "Pending" &&
-                    item.payment_status === "paid" && item.order_type === 'laundry' && (
-                        <OrderCard order={item} isHomeScreen={isHomeScreen} />
-                    )
-                )
+                renderItem={({ item }) => (<OrderCard order={item} isHomeScreen={isHomeScreen} />)
                 }
                 estimatedItemSize={200}
                 showsHorizontalScrollIndicator={false}
