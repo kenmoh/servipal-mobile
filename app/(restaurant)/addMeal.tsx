@@ -22,6 +22,7 @@ import { addMeal, getCategories } from "@/api/foods";
 import CategoryPicker from "@/components/CategoryPicker";
 import CustomPickerTextInput from "@/components/AppModal";
 import Accordion from "@/components/Accordion";
+import { useAuth } from "@/auth/authContext";
 
 type CategoryType = {
     id: number;
@@ -30,6 +31,7 @@ type CategoryType = {
 const AddMeal = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const { openingHour } = useAuth();
 
     const { error, isSuccess, mutate, isPending, data } = useMutation({
         mutationFn: (meal: AddMealType) => addMeal(meal),
@@ -71,125 +73,131 @@ const AddMeal = () => {
 
             }}
         >
-            <Text
-                onPress={() => router.push("setupCompanyProfile")}
-                style={{
-                    color: activeColor.icon,
-                    fontFamily: "Poppins-Regular",
-                    fontSize: 12,
-                    textDecorationLine: 'underline'
-                }}
-            >
-                Setup company profile image, opening and closing hours.
-            </Text>
-            <CustomActivityIndicator visible={isPending} />
-            <StatusBar style="inverted" />
-            <View style={styles.mainContainer}>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <Formik
-                        initialValues={{
-                            name: "",
-                            price: "",
-                            category: "",
-                            side: "",
-                            ingredients: "",
-                            image: "",
-                        }}
-                        onSubmit={(values, { resetForm }) =>
-                            mutate(values, { onSuccess: () => resetForm() })
-                        }
-                        validationSchema={addMealValidation}
-                    >
-                        {({
-                            handleChange,
-                            handleSubmit,
-                            values,
-                            errors,
-                            touched,
-                            setFieldValue,
-                        }) => (
-                            <>
-                                <View style={styles.container}>
-                                    <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                                        <CustomTextInput
-                                            onChangeText={handleChange("name")}
-                                            value={values.name}
-                                            labelColor={activeColor.text}
-                                            label="Name"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.name && errors.name && (
-                                            <InputErrorMessage error={errors.name} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("price")}
-                                            value={values.price}
-                                            labelColor={activeColor.text}
-                                            label="Price"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.price && errors.price && (
-                                            <InputErrorMessage error={errors.price} />
-                                        )}
-                                    </View>
-                                </View>
-                                <View style={styles.container}>
-                                    <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                                        <CustomTextInput
-                                            onChangeText={handleChange("side")}
-                                            value={values.side}
-                                            label="Side"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                            labelColor={activeColor.text}
-                                        />
-                                        {touched.side && errors.side && (
-                                            <InputErrorMessage error={errors.side} />
-                                        )}
-                                        <CustomTextInput
-                                            label="Ingredients"
-                                            onChangeText={handleChange("ingredients")}
-                                            value={values.ingredients}
-                                            multiline
-                                            numberOfLines={4}
-                                            textAlignVertical="top"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                            labelColor={activeColor.text}
-                                        />
-                                        {touched.ingredients && errors.ingredients && (
-                                            <InputErrorMessage error={errors.ingredients} />
-                                        )}
 
-                                        <CustomPickerTextInput
-                                            label="Category"
-                                            categories={categoriesData?.data}
-                                            onSelect={(item: CategoryType) =>
-                                                setFieldValue("category", item.name)
-                                            }
-                                        />
-                                        {touched.category && errors.category && (
-                                            <InputErrorMessage error={errors.category} />
-                                        )}
+            {openingHour ? (<>
+                <CustomActivityIndicator visible={isPending} />
+                <StatusBar style="inverted" />
+                <View style={styles.mainContainer}>
 
-                                        <ImagePickerForm field={"image"} />
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <Formik
+                            initialValues={{
+                                name: "",
+                                price: "",
+                                category: "",
+                                side: "",
+                                ingredients: "",
+                                image: "",
+                            }}
+                            onSubmit={(values, { resetForm }) =>
+                                mutate(values, { onSuccess: () => resetForm() })
+                            }
+                            validationSchema={addMealValidation}
+                        >
+                            {({
+                                handleChange,
+                                handleSubmit,
+                                values,
+                                errors,
+                                touched,
+                                setFieldValue,
+                            }) => (
+                                <>
 
-                                        <View style={styles.btnContainer}>
-                                            <CustomBtn
-                                                label="submit"
-                                                btnColor="orange"
-                                                onPress={handleSubmit}
+                                    <View style={styles.container}>
+                                        <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                                            <CustomTextInput
+                                                onChangeText={handleChange("name")}
+                                                value={values.name}
+                                                labelColor={activeColor.text}
+                                                label="Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
                                             />
+                                            {touched.name && errors.name && (
+                                                <InputErrorMessage error={errors.name} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("price")}
+                                                value={values.price}
+                                                labelColor={activeColor.text}
+                                                label="Price"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                            />
+                                            {touched.price && errors.price && (
+                                                <InputErrorMessage error={errors.price} />
+                                            )}
                                         </View>
                                     </View>
-                                </View>
-                            </>
-                        )}
-                    </Formik>
-                </ScrollView>
-            </View>
+                                    <View style={styles.container}>
+                                        <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                                            <CustomTextInput
+                                                onChangeText={handleChange("side")}
+                                                value={values.side}
+                                                label="Side"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                labelColor={activeColor.text}
+                                            />
+                                            {touched.side && errors.side && (
+                                                <InputErrorMessage error={errors.side} />
+                                            )}
+                                            <CustomTextInput
+                                                label="Ingredients"
+                                                onChangeText={handleChange("ingredients")}
+                                                value={values.ingredients}
+                                                multiline
+                                                numberOfLines={4}
+                                                textAlignVertical="top"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                labelColor={activeColor.text}
+                                            />
+                                            {touched.ingredients && errors.ingredients && (
+                                                <InputErrorMessage error={errors.ingredients} />
+                                            )}
+
+                                            <CustomPickerTextInput
+                                                label="Category"
+                                                categories={categoriesData?.data}
+                                                onSelect={(item: CategoryType) =>
+                                                    setFieldValue("category", item.name)
+                                                }
+                                            />
+                                            {touched.category && errors.category && (
+                                                <InputErrorMessage error={errors.category} />
+                                            )}
+
+                                            <ImagePickerForm field={"image"} />
+
+                                            <View style={styles.btnContainer}>
+                                                <CustomBtn
+                                                    label="submit"
+                                                    btnColor="orange"
+                                                    onPress={handleSubmit}
+                                                />
+                                            </View>
+                                        </View>
+                                    </View>
+                                </>
+                            )}
+                        </Formik>
+                    </ScrollView>
+                </View>
+            </>) : (
+                <Text
+                    onPress={() => router.push("setupCompanyProfile")}
+                    style={{
+                        color: activeColor.icon,
+                        fontFamily: "Poppins-Regular",
+                        fontSize: 12,
+                        textDecorationLine: 'underline'
+                    }}
+                >
+                    Setup company profile image, opening and closing hours.
+                </Text>
+            )}
         </View>
     );
 };

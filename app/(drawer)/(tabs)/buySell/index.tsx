@@ -5,6 +5,7 @@ import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
 import { useQuery } from '@tanstack/react-query';
 import { getItemListings } from '@/api/items';
+import Empty from '@/components/Empty';
 
 
 
@@ -33,6 +34,7 @@ const index = () => {
 
                 }}
                 columnWrapperStyle={{ gap: 10 }}
+                ListEmptyComponent={<Empty />}
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.data.length - 1
                     return (

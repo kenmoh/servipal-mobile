@@ -130,7 +130,7 @@ const setupCompanyProfile = async (profile: SetupCompany) => {
     name: profile.image.split("/").slice(-1)[0],
   });
 
-  const response = await client.post(`${user}/update-profile-image`, data, {
+  const response = await client.put(`${user}/setup-company-profile`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

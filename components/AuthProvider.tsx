@@ -5,6 +5,7 @@ import authStorage from '@/auth/storage'
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<{} | null>(null);
+  const [openingHour, setOpeningHour] = useState<{} | null>(null);
   const signIn = () => {
     // Implement signIn logic
   };
@@ -26,7 +27,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   useProtectedRoute(user);
   return (
-    <AuthContext.Provider value={{ signIn, signOut, setUser, user }}>
+    <AuthContext.Provider value={{ signIn, signOut, setUser, user, openingHour, setOpeningHour }}>
       {children}
     </AuthContext.Provider>
   );

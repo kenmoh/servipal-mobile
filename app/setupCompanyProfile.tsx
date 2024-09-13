@@ -1,9 +1,10 @@
-import { useContext, useEffect } from "react";
-import { StyleSheet, ScrollView, View, Text } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { StyleSheet, ScrollView, View, Text, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
 import { showMessage } from "react-native-flash-message";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import CustomBtn from "@/components/CustomBtn";
 import { Colors } from "@/constants/Colors";
@@ -13,6 +14,8 @@ import InputErrorMessage from "@/components/InputErrorMessage";
 import { ThemeContext } from "@/context/themeContext";
 import userApi from '@/api/users'
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
+import ImagePickerForm from "@/components/ImageFormPicker";
+import { useAuth } from "@/auth/authContext";
 
 
 type ProfileType = {
@@ -23,13 +26,20 @@ type ProfileType = {
 const SetupCompanyProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const { setOpeningHour, openingHour } = useAuth();
+    const [showOpeningHour, setShowOpeningHour] = useState(false);
+    const [showClosingHour, setShowClosingHour] = useState(false);
 
     const { error, isSuccess, mutate, isPending, data } = useMutation({
-        mutationFn: ({ profile }: { profile: ProfileType }) => userApi.setupCompanyProfile(profile),
+        mutationFn: (profile: ProfileType) => userApi.setupCompanyProfile(profile),
     });
 
-    console.log(data)
 
+    useEffect(() => {
+        if (isSuccess) {
+            setOpeningHour(data!)
+        }
+    }, [isSuccess, data])
 
     useEffect(() => {
         if (error) {
@@ -43,7 +53,7 @@ const SetupCompanyProfile = () => {
         }
         if (isSuccess) {
             showMessage({
-                message: "Meal added successfully.",
+                message: "Profile Updated!",
                 type: "success",
                 style: {
                     alignItems: "center",
@@ -59,15 +69,14 @@ const SetupCompanyProfile = () => {
                 justifyContent: "center",
             }}
         >
-            <Text>Setup company profile image, opening and closing hours.</Text>
             <CustomActivityIndicator visible={isPending} />
             <StatusBar style="inverted" />
             <View style={styles.mainContainer}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Formik
                         initialValues={{
-                            openingHour: "",
-                            closingHour: "",
+                            openingHour: openingHour?.opening_hour || "",
+                            closingHour: openingHour?.closing_hour || "",
                             image: "",
                         }}
                         onSubmit={(values, { resetForm }) =>
@@ -81,6 +90,7 @@ const SetupCompanyProfile = () => {
                             values,
                             errors,
                             touched,
+                            setFieldValue
 
                         }) => (
                             <>
@@ -93,6 +103,8 @@ const SetupCompanyProfile = () => {
                                             label="Opening Hour"
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
+                                            onPress={() => setShowOpeningHour(true)}
+
                                         />
                                         {touched.openingHour && errors.openingHour && (
                                             <InputErrorMessage error={errors.openingHour} />
@@ -104,11 +116,15 @@ const SetupCompanyProfile = () => {
                                             label="Closing Hour"
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
+                                            onPress={() => setShowClosingHour(true)}
                                         />
                                         {touched.closingHour && errors.closingHour && (
                                             <InputErrorMessage error={errors.closingHour} />
                                         )}
-
+                                        <View>
+                                            <Text style={{ fontSize: 14, marginTop: 10, color: activeColor.text, fontFamily: "Poppins-Medium" }}>Barner</Text>
+                                            <ImagePickerForm field={"image"} height={150} width={'100%'} />
+                                        </View>
                                         <View style={styles.btnContainer}>
                                             <CustomBtn
                                                 label="submit"
@@ -119,6 +135,41 @@ const SetupCompanyProfile = () => {
 
                                     </View>
                                 </View>
+                                {showOpeningHour && (
+                                    <DateTimePicker
+                                        testID="openinHourPicker"
+                                        value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
+                                        mode="time"
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={(event, selectedDate) => {
+                                            setShowOpeningHour(Platform.OS === 'ios');
+                                            if (selectedDate) {
+                                                const formattedTime = selectedDate.toTimeString().split(' ')[0];
+                                                setFieldValue('openingHour', formattedTime);
+                                            }
+
+                                        }}
+                                    />
+                                )}
+                                {showClosingHour && (
+                                    <DateTimePicker
+                                        testID="closingHourPicker"
+                                        value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
+                                        mode="time"
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={(event, selectedDate) => {
+                                            setShowClosingHour(Platform.OS === 'ios');
+                                            if (selectedDate) {
+                                                const formattedTime = selectedDate.toTimeString().split(' ')[0];
+                                                setFieldValue('closingHour', formattedTime);
+                                            }
+
+                                        }}
+
+                                    />
+                                )}
 
                             </>
                         )}
@@ -140,7 +191,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         padding: 10,
-        alignItems: "center",
     },
     text: {
         fontSize: 16,

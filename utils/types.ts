@@ -170,6 +170,11 @@ export type Transactions = {
 };
 
 type Role = "admin" | "vendor" | "dispatcher" | "rider" | "staff";
+export type OpeningHourReturn = {
+  sample_company_image: string;
+  opening_hour: string;
+  closing_hour: string;
+};
 export type UserReturn = {
   id: string;
   dispatch_id: string;

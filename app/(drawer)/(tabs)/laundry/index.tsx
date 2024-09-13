@@ -9,6 +9,7 @@ import { Colors } from '@/constants/Colors';
 import { ThemeContext } from '@/context/themeContext';
 import { getLaundryServiceUsers } from '@/api/laundry';
 import { usePathname } from 'expo-router';
+import Empty from '@/components/Empty';
 
 const index = () => {
 
@@ -21,12 +22,7 @@ const index = () => {
         queryFn: getLaundryServiceUsers,
     });
 
-
-
-
-
-
-
+    console.log(users?.data)
     if (isLoading || isFetching) {
         return (
             <View
@@ -80,6 +76,7 @@ const index = () => {
                 keyExtractor={(item) => item?.id?.toString()}
                 key={1}
                 showsVerticalScrollIndicator={false}
+                ListEmptyComponent={<Empty />}
                 renderItem={({ item, index }) => {
                     const isLastItem = index === users?.data!.length - 1
                     return (
@@ -87,6 +84,7 @@ const index = () => {
                     )
                 }
                 }
+
             />
         </View>
     );

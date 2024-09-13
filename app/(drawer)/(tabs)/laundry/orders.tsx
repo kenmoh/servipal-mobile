@@ -36,13 +36,6 @@ const index = () => {
         queryFn: ordersApi.getVendorNewLaundryOrder,
     });
 
-    // const handleFetchOrders = useCallback(
-    //     (orderType: string) => {
-    //         setActiveOrderType(orderType);
-    //         laundryOrdersQuery.refetch();
-    //     },
-    //     [laundryOrdersQuery]
-    // );
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -56,9 +49,7 @@ const index = () => {
         return () => subscription.remove();
     }, []);
 
-    // useEffect(() => {
-    //     handleFetchOrders("package");
-    // }, []);
+
 
     const handleRefretch = () => {
         setRefreshing(true);

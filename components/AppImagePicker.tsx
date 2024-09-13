@@ -16,8 +16,12 @@ const AppImagePicker = ({
   imageUri,
   onChangeImage,
   borderRadius = 20,
+  height = 75,
+  width = 75,
 
 }: {
+  height?: number,
+  width?: number | string,
   imageUri: string;
   borderRadius: number;
   onChangeImage: (url: string | null) => null | string;
@@ -73,7 +77,9 @@ const AppImagePicker = ({
           {
             backgroundColor: activeColor.inputBackground,
             borderColor: activeColor.borderColor,
-            borderRadius
+            borderRadius,
+            height,
+            width
           },
         ]}
       >
@@ -101,8 +107,6 @@ export default AppImagePicker;
 const styles = StyleSheet.create({
   imageContainer: {
 
-    height: 75,
-    width: 75,
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 5,
