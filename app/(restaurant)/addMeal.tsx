@@ -194,7 +194,8 @@ const AddMeal = () => {
                         fontSize: 12,
                         textDecorationLine: 'underline',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        textAlign: 'center'
                     }}
                 >
                     Setup company profile image, opening and closing hours.

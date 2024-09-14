@@ -1,8 +1,11 @@
+import { ProfileType } from "@/app/setupCompanyProfile";
 import { ThemeModeType } from "@/context/themeContext";
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 
 const key = "authToken";
+const profileKey = "profile";
+
 const storeToken = async (authToken: string) => {
   try {
     await SecureStore.setItemAsync(key, authToken);
@@ -11,9 +14,22 @@ const storeToken = async (authToken: string) => {
   }
 };
 
+const storeProfile = async (profileData: ProfileType) => {
+  try {
+    await SecureStore.setItemAsync(profileKey, JSON.stringify(profileData));
+  } catch (error) {
+    throw new Error("Error storing auth token", error!);
+  }
+};
+
 const getUser = async () => {
   const token = await getToken();
   return token ? jwtDecode.jwtDecode(token) : null;
+};
+
+const getProfile = async () => {
+  const profile = await SecureStore.getItemAsync(profileKey);
+  return JSON.parse(profile!);
 };
 
 const getToken = async () => {
@@ -58,4 +74,6 @@ export default {
   getUser,
   removeToken,
   storeToken,
+  storeProfile,
+  getProfile,
 };

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import OrderCard from "@/components/OrderCard";
 import { Colors } from "@/constants/Colors";
 import { focusManager, useQuery } from "@tanstack/react-query";
@@ -25,25 +25,14 @@ export const imageUrl = "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfo
 const Delivery = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [isHomeScreen, setIsHomeScreen] = useState(true);
-    const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
     const [refreshing, setRefreshing] = useState(false);
-    const { user } = useAuth()
 
 
-    const newFoodOrdersQuery = useQuery({
-        queryKey: ["laundryOrders"],
+    const { data, refetch, error, isFetching } = useQuery({
+        queryKey: ["newFoodOrders"],
         queryFn: ordersApi.getVendorNewFoodOrder,
-        enabled: false,
     });
 
-    const handleFetchOrders = useCallback(
-        (orderType: string) => {
-            setActiveOrderType(orderType);
-            newFoodOrdersQuery.refetch();
-        },
-        [newFoodOrdersQuery]
-    );
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -57,24 +46,17 @@ const Delivery = () => {
         return () => subscription.remove();
     }, []);
 
-    useEffect(() => {
-        handleFetchOrders("package");
-    }, []);
-
 
 
     const handleRefretch = () => {
         setRefreshing(true);
-        newFoodOrdersQuery.refetch()
+        refetch()
         setRefreshing(false);
     };
 
-    useRefreshOnFocus(newFoodOrdersQuery?.refetch!);
+    useRefreshOnFocus(refetch!);
 
-    if (
-
-        newFoodOrdersQuery.isFetching
-    ) {
+    if (isFetching) {
         return (
             <View
                 style={{
@@ -88,10 +70,7 @@ const Delivery = () => {
             </View>
         );
     }
-    if (
-
-        newFoodOrdersQuery.error
-    ) {
+    if (error) {
         <View
             style={{
                 flex: 1,
@@ -122,10 +101,10 @@ const Delivery = () => {
             />
 
             <FlatList
-                data={newFoodOrdersQuery?.data?.data}
+                data={data?.data}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }: { item: ItemOrderType }) =>
-                    (item.order_type === "food" && item.order_status === 'Pending' && item.payment_status === 'paid') &&
+                    (item.order_type === "food" && item.order_status === 'Pending' && item.food_status === 'cooking' && item.payment_status === 'paid') &&
                     (<OrderCard order={item} isHomeScreen={true} />)
 
 

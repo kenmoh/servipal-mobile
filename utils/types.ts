@@ -9,6 +9,7 @@ export type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
 type OrderType = "delivery" | "food" | "laundry";
 
 type AccountStatus = "pending" | "confirmed";
+type FoodOrderStatus = "cooking" | "served";
 
 type Item = {
   id: string;
@@ -103,6 +104,7 @@ export type ItemOrderType = {
   deduction: number;
   payment_status: PaymentStatus;
   payment_url: string;
+  food_status: FoodOrderStatus;
   foods: FoodUserType[];
 };
 

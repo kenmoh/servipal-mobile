@@ -15,10 +15,12 @@ import { ThemeContext } from "@/context/themeContext";
 import userApi from '@/api/users'
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import ImagePickerForm from "@/components/ImageFormPicker";
+import storage from "@/auth/storage";
 import { useAuth } from "@/auth/authContext";
+import { router } from "expo-router";
 
 
-type ProfileType = {
+export type ProfileType = {
     openingHour: string;
     closingHour: string;
     image: string
@@ -30,16 +32,20 @@ const SetupCompanyProfile = () => {
     const [showOpeningHour, setShowOpeningHour] = useState(false);
     const [showClosingHour, setShowClosingHour] = useState(false);
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
+    const { error, isSuccess, mutate, isPending, data, } = useMutation({
         mutationFn: (profile: ProfileType) => userApi.setupCompanyProfile(profile),
     });
 
 
+
+
     useEffect(() => {
         if (isSuccess) {
-            setOpeningHour(data!)
+            storage.storeProfile(data)
+            setOpeningHour(storage.getProfile())
         }
     }, [isSuccess, data])
+
 
     useEffect(() => {
         if (error) {
@@ -59,6 +65,7 @@ const SetupCompanyProfile = () => {
                     alignItems: "center",
                 },
             });
+            router.back()
         }
     }, [error, isSuccess]);
     return (
