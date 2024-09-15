@@ -146,6 +146,7 @@ export type UpdateProfileImage = {
   profileImageUrl: string;
 };
 export type SetupCompany = {
+  companyName: string;
   image: string;
   openingHour: string;
   closingHour: string;
@@ -176,6 +177,7 @@ export type OpeningHourReturn = {
   sample_company_image: string;
   opening_hour: string;
   closing_hour: string;
+  vendor_company_name: string;
 };
 export type UserReturn = {
   id: string;

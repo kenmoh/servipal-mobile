@@ -24,6 +24,7 @@ export type ProfileType = {
     openingHour: string;
     closingHour: string;
     image: string
+    companyName: string
 };
 const SetupCompanyProfile = () => {
     const { theme } = useContext(ThemeContext);
@@ -36,21 +37,10 @@ const SetupCompanyProfile = () => {
         mutationFn: (profile: ProfileType) => userApi.setupCompanyProfile(profile),
     });
 
-
-
-
-    useEffect(() => {
-        if (isSuccess) {
-            storage.storeProfile(data)
-            setOpeningHour(storage.getProfile())
-        }
-    }, [isSuccess, data])
-
-
     useEffect(() => {
         if (error) {
             showMessage({
-                message: error.message,
+                message: error.message || 'Something went wrong, please try again!',
                 type: "danger",
                 style: {
                     alignItems: "center",
@@ -58,6 +48,8 @@ const SetupCompanyProfile = () => {
             });
         }
         if (isSuccess) {
+            storage.storeProfile(data)
+            setOpeningHour(storage.getProfile())
             showMessage({
                 message: "Profile Updated!",
                 type: "success",
@@ -67,7 +59,7 @@ const SetupCompanyProfile = () => {
             });
             router.back()
         }
-    }, [error, isSuccess]);
+    }, [error, isSuccess, data]);
     return (
         <View
             style={{
@@ -84,6 +76,7 @@ const SetupCompanyProfile = () => {
                         initialValues={{
                             openingHour: openingHour?.opening_hour || "",
                             closingHour: openingHour?.closing_hour || "",
+                            companyName: openingHour?.vendor_company_name || "",
                             image: "",
                         }}
                         onSubmit={(values, { resetForm }) =>
@@ -103,6 +96,17 @@ const SetupCompanyProfile = () => {
                             <>
                                 <View style={styles.container}>
                                     <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                                        <CustomTextInput
+                                            onChangeText={handleChange("companyName")}
+                                            value={values.companyName}
+                                            labelColor={activeColor.text}
+                                            label="Company Name"
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                        />
+                                        {touched.companyName && errors.companyName && (
+                                            <InputErrorMessage error={errors.companyName} />
+                                        )}
                                         <CustomTextInput
                                             onChangeText={handleChange("openingHour")}
                                             value={values.openingHour}

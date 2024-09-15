@@ -73,8 +73,8 @@ export default function HomeScreen() {
 
   // Handle order Pickup
   const {
+    error: pickupError,
     mutate: handlePickup,
-    data: pickupData,
     isPending,
   } = useMutation({
     mutationFn: () => ordersApi.pickUpOrder(id as string),
@@ -87,15 +87,14 @@ export default function HomeScreen() {
     },
     onError: () => {
       showMessage({
-        message: "Fail to complete",
+        message: pickupError?.message, // TODO: handle this error
         type: "danger",
       });
-      router.push("(tabs)/stats");
     },
   });
 
   // Handle order Delivered
-  const { mutate: handleDelivered } = useMutation({
+  const { mutate: handleDelivered, isPending: pendingDelivery } = useMutation({
     mutationFn: () => ordersApi.orderDelievered(id as string),
     onSuccess: () => {
       showMessage({
@@ -160,7 +159,7 @@ export default function HomeScreen() {
 
   // Handle vendor cancel order
   const { mutate: handleCancelOrderByVendor } = useMutation({
-    mutationFn: () => ordersApi.cancelOrderByVendor(id),
+    mutationFn: () => ordersApi.cancelOrderByVendor(id as string),
     onSuccess: () => {
       showMessage({
         message: "Order Cancelled",
@@ -178,44 +177,54 @@ export default function HomeScreen() {
   });
 
   // Handle rider cancel order
-  const { mutate: handleRiderCancelOrder } = useMutation({
-    mutationFn: () => ordersApi.cancelOrder(id),
-    onSuccess: () => {
-      showMessage({
-        message: "Order Cancelled",
-        type: "success",
-      });
-      router.push("(tabs)/stats");
-    },
-    onError: () => {
-      showMessage({
-        message: "Fail to cancel",
-        type: "danger",
-      });
-      router.push("(tabs)/stats");
-    },
-  });
+  const { mutate: handleRiderCancelOrder, isPending: riderCancelPending } =
+    useMutation({
+      mutationFn: () => ordersApi.cancelOrder(id as string),
+      onSuccess: () => {
+        showMessage({
+          message: "Order Cancelled",
+          type: "success",
+        });
+        router.push("(tabs)/stats");
+      },
+      onError: () => {
+        showMessage({
+          message: "Fail to cancel",
+          type: "danger",
+        });
+        router.push("(tabs)/stats");
+      },
+    });
 
   // Handle vendor relist order
-  const { mutate: handleRelistOrderByVendor } = useMutation({
-    mutationFn: () => ordersApi.relistOrderByVendor(id),
-    onSuccess: () => {
-      showMessage({
-        message: "Order listed for delivery",
-        type: "success",
-      });
-      router.push("(tabs)/stats");
-    },
-    onError: () => {
-      showMessage({
-        message: "Something went wrong. Please try again!",
-        type: "danger",
-      });
-      router.push("(tabs)/stats");
-    },
-  });
+  const { mutate: handleRelistOrderByVendor, isPending: relistPending } =
+    useMutation({
+      mutationFn: () => ordersApi.relistOrderByVendor(id as string),
+      onSuccess: () => {
+        showMessage({
+          message: "Order listed for delivery",
+          type: "success",
+        });
+        router.push("(tabs)/stats");
+      },
+      onError: () => {
+        showMessage({
+          message: "Something went wrong. Please try again!",
+          type: "danger",
+        });
+        router.push("(tabs)/stats");
+      },
+    });
 
-  if (isFetching || isPending || orderRecivedPending || laundryReceivedPending) {
+  if (
+    isFetching ||
+    isPending ||
+    riderCancelPending ||
+    relistPending ||
+    orderRecivedPending ||
+    laundryReceivedPending ||
+    pendingDelivery
+  ) {
     return (
       <View
         style={{
@@ -484,7 +493,7 @@ export default function HomeScreen() {
               onPress={handleRelistOrderByVendor}
             />
           ) : user?.user_type === "vendor" &&
-            order?.order_status === 'Delivered' ? (
+            order?.order_status === "Delivered" ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -501,7 +510,6 @@ export default function HomeScreen() {
               btnColor={
                 order.order_status === "Delivered"
                   ? activeColor.profileCard
-
                   : Colors.btnPrimaryColor
               }
               label="Laundry Received"

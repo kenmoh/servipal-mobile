@@ -50,12 +50,22 @@ const getLaundryDetails = async (
   );
 
 // Pickup order by dispatch/rider
-const pickUpOrder = (order_id: string) =>
-  client.put(`${endpoint}/${order_id}/pick-up-order`);
+const pickUpOrder = async (order_id: string) => {
+  const response = await client.put(`${endpoint}/${order_id}/pick-up-order`);
+  if (!response.ok) {
+    throw new Error(response.data?.detail?.split(":")[1]);
+  }
+};
 
 // Mark order as delivered [dispatch/rider users only]
-const orderDelievered = (order_id: string) =>
-  client.put(`${endpoint}/${order_id}/order-is-delivered`);
+const orderDelievered = async (order_id: string) => {
+  const response = await client.put(
+    `${endpoint}/${order_id}/order-is-delivered`
+  );
+  if (!response.ok) {
+    throw new Error(response.data?.detail?.split(":")[1]);
+  }
+};
 
 // Cancel picked up order [dispatch/rider users only]
 const cancelOrder = (order_id: string) =>

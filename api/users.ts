@@ -122,6 +122,7 @@ const updateProfileImage = async (img: UpdateProfileImage) => {
 // Update Profile Image
 const setupCompanyProfile = async (profile: SetupCompany) => {
   const data = new FormData();
+  data.append("company_name", profile.companyName);
   data.append("opening_hour", profile.openingHour);
   data.append("closing_hour", profile.closingHour);
   data.append("image", {
@@ -129,14 +130,14 @@ const setupCompanyProfile = async (profile: SetupCompany) => {
     uri: profile.image,
     name: profile.image.split("/").slice(-1)[0],
   });
-
   const response = await client.put(`${user}/setup-company-profile`, data, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
+
   if (!response.ok) {
-    throw new Error(response?.data.detail.split(":")[1]);
+    throw new Error(response?.data?.detail);
   }
   return response.data;
 };
