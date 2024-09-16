@@ -387,7 +387,15 @@ export default function HomeScreen() {
                     <DetailLabel lable="Total Cost" value={order?.total_cost} />
                   </>
                 )}
-                {user?.phone_number === order?.vendor_phone_number && (
+                {user?.username === order?.vendor_username && (
+
+                  <DetailLabel
+                    lable="Delivery Fee"
+                    value={order?.delivery_fee!}
+                  />
+
+                )}
+                {user?.phone_number === order?.vendor_phone_number && order?.order_type !== 'delivery' && (
                   <DetailLabel lable="Food Cost" value={order?.food_cost} />
                 )}
                 {user?.user_type === 'dispatcher' || user?.user_type === 'rider' && <DetailLabel
@@ -398,7 +406,7 @@ export default function HomeScreen() {
                   lable="Service Charge"
                   value={order?.commission_food!}
                 />}
-                {user?.phone_number === order?.dispatch_company_phone_number || user?.phone_number === order?.rider_phone_number && <DetailLabel
+                {(user?.phone_number === order?.dispatch_company_phone_number || user?.phone_number === order?.rider_phone_number) && <DetailLabel
                   lable="Amount payable"
                   value={order?.amount_payable_delivery}
                 />}
