@@ -1,26 +1,21 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Colors } from "@/constants/Colors";
-import { focusManager, useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
     StyleSheet,
     Text,
     View,
     FlatList,
     ActivityIndicator,
-    Platform,
-    AppStateStatus,
-    AppState,
-    Dimensions,
+
 } from "react-native";
 import { ThemeContext } from "@/context/themeContext";
-import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useAuth } from "@/auth/authContext";
 
 import { getCategories, getUserByMealCategory } from "@/api/foods";
 import FoodLaundryCard from "@/components/FoodLaundryCard";
 import CategoryBtn from "@/components/CategoryBtn";
 import { StatusBar } from "expo-status-bar";
-import { usePathname } from "expo-router";
+
 
 type CategoryType = {
     name: string;
@@ -54,8 +49,6 @@ const index = () => {
     });
 
 
-
-
     const handleCategoryPress = (category: CategoryType) => {
         setSelectedCategory(category.name);
 
@@ -65,11 +58,6 @@ const index = () => {
             viewPosition: 0.5,
         });
     };
-
-
-
-
-    const handleRefresch = () => refetch();
 
 
     if (isLoading || isFetching) {

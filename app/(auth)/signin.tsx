@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
 import AccountLinkText from "@/components/AcountLink";
@@ -22,6 +22,7 @@ import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import authStorage from '@/auth/storage'
 import { SIZES } from "@/constants/Sizes";
+import userApi from '@/api/users'
 
 
 const SignIn = () => {
@@ -32,6 +33,12 @@ const SignIn = () => {
   const { error, isSuccess, mutate, isPending, data } = useMutation({
     mutationFn: ({ username, password }: Login) => authApi.loginApi(username, password),
   });
+
+  const { data: profileData } = useQuery({
+    queryKey: ['user', authContext.user?.id],
+    queryFn: userApi.getCompanyProfile
+  })
+
 
 
   useEffect(() => {
@@ -79,7 +86,7 @@ const SignIn = () => {
     }
   }, [isSuccess, data])
 
-
+  console.log('PROFILE: ', profileData)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View

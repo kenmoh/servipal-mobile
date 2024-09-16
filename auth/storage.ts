@@ -14,32 +14,11 @@ const storeToken = async (authToken: string) => {
   }
 };
 
-const storeProfile = async (profileData: ProfileType) => {
-  try {
-    const profileString = JSON.stringify(profileData);
-    await SecureStore.setItemAsync(profileKey, profileString);
-  } catch (error) {
-    throw new Error("Error storing auth token", error!);
-  }
-};
-
 const getUser = async () => {
   const token = await getToken();
   return token ? jwtDecode.jwtDecode(token) : null;
 };
 
-const getProfile = async () => {
-  try {
-    const profileString = await SecureStore.getItemAsync(profileKey);
-    if (profileString) {
-      const profile = JSON.parse(profileString) as ProfileType;
-      return profile;
-    }
-    return null;
-  } catch (error) {
-    throw new Error("Error getting auth token", error!);
-  }
-};
 const getToken = async () => {
   try {
     return await SecureStore.getItemAsync(key);
@@ -82,6 +61,4 @@ export default {
   getUser,
   removeToken,
   storeToken,
-  storeProfile,
-  getProfile,
 };

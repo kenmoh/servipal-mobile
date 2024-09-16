@@ -15,14 +15,12 @@ import { useContext, useEffect, useState } from "react";
 import { AddMealType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
-import { Picker } from "@react-native-picker/picker";
-
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { addMeal, getCategories } from "@/api/foods";
-import CategoryPicker from "@/components/CategoryPicker";
 import CustomPickerTextInput from "@/components/AppModal";
-import Accordion from "@/components/Accordion";
+import userApi from '@/api/users'
 import { useAuth } from "@/auth/authContext";
+import { ProfileType } from "../setupCompanyProfile";
 
 type CategoryType = {
     id: number;
@@ -31,13 +29,16 @@ type CategoryType = {
 const AddMeal = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { companyProfile } = useAuth();
+    const { user } = useAuth()
 
-    console.log(companyProfile)
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
+    const { error, isSuccess, mutate, isPending } = useMutation({
         mutationFn: (meal: AddMealType) => addMeal(meal),
     });
 
+    const { data } = useQuery<ProfileType>({
+        queryKey: ['user', user?.id],
+        queryFn: userApi.getCompanyProfile
+    })
 
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
@@ -76,7 +77,7 @@ const AddMeal = () => {
             }}
         >
 
-            {companyProfile ? (<>
+            {data?.location ? (<>
                 <CustomActivityIndicator visible={isPending} />
                 <StatusBar style="inverted" />
                 <View style={styles.mainContainer}>

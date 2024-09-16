@@ -1,4 +1,5 @@
 import client from "@/api/client";
+import { ProfileType } from "@/app/setupCompanyProfile";
 import {
   CreateDispatch,
   CreateRider,
@@ -20,6 +21,13 @@ const getDispatchRiders = async () =>
 // Dispatch user Suspend own rider
 const dispatchSuspenRider = async (id: string) =>
   await client.put(`${user}/${id}/suspend-rider`);
+
+// Get company profile
+const getCompanyProfile = async (): Promise<ProfileType> => {
+  const result = await client.get(`${user}/company-profile`);
+  if (!result.data) throw new Error(result?.data.detail.split(":")[1]);
+  return result.data;
+};
 
 // Get user reviews
 const getUserReviews = async (id: string) =>
@@ -178,4 +186,5 @@ export default {
   getUserReviews,
   updateUser,
   setupCompanyProfile,
+  getCompanyProfile,
 };

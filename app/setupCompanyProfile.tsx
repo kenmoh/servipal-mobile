@@ -15,31 +15,26 @@ import { ThemeContext } from "@/context/themeContext";
 import userApi from '@/api/users'
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import ImagePickerForm from "@/components/ImageFormPicker";
-import storage from "@/auth/storage";
-import { useAuth } from "@/auth/authContext";
 import { router } from "expo-router";
 
 
 export type ProfileType = {
-    openingHour: string;
-    closingHour: string;
-    image: string
-    companyName: string
+    opening_hour: string;
+    closing_hour: string;
+    sample_company_image: string
+    vendor_company_name: string
     location: string
 };
 const SetupCompanyProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { setCompanyProfile, companyProfile } = useAuth();
+
     const [showOpeningHour, setShowOpeningHour] = useState(false);
     const [showClosingHour, setShowClosingHour] = useState(false);
 
     const { mutate, isPending } = useMutation({
         mutationFn: (profile: ProfileType) => userApi.setupCompanyProfile(profile),
-        onSuccess: async (data: ProfileType) => {
-            await storage.storeProfile(data)
-            const storedProfile = await storage.getProfile();
-            setCompanyProfile(storedProfile);
+        onSuccess: () => {
             showMessage({
                 message: 'Profile Updated!',
                 type: "success",
@@ -74,10 +69,10 @@ const SetupCompanyProfile = () => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Formik
                         initialValues={{
-                            openingHour: companyProfile?.opening_hour || "",
-                            closingHour: companyProfile?.closing_hour || "",
-                            companyName: companyProfile?.vendor_company_name || "",
-                            location: companyProfile?.location || "",
+                            openingHour: "",
+                            closingHour: "",
+                            companyName: "",
+                            location: "",
                             image: "",
                         }}
                         onSubmit={(values, { resetForm }) =>

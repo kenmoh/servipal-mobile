@@ -14,7 +14,6 @@ import { Image } from "expo-image";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import userApi from '@/api/users'
-import { useAuth } from "@/auth/authContext";
 
 
 export type CardProps = {
@@ -22,23 +21,22 @@ export type CardProps = {
     sample_company_image: string;
     average_rating: number;
     numReviews?: number;
-    company_name?: string;
-    username?: string;
+    vendor_company_name?: string;
+    opening_hour: string;
     location: string;
+    closing_hour: string;
 };
-const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.3;
+const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.35;
 
 const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isLaundry: boolean, isLastItem: boolean }) => {
 
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { companyProfile } = useAuth()
 
     const { data: reviews } = useQuery({
         queryKey: ['reviews', item.id],
         queryFn: () => userApi.getUserReviews(item.id)
     })
-
 
     return (
         <TouchableOpacity
@@ -48,24 +46,25 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
                     pathname: isLaundry ? "(laundry)/laundry" : "(restaurant)/restaurant",
                     params: {
                         id: item.id,
-                        companyName: item.company_name,
-                        username: item.username,
+                        companyName: item.vendor_company_name,
                         avgRating: reviews?.data?.average_rating,
                         location: item.location,
                         imageUrl: item.sample_company_image,
-                        numReview: reviews?.data?.total_reviews
+                        numReview: reviews?.data?.total_reviews,
+                        closingHour: item?.closing_hour,
+                        openingHour: item?.opening_hour
                     },
                 })
             }
             style={{ marginVertical: 5, marginBottom: isLastItem ? 80 : 0, }}
         >
             <View style={[styles.container]}>
-                <Image source={companyProfile?.sample_company_image} style={styles.image} />
+                <Image source={item.sample_company_image} style={styles.image} />
             </View>
             <View style={[styles.wrapper]}>
                 <View>
                     <Text style={[styles.nameText, { color: activeColor.text }]}>
-                        {item.company_name || item.username}
+                        {item.vendor_company_name}
                     </Text>
 
                     <Text style={[styles.locationText, { color: activeColor.text }]}>

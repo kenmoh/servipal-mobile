@@ -6,7 +6,6 @@ import storage from "@/auth/storage";
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<{} | null>(null);
-  const [companyProfile, setCompanyProfile] = useState<{} | null>(null);
   const signIn = () => {
     // Implement signIn logic
   };
@@ -21,15 +20,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     restoreToken()
   }, [])
 
-  useEffect(() => {
-    // Load the profile from SecureStore when the app starts
-    const loadProfile = async () => {
-      const storedProfile = await storage.getProfile();
-      setCompanyProfile(storedProfile);
-    };
-    loadProfile();
-  }, []);
-
 
   const signOut = () => {
     setUser(null);
@@ -37,7 +27,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   useProtectedRoute(user);
   return (
-    <AuthContext.Provider value={{ signIn, signOut, setUser, user, companyProfile, setCompanyProfile }}>
+    <AuthContext.Provider value={{ signIn, signOut, setUser, user }}>
       {children}
     </AuthContext.Provider>
   );

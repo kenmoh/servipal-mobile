@@ -59,8 +59,6 @@ const RestaurantDetails = () => {
     const { id, username, companyName, imageUrl, numReview, avgRating } =
         useLocalSearchParams();
     const { cart, getTotalPrice } = useCart();
-    const { companyProfile, user } = useAuth()
-
 
     const {
         data: meals,
@@ -143,7 +141,7 @@ const RestaurantDetails = () => {
                     {username || companyName}
                 </Text>
                 <Text style={[{ color: activeColor.text, fontFamily: "Poppins-Thin" }]}>
-                    {companyProfile?.location}
+                    {/* {companyProfile?.location} */} Ilorin
                 </Text>
 
                 {numReview > 0 && (
