@@ -290,7 +290,7 @@ export default function HomeScreen() {
                 text={order?.order_status!}
                 textColor={
                   order?.order_status === "Pending"
-                    ? "#c8553d"
+                    ? "tomato"
                     : order?.order_status === "Received"
                       ? "#25a18e"
                       : order?.order_status === "Delivered"
@@ -377,16 +377,36 @@ export default function HomeScreen() {
                   value={order?.destination || ""}
                 />
                 <DetailLabel lable="Distance" value={order?.distance || ""} />
-                <DetailLabel lable="Total Cost" value={order?.total_cost} />
-                <DetailLabel
+                {user?.username === order?.order_owner_username && (
+                  <>
+                    <DetailLabel
+                      lable="Delivery Fee"
+                      value={order?.delivery_fee!}
+                    />
+                    <DetailLabel lable="Food Cost" value={order?.food_cost} />
+                    <DetailLabel lable="Total Cost" value={order?.total_cost} />
+                  </>
+                )}
+                {user?.phone_number === order?.vendor_phone_number && (
+                  <DetailLabel lable="Food Cost" value={order?.food_cost} />
+                )}
+                {user?.user_type === 'dispatcher' || user?.user_type === 'rider' && <DetailLabel
                   lable="Service Charge"
                   value={order?.commission_delivery!}
-                />
-                <DetailLabel
+                />}
+                {user?.user_type === 'vendor' && <DetailLabel
+                  lable="Service Charge"
+                  value={order?.commission_food!}
+                />}
+                {user?.phone_number === order?.dispatch_company_phone_number || user?.phone_number === order?.rider_phone_number && <DetailLabel
                   lable="Amount payable"
                   value={order?.amount_payable_delivery}
-                />
-                <View style={{ marginVertical: 10 }}>
+                />}
+                {user?.phone_number === order?.vendor_phone_number && <DetailLabel
+                  lable="Amount payable"
+                  value={order?.amount_payable_food}
+                />}
+                {order?.description && <View style={{ marginVertical: 10 }}>
                   <Text
                     style={{
                       fontSize: 14,
@@ -406,7 +426,7 @@ export default function HomeScreen() {
                   >
                     {order?.description}
                   </Text>
-                </View>
+                </View>}
               </View>
             </View>
           </View>

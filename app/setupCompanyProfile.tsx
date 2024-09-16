@@ -16,6 +16,7 @@ import userApi from '@/api/users'
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import ImagePickerForm from "@/components/ImageFormPicker";
 import { router } from "expo-router";
+import { SetupCompany } from "@/utils/types";
 
 
 export type ProfileType = {
@@ -33,7 +34,7 @@ const SetupCompanyProfile = () => {
     const [showClosingHour, setShowClosingHour] = useState(false);
 
     const { mutate, isPending } = useMutation({
-        mutationFn: (profile: ProfileType) => userApi.setupCompanyProfile(profile),
+        mutationFn: (profile: SetupCompany) => userApi.setupCompanyProfile(profile),
         onSuccess: () => {
             showMessage({
                 message: 'Profile Updated!',

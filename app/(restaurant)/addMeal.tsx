@@ -35,10 +35,7 @@ const AddMeal = () => {
         mutationFn: (meal: AddMealType) => addMeal(meal),
     });
 
-    const { data } = useQuery<ProfileType>({
-        queryKey: ['user', user?.id],
-        queryFn: userApi.getCompanyProfile
-    })
+
 
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
@@ -77,7 +74,7 @@ const AddMeal = () => {
             }}
         >
 
-            {data?.location ? (<>
+            {user?.location ? (<>
                 <CustomActivityIndicator visible={isPending} />
                 <StatusBar style="inverted" />
                 <View style={styles.mainContainer}>
