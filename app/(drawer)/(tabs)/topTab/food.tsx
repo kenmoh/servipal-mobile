@@ -37,6 +37,9 @@ const food = () => {
 
         ),
     });
+    console.log(data)
+
+
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {

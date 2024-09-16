@@ -25,41 +25,41 @@ export type ProfileType = {
     closingHour: string;
     image: string
     companyName: string
+    location: string
 };
 const SetupCompanyProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { setOpeningHour, openingHour } = useAuth();
+    const { setCompanyProfile, companyProfile } = useAuth();
     const [showOpeningHour, setShowOpeningHour] = useState(false);
     const [showClosingHour, setShowClosingHour] = useState(false);
 
-    const { error, isSuccess, mutate, isPending, data, } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: (profile: ProfileType) => userApi.setupCompanyProfile(profile),
-    });
-
-    useEffect(() => {
-        if (error) {
+        onSuccess: async (data: ProfileType) => {
+            await storage.storeProfile(data)
+            const storedProfile = await storage.getProfile();
+            setCompanyProfile(storedProfile);
             showMessage({
-                message: error.message || 'Something went wrong, please try again!',
-                type: "danger",
-                style: {
-                    alignItems: "center",
-                },
-            });
-        }
-        if (isSuccess) {
-            storage.storeProfile(data)
-            setOpeningHour(storage.getProfile())
-            showMessage({
-                message: "Profile Updated!",
+                message: 'Profile Updated!',
                 type: "success",
                 style: {
                     alignItems: "center",
                 },
+
             });
-            router.back()
-        }
-    }, [error, isSuccess, data]);
+            router.push('(restaurant)/addMeal')
+        },
+        onError: (error) => showMessage({
+            message: error.message || 'Something went wrong, please try again!',
+            type: "danger",
+            style: {
+                alignItems: "center",
+            },
+        })
+    });
+
+
     return (
         <View
             style={{
@@ -74,9 +74,10 @@ const SetupCompanyProfile = () => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Formik
                         initialValues={{
-                            openingHour: openingHour?.opening_hour || "",
-                            closingHour: openingHour?.closing_hour || "",
-                            companyName: openingHour?.vendor_company_name || "",
+                            openingHour: companyProfile?.opening_hour || "",
+                            closingHour: companyProfile?.closing_hour || "",
+                            companyName: companyProfile?.vendor_company_name || "",
+                            location: companyProfile?.location || "",
                             image: "",
                         }}
                         onSubmit={(values, { resetForm }) =>
@@ -107,6 +108,18 @@ const SetupCompanyProfile = () => {
                                         {touched.companyName && errors.companyName && (
                                             <InputErrorMessage error={errors.companyName} />
                                         )}
+                                        <CustomTextInput
+                                            onChangeText={handleChange("location")}
+                                            value={values.location}
+                                            labelColor={activeColor.text}
+                                            label="Location"
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                        />
+                                        {touched.location && errors.location && (
+                                            <InputErrorMessage error={errors.location} />
+                                        )}
+
                                         <CustomTextInput
                                             onChangeText={handleChange("openingHour")}
                                             value={values.openingHour}

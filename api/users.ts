@@ -122,6 +122,7 @@ const updateProfileImage = async (img: UpdateProfileImage) => {
 // Update Profile Image
 const setupCompanyProfile = async (profile: SetupCompany) => {
   const data = new FormData();
+  data.append("location", profile.location);
   data.append("company_name", profile.companyName);
   data.append("opening_hour", profile.openingHour);
   data.append("closing_hour", profile.closingHour);

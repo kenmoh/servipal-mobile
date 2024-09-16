@@ -22,6 +22,7 @@ import { useCart } from "@/components/CartProvider";
 import { AntDesign } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
 import restaurant from '@/assets/images/restaurant.jpg'
+import { useAuth } from "@/auth/authContext";
 
 const Menu = () => {
     const { theme } = useContext(ThemeContext);
@@ -58,6 +59,8 @@ const RestaurantDetails = () => {
     const { id, username, companyName, imageUrl, numReview, avgRating } =
         useLocalSearchParams();
     const { cart, getTotalPrice } = useCart();
+    const { companyProfile, user } = useAuth()
+
 
     const {
         data: meals,
@@ -140,7 +143,7 @@ const RestaurantDetails = () => {
                     {username || companyName}
                 </Text>
                 <Text style={[{ color: activeColor.text, fontFamily: "Poppins-Thin" }]}>
-                    Address
+                    {companyProfile?.location}
                 </Text>
 
                 {numReview > 0 && (

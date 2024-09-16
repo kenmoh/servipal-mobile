@@ -44,7 +44,7 @@ export default function HomeScreen() {
   //   queryKey: ["orders", id],
   //   queryFn: () => ordersApi.orderItemDetails(id),
   // });
-  console.log(orderType);
+
   const fetchOrder = useMemo(() => {
     if (orderType === "delivery") {
       return ordersApi.orderItemDetails;

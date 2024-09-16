@@ -14,7 +14,7 @@ import { Image } from "expo-image";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import userApi from '@/api/users'
-import restaurant from '@/assets/images/restaurant.jpg'
+import { useAuth } from "@/auth/authContext";
 
 
 export type CardProps = {
@@ -32,6 +32,7 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
 
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const { companyProfile } = useAuth()
 
     const { data: reviews } = useQuery({
         queryKey: ['reviews', item.id],
@@ -59,7 +60,7 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
             style={{ marginVertical: 5, marginBottom: isLastItem ? 80 : 0, }}
         >
             <View style={[styles.container]}>
-                <Image source={item.sample_company_image || restaurant} style={styles.image} />
+                <Image source={companyProfile?.sample_company_image} style={styles.image} />
             </View>
             <View style={[styles.wrapper]}>
                 <View>

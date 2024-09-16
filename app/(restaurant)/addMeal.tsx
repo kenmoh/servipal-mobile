@@ -31,11 +31,13 @@ type CategoryType = {
 const AddMeal = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { openingHour } = useAuth();
+    const { companyProfile } = useAuth();
 
+    console.log(companyProfile)
     const { error, isSuccess, mutate, isPending, data } = useMutation({
         mutationFn: (meal: AddMealType) => addMeal(meal),
     });
+
 
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
@@ -51,7 +53,7 @@ const AddMeal = () => {
                     alignItems: "center",
                 },
             });
-            router.push("/(restaurant)/addMeal");
+
         }
         if (isSuccess) {
             showMessage({
@@ -61,7 +63,7 @@ const AddMeal = () => {
                     alignItems: "center",
                 },
             });
-            router.push("/(restaurant)/addMeal");
+
         }
     }, [error, isSuccess]);
     return (
@@ -74,7 +76,7 @@ const AddMeal = () => {
             }}
         >
 
-            {openingHour ? (<>
+            {companyProfile ? (<>
                 <CustomActivityIndicator visible={isPending} />
                 <StatusBar style="inverted" />
                 <View style={styles.mainContainer}>

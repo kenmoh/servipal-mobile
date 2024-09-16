@@ -142,14 +142,17 @@ export type CreateRider = {
   password: string;
   confirmPassword: string;
 };
+
 export type UpdateProfileImage = {
   profileImageUrl: string;
 };
+
 export type SetupCompany = {
   companyName: string;
   image: string;
   openingHour: string;
   closingHour: string;
+  location: string;
 };
 
 type TransactionType = "deposit" | "withdrawal" | string;
@@ -173,12 +176,15 @@ export type Transactions = {
 };
 
 type Role = "admin" | "vendor" | "dispatcher" | "rider" | "staff";
-export type OpeningHourReturn = {
+
+export type CompanyProfileReturn = {
   sample_company_image: string;
   opening_hour: string;
   closing_hour: string;
   vendor_company_name: string;
+  location: string;
 };
+
 export type UserReturn = {
   id: string;
   dispatch_id: string;
