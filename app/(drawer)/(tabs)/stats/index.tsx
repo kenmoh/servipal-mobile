@@ -21,11 +21,12 @@ import RenderBtn from "@/components/RenderBtn";
 import OrderCard from "@/components/OrderCard";
 import { number } from "yup";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { ItemOrderType } from "@/utils/types";
 
 type StatType = {
-    total_order: number,
-    pending_orders: number
-}
+    total_order: number;
+    pending_orders: number;
+};
 
 const index = () => {
     const { theme } = useContext(ThemeContext);
@@ -35,11 +36,9 @@ const index = () => {
     const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
 
     const { data } = useQuery({
-        queryKey: ['stats', user?.id],
-        queryFn: ordersApi.getUserOrderStats
-    })
-
-
+        queryKey: ["stats", user?.id],
+        queryFn: ordersApi.getUserOrderStats,
+    });
 
     const newOrdersQuery = useQuery({
         queryKey: ["newOrders"],
@@ -53,7 +52,6 @@ const index = () => {
         enabled: false,
     });
 
-
     const foodOrdersQuery = useQuery({
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
@@ -65,7 +63,6 @@ const index = () => {
         queryFn: ordersApi.getLaundryOrders,
         enabled: false,
     });
-
 
     const handleFetchOrders = useCallback(
         (orderType: string) => {
@@ -116,15 +113,18 @@ const index = () => {
         handleFetchOrders("package");
     }, []);
 
-
-    let isFetching = true
+    let isFetching = true;
     const activeQuery = getActiveQuery();
     if (activeQuery) {
-        isFetching = activeQuery.isFetching
+        isFetching = activeQuery.isFetching;
     }
     const handleRefresch = () => activeQuery?.refetch();
 
-    if (packageOrdersQuery.isFetching || foodOrdersQuery.isFetching || laundryOrdersQuery.isFetching) {
+    if (
+        packageOrdersQuery.isFetching ||
+        foodOrdersQuery.isFetching ||
+        laundryOrdersQuery.isFetching
+    ) {
         return (
             <View
                 style={{
@@ -138,7 +138,11 @@ const index = () => {
             </View>
         );
     }
-    if (packageOrdersQuery.error || foodOrdersQuery.error || laundryOrdersQuery.error) {
+    if (
+        packageOrdersQuery.error ||
+        foodOrdersQuery.error ||
+        laundryOrdersQuery.error
+    ) {
         <View
             style={{
                 flex: 1,
@@ -147,7 +151,15 @@ const index = () => {
                 justifyContent: "center",
             }}
         >
-            <Text style={{ fontFamily: 'Poppins-Light', fontSize: 12, color: Colors.error }}>Something went wrong!</Text>
+            <Text
+                style={{
+                    fontFamily: "Poppins-Light",
+                    fontSize: 12,
+                    color: Colors.error,
+                }}
+            >
+                Something went wrong!
+            </Text>
         </View>;
     }
     if (activeQuery?.data?.data) {
@@ -159,10 +171,17 @@ const index = () => {
                 justifyContent: "center",
             }}
         >
-            <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 16, color: activeColor.icon }}>No Order yet</Text>
+            <Text
+                style={{
+                    fontFamily: "Poppins-Bold",
+                    fontSize: 16,
+                    color: activeColor.icon,
+                }}
+            >
+                No Order yet
+            </Text>
         </View>;
     }
-
 
     return (
         <>
@@ -191,7 +210,6 @@ const index = () => {
                             // { backgroundColor: activeColor.profileCard },
                         ]}
                     >
-
                         <MaterialIcons name="pending" color={activeColor.icon} size={18} />
                         <Text style={[styles.text, { color: activeColor.text }]}>
                             Pending Deliveries: {data?.data?.pending_orders}
@@ -199,7 +217,14 @@ const index = () => {
                     </View>
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: 'space-between', width: '95%', alignSelf: 'center' }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        width: "95%",
+                        alignSelf: "center",
+                    }}
+                >
                     <RenderBtn
                         title="Package"
                         orderType="package"
@@ -222,16 +247,29 @@ const index = () => {
                 <FlatList
                     data={activeQuery?.data?.data}
                     keyExtractor={(item) => item?.id}
-                    renderItem={({ item }) =>
-                        (item?.vendor_phone_number === user?.phone_number && user?.user_type === 'vendor') ? (
+                    renderItem={({ item }: { item: ItemOrderType }) =>
+                        item?.vendor_phone_number === user?.phone_number &&
+                            user?.user_type === "vendor" ? (
                             <OrderCard order={item} isHomeScreen={false} />
-                        ) : (item?.dispatch_company_name === user?.company_name && user?.user_type === 'dispatcher') ? (
+                        ) : item?.order_owner_phone_number === user?.phone_number &&
+                            user?.user_type === "vendor" &&
+                            item.order_type === "food" ? (
                             <OrderCard order={item} isHomeScreen={false} />
-                        ) : (
-                            (item?.rider_phone_number === user?.phone_number && user?.user_type === 'rider') && (
-                                <OrderCard order={item} isHomeScreen={false} />
-                            )
+                        ) : item?.order_owner_phone_number === user?.phone_number &&
+                            user?.user_type === "vendor" &&
+                            item.order_type === "laundry" ? (
+                            <OrderCard order={item} isHomeScreen={false} />
                         )
+
+                            : item?.dispatch_company_name === user?.company_name &&
+                                user?.user_type === "dispatcher" ? (
+                                <OrderCard order={item} isHomeScreen={false} />
+                            ) : (
+                                item?.rider_phone_number === user?.phone_number &&
+                                user?.user_type === "rider" && (
+                                    <OrderCard order={item} isHomeScreen={false} />
+                                )
+                            )
                     }
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
@@ -271,7 +309,7 @@ const styles = StyleSheet.create({
         // paddingVertical: SIZES.paddingSmall,
         // paddingHorizontal: SIZES.paddingMedium,
         // borderRadius: SIZES.smallRadius,
-        flexDirection: 'row',
-        gap: 5
+        flexDirection: "row",
+        gap: 5,
     },
 });

@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
 
     locationText: {
         fontSize: 11,
-        fontFamily: "Poppins-Thin",
+        fontFamily: "Poppins-Light",
     },
     image: {
 

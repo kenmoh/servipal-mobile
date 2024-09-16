@@ -92,6 +92,7 @@ export type ItemOrderType = {
   description?: string;
   dispatch_company_name?: string;
   dispatch_company_phone_number?: string;
+  order_owner_phone_number?: string;
   rider_name?: string;
   image_url?: string;
   vendor_phone_number?: string;
