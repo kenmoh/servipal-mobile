@@ -49,7 +49,7 @@ const CustomTabBarIcon = ({
       >
         {children}
       </View>
-      <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 12, color: focused ? activeColor.text : activeColor.icon }}>{label}</Text>
+      <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 10, color: focused ? activeColor.text : activeColor.icon }}>{label}</Text>
     </>
   );
 };
@@ -146,7 +146,7 @@ export default function TabLayout() {
             backgroundColor: activeColor.background,
           },
           tabBarIcon: ({ color, focused }) => (
-            (<CustomTabBarIcon focused={focused} label="Food">
+            (<CustomTabBarIcon focused={focused} label="Restaurants">
               <MaterialIcons
                 name="restaurant"
                 size={TAB_BAR_ICON_SIZE}
@@ -195,7 +195,7 @@ export default function TabLayout() {
             shadowOpacity: 0,
           },
           tabBarIcon: ({ color, focused }) => (
-            <CustomTabBarIcon focused={focused} label="Buy">
+            <CustomTabBarIcon focused={focused} label="Buy/Sell">
 
               <Entypo name="shop" size={TAB_BAR_ICON_SIZE} color={color} />
             </CustomTabBarIcon>
@@ -225,7 +225,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="stats"
         options={{
-          title: "Stats",
+          title: "History",
           headerShown: true,
           headerTintColor: activeColor.text,
           headerStyle: {
@@ -236,7 +236,7 @@ export default function TabLayout() {
             borderBottomColor: activeColor.borderColor,
           },
           tabBarIcon: ({ color, focused }) => (
-            <CustomTabBarIcon focused={focused} label="Stats">
+            <CustomTabBarIcon focused={focused} label="History">
 
               <MaterialIcons
                 name="bar-chart"
