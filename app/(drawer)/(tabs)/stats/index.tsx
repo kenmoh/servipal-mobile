@@ -195,8 +195,7 @@ const index = () => {
                 <View style={[styles.statWrapper]}>
                     <View
                         style={[
-                            styles.statContainer,
-                            // { backgroundColor: activeColor.profileCard },
+                            styles.statContainer
                         ]}
                     >
                         <Feather name="package" color={activeColor.icon} size={18} />
@@ -206,8 +205,7 @@ const index = () => {
                     </View>
                     <View
                         style={[
-                            styles.statContainer,
-                            // { backgroundColor: activeColor.profileCard },
+                            styles.statContainer
                         ]}
                     >
                         <MaterialIcons name="pending" color={activeColor.icon} size={18} />

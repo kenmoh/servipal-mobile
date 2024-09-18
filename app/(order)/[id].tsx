@@ -520,7 +520,7 @@ export default function HomeScreen() {
               label="List order"
               onPress={handleRelistOrderByVendor}
             />
-          ) : user?.user_type === "vendor" &&
+          ) : user?.user_type === "vendor" && user?.phone_number === (order?.vendor_phone_number || order?.order_owner_phone_number) &&
             order?.order_status === "Delivered" ? (
             <CustomBtn
               disabled={false}
