@@ -1,5 +1,5 @@
 import client from "@/api/client";
-import { ProfileType } from "@/app/setupCompanyProfile";
+import { ProfileReturnType, ProfileType } from "@/app/setupCompanyProfile";
 import {
   CreateDispatch,
   CreateRider,
@@ -14,6 +14,10 @@ const riderEndpoint = "/users/register-rider";
 const userEndpoint = "/users/register";
 const user = "/users";
 
+type ErrorType = {
+  detail: string;
+};
+
 // Dispatch get all riders
 const getDispatchRiders = async () =>
   await client.get(`${user}/dispatcher-riders`);
@@ -23,9 +27,9 @@ const dispatchSuspenRider = async (id: string) =>
   await client.put(`${user}/${id}/suspend-rider`);
 
 // Get company profile
-const getCompanyProfile = async (): Promise<ProfileType> => {
+const getCompanyProfile = async (): Promise<ProfileReturnType> => {
   const result = await client.get(`${user}/company-profile`);
-  if (!result.data) throw new Error(result?.data.detail.split(":")[1]);
+  if (!result.data) throw new Error(result?.data?.detail.split(":")[1]);
   return result.data;
 };
 
@@ -37,6 +41,7 @@ const createUser = async (user: CreateUser) => {
   const reqData = {
     email: user.email.toLowerCase().trim(),
     username: user.username,
+    user_type: user.userRole,
     phone_number: user.phoneNumber,
     password: user.password,
   };
@@ -132,12 +137,21 @@ const setupCompanyProfile = async (profile: SetupCompany) => {
   const data = new FormData();
   data.append("location", profile.location);
   data.append("company_name", profile.companyName);
+  data.append("company_reg_number", profile.companyRegNum);
   data.append("opening_hour", profile.openingHour);
   data.append("closing_hour", profile.closingHour);
+  data.append("account_holder_name", profile.accountHolderName);
+  data.append("bank_name", profile.bankName);
+  data.append("bank_account_number", profile.accountNumber);
   data.append("image", {
     type: "image/jpeg",
-    uri: profile.image,
-    name: profile.image.split("/").slice(-1)[0],
+    uri: profile.profileImage,
+    name: profile.profileImage.split("/").slice(-1)[0],
+  });
+  data.append("company_background_image", {
+    type: "image/jpeg",
+    uri: profile.backgroundImage,
+    name: profile.backgroundImage.split("/").slice(-1)[0],
   });
   const response = await client.put(`${user}/setup-company-profile`, data, {
     headers: {

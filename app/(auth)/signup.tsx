@@ -21,6 +21,18 @@ import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { SIZES } from "@/constants/Sizes";
+import CustomPickerTextInput from "@/components/AppModal";
+
+interface RoleType {
+  name: string;
+  id: number;
+}
+const roleData = [
+  { id: 1, name: 'user' },
+  { id: 2, name: 'admin' },
+  { id: 3, name: 'restaurant' },
+  { id: 4, name: 'laundry' },
+]
 
 const SenderSignup = () => {
   const { theme } = useContext(ThemeContext);
@@ -73,19 +85,19 @@ const SenderSignup = () => {
               username: "",
               email: "",
               phoneNumber: "",
+              userRole: "",
               confirmPassword: "",
               password: "",
             }}
             validationSchema={vendorValidationSchema}
             onSubmit={mutate}
           >
-            {({ handleChange, handleSubmit, values, errors, touched }) => (
+            {({ handleChange, handleSubmit, setFieldValue, values, errors, touched }) => (
               <>
                 <CustomActivityIndicator visible={isPending} />
                 <View style={{ padding: SIZES.paddingMedium }}>
                   <CustomTextInput
                     label="Email"
-
                     autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={handleChange("email")}
@@ -98,8 +110,19 @@ const SenderSignup = () => {
                     <InputErrorMessage error={errors.email} />
                   )}
                   <CustomTextInput
+                    label="Username"
+                    autoCapitalize="none"
+                    onChangeText={handleChange("username")}
+                    labelColor={activeColor.text}
+                    inputBackgroundColor={activeColor.inputBackground}
+                    inputTextColor={activeColor.text}
+                    value={values.username}
+                  />
+                  {touched.username && errors.username && (
+                    <InputErrorMessage error={errors.username} />
+                  )}
+                  <CustomTextInput
                     label="Phone Number"
-                    hasBorder={theme.mode !== "dark"}
                     keyboardType="phone-pad"
                     onChangeText={handleChange("phoneNumber")}
                     value={values.phoneNumber}
@@ -110,21 +133,18 @@ const SenderSignup = () => {
                   {touched.phoneNumber && errors.phoneNumber && (
                     <InputErrorMessage error={errors.phoneNumber} />
                   )}
-                  <CustomTextInput
-                    label="Username"
-                    hasBorder={theme.mode !== "dark"}
-                    onChangeText={handleChange("username")}
-                    value={values.username}
-                    labelColor={activeColor.text}
-                    inputBackgroundColor={activeColor.inputBackground}
-                    inputTextColor={activeColor.text}
+                  <CustomPickerTextInput
+                    label="Select user type"
+                    categories={roleData}
+                    onSelect={(role: RoleType) =>
+                      setFieldValue("userRole", role.name)
+                    }
                   />
-                  {touched.username && errors.username && (
-                    <InputErrorMessage error={errors.username} />
+                  {touched.userRole && errors.userRole && (
+                    <InputErrorMessage error={errors.userRole} />
                   )}
                   <CustomTextInput
                     label="Password"
-                    hasBorder={theme.mode !== "dark"}
                     secureTextEntry={true}
                     onChangeText={handleChange("password")}
                     value={values.password}
@@ -137,7 +157,6 @@ const SenderSignup = () => {
                   )}
                   <CustomTextInput
                     label="Confirm Passord"
-                    hasBorder={theme.mode !== "dark"}
                     secureTextEntry={true}
                     onChangeText={handleChange("confirmPassword")}
                     value={values.confirmPassword}
@@ -148,6 +167,7 @@ const SenderSignup = () => {
                   {touched.confirmPassword && errors.confirmPassword && (
                     <InputErrorMessage error={errors.confirmPassword} />
                   )}
+
                   <View style={{ marginVertical: 25 }}>
                     <CustomBtn
                       btnColor={Colors.btnPrimaryColor}

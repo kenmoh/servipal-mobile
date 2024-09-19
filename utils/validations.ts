@@ -5,7 +5,8 @@ const phoneRegEx =
 
 export const vendorValidationSchema = Yup.object().shape({
   email: Yup.string().email().trim().required().label("Email"),
-  username: Yup.string().required().label("Email"),
+  // username: Yup.string().required().label("Username"),
+  userRole: Yup.string().required().label("Role"),
   phoneNumber: Yup.string()
     .required()
     .matches(phoneRegEx, "Enter a valid phone number")

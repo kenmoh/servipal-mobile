@@ -26,13 +26,13 @@ const Delivery = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [refreshing, setRefreshing] = useState(false);
+    const { user } = useAuth()
 
 
     const { data, refetch, error, isFetching } = useQuery({
         queryKey: ["newFoodOrders"],
         queryFn: ordersApi.getVendorNewFoodOrder,
     });
-
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -104,7 +104,7 @@ const Delivery = () => {
                 data={data?.data}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }: { item: ItemOrderType }) =>
-                    (item.order_type === "food" && item.order_status === 'Pending' && item.food_status === 'cooking' && item.payment_status === 'paid') &&
+                    (item.order_type === "food" && (item.order_owner_phone_number === user?.phone_number || item.vendor_phone_number === user?.phone_number) && item.food_status === 'cooking' && item.payment_status === 'paid') &&
                     (<OrderCard order={item} isHomeScreen={true} />)
 
 

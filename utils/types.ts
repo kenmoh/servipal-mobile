@@ -1,9 +1,9 @@
 export type OrderStatus =
-  | "Pending"
-  | "Picked up"
-  | "Delivered"
-  | "Received"
-  | "Cancelled";
+  | "pending"
+  | "in transit"
+  | "delivered"
+  | "received"
+  | "cancelled";
 
 export type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
 type OrderType = "delivery" | "food" | "laundry";
@@ -137,6 +137,7 @@ export type CreateUser = {
   phoneNumber: string;
   password: string;
   confirmPassword: string;
+  userRole: string;
 };
 
 export type CreateRider = {
@@ -154,10 +155,15 @@ export type UpdateProfileImage = {
 
 export type SetupCompany = {
   companyName: string;
-  image: string;
+  profileImage: string;
   openingHour: string;
   closingHour: string;
   location: string;
+  accountHolderName: string;
+  companyRegNum: string;
+  backgroundImage: string;
+  accountNumber: string;
+  bankName: string;
 };
 
 type TransactionType = "deposit" | "withdrawal" | string;
@@ -180,7 +186,21 @@ export type Transactions = {
   transactions: Transaction[];
 };
 
-type Role = "admin" | "vendor" | "dispatcher" | "rider" | "staff";
+type Role =
+  | "admin"
+  | "dispatcher"
+  | "rider"
+  | "staff"
+  | "user"
+  | "restaurant"
+  | "laundry";
+// enum Role {
+//   "admin",
+//   "dispatcher",
+//   "rider",
+//   "staff",
+//   "user",
+// }
 
 export type CompanyProfileReturn = {
   sample_company_image: string;

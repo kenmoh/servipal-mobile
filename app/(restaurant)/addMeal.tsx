@@ -18,9 +18,8 @@ import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { addMeal, getCategories } from "@/api/foods";
 import CustomPickerTextInput from "@/components/AppModal";
-import userApi from '@/api/users'
 import { useAuth } from "@/auth/authContext";
-import { ProfileType } from "../setupCompanyProfile";
+
 
 type CategoryType = {
     id: number;

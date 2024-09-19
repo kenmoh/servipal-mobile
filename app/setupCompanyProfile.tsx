@@ -17,18 +17,36 @@ import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import ImagePickerForm from "@/components/ImageFormPicker";
 import { router } from "expo-router";
 import { SetupCompany } from "@/utils/types";
+import { useAuth } from "@/auth/authContext";
 
+type ErrorType = {
+    detail: string
+}
 
-export type ProfileType = {
-    opening_hour: string;
-    closing_hour: string;
-    sample_company_image: string
-    vendor_company_name: string
-    location: string
+type ProfileType = {
+    user_id: string,
+    location: string,
+    company_name: string,
+    company_background_image: string,
+    profile_image: string,
+    opening_hour: string,
+    closing_hour: string,
+    bank_account_number: string,
+    account_holder_name: string,
+    bank_name: string,
+    company_reg_number: string
 };
+
+export type ProfileReturnType = {
+    data: ProfileType | ErrorType
+}
+
+
+
 const SetupCompanyProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const { user } = useAuth()
 
     const [showOpeningHour, setShowOpeningHour] = useState(false);
     const [showClosingHour, setShowClosingHour] = useState(false);
@@ -74,7 +92,12 @@ const SetupCompanyProfile = () => {
                             closingHour: "",
                             companyName: "",
                             location: "",
-                            image: "",
+                            accountHolderName: '',
+                            bankName: '',
+                            accountNumber: '',
+                            companyRegNum: '',
+                            backgroundImage: '',
+                            profileImage: ''
                         }}
                         onSubmit={(values, { resetForm }) =>
                             mutate(values, { onSuccess: () => resetForm() })
@@ -91,18 +114,30 @@ const SetupCompanyProfile = () => {
 
                         }) => (
                             <>
+
                                 <View style={styles.container}>
                                     <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                                        <CustomTextInput
+                                        {user?.user_type !== 'user' && <CustomTextInput
                                             onChangeText={handleChange("companyName")}
                                             value={values.companyName}
                                             labelColor={activeColor.text}
                                             label="Company Name"
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
-                                        />
+                                        />}
                                         {touched.companyName && errors.companyName && (
                                             <InputErrorMessage error={errors.companyName} />
+                                        )}
+                                        {user?.user_type !== 'user' && <CustomTextInput
+                                            onChangeText={handleChange("companyRegNum")}
+                                            value={values.companyRegNum}
+                                            labelColor={activeColor.text}
+                                            label="Company Reg. Number"
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                        />}
+                                        {touched.companyRegNum && errors.companyRegNum && (
+                                            <InputErrorMessage error={errors.companyRegNum} />
                                         )}
                                         <CustomTextInput
                                             onChangeText={handleChange("location")}
@@ -115,8 +150,42 @@ const SetupCompanyProfile = () => {
                                         {touched.location && errors.location && (
                                             <InputErrorMessage error={errors.location} />
                                         )}
-
                                         <CustomTextInput
+                                            onChangeText={handleChange("accountNumber")}
+                                            value={values.accountNumber}
+                                            labelColor={activeColor.text}
+                                            label="Bank Account Number"
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                        />
+                                        {touched.accountNumber && errors.accountNumber && (
+                                            <InputErrorMessage error={errors.accountNumber} />
+                                        )}
+                                        <CustomTextInput
+                                            onChangeText={handleChange("accountHolderName")}
+                                            value={values.accountHolderName}
+                                            labelColor={activeColor.text}
+                                            label="Account Holder Name"
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                        />
+                                        {touched.accountHolderName && errors.accountHolderName && (
+                                            <InputErrorMessage error={errors.accountHolderName} />
+                                        )}
+                                        <CustomTextInput
+                                            onChangeText={handleChange("bankName")}
+                                            value={values.bankName}
+                                            labelColor={activeColor.text}
+                                            label="Bank Name"
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                        />
+                                        {touched.bankName && errors.bankName && (
+                                            <InputErrorMessage error={errors.bankName} />
+                                        )}
+
+
+                                        {user?.user_type !== 'user' && <CustomTextInput
                                             onChangeText={handleChange("openingHour")}
                                             value={values.openingHour}
                                             labelColor={activeColor.text}
@@ -125,11 +194,11 @@ const SetupCompanyProfile = () => {
                                             inputTextColor={activeColor.text}
                                             onPress={() => setShowOpeningHour(true)}
 
-                                        />
+                                        />}
                                         {touched.openingHour && errors.openingHour && (
                                             <InputErrorMessage error={errors.openingHour} />
                                         )}
-                                        <CustomTextInput
+                                        {user?.user_type !== 'user' && <CustomTextInput
                                             onChangeText={handleChange("closingHour")}
                                             value={values.closingHour}
                                             labelColor={activeColor.text}
@@ -137,13 +206,19 @@ const SetupCompanyProfile = () => {
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                             onPress={() => setShowClosingHour(true)}
-                                        />
+                                        />}
                                         {touched.closingHour && errors.closingHour && (
                                             <InputErrorMessage error={errors.closingHour} />
                                         )}
-                                        <View>
-                                            <Text style={{ fontSize: 14, marginTop: 10, color: activeColor.text, fontFamily: "Poppins-Medium" }}>Barner</Text>
-                                            <ImagePickerForm field={"image"} height={150} width={'100%'} />
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
+                                            <View>
+                                                <Text style={{ fontSize: 14, marginTop: 10, color: activeColor.text, fontFamily: "Poppins-Medium" }}>Profile Image</Text>
+                                                <ImagePickerForm field={"profileImage"} height={150} width={'100%'} />
+                                            </View>
+                                            {user?.user_type !== 'user' && <View>
+                                                <Text style={{ fontSize: 14, marginTop: 10, color: activeColor.text, fontFamily: "Poppins-Medium" }}>Background Barner</Text>
+                                                <ImagePickerForm field={"backgroundImage"} height={150} width={'100%'} />
+                                            </View>}
                                         </View>
                                         <View style={styles.btnContainer}>
                                             <CustomBtn
@@ -155,7 +230,7 @@ const SetupCompanyProfile = () => {
 
                                     </View>
                                 </View>
-                                {showOpeningHour && (
+                                {user?.user_type !== 'user' && showOpeningHour && (
                                     <DateTimePicker
                                         testID="openinHourPicker"
                                         value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
@@ -172,7 +247,7 @@ const SetupCompanyProfile = () => {
                                         }}
                                     />
                                 )}
-                                {showClosingHour && (
+                                {user?.user_type !== 'user' && showClosingHour && (
                                     <DateTimePicker
                                         testID="closingHourPicker"
                                         value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
@@ -190,6 +265,8 @@ const SetupCompanyProfile = () => {
 
                                     />
                                 )}
+
+
 
                             </>
                         )}

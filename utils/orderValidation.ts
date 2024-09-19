@@ -72,8 +72,13 @@ export const CategoryValidationSchema = Yup.object().shape({
 
 export const SetupCompanyValidation = Yup.object().shape({
   location: Yup.string().required().label("Location"),
+  accountHolderName: Yup.string().required().label("Beneficiary Name"),
+  bankName: Yup.string().required().label("Bank Name"),
+  accoutNumber: Yup.string().required().label("Account Number"),
   companyName: Yup.string().required().label("Company Name"),
+  companyRegNum: Yup.string(),
   openingHour: Yup.string().required().label("Opening hour"),
   closingHour: Yup.string().required().label("Closing hour"),
-  image: Yup.string().required().label("Image"),
+  backgroundImage: Yup.string(),
+  profileImage: Yup.string(),
 });

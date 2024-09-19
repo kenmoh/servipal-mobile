@@ -28,6 +28,7 @@ import { useContext, useMemo } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import { showMessage } from "react-native-flash-message";
+import { SIZES } from "@/constants/Sizes";
 
 const IMG_HEIGHT = 300;
 
@@ -87,7 +88,7 @@ export default function HomeScreen() {
     },
     onError: () => {
       showMessage({
-        message: pickupError?.message, // TODO: handle this error
+        message: pickupError?.message!, // TODO: handle this error
         type: "danger",
       });
     },
@@ -289,11 +290,11 @@ export default function HomeScreen() {
               <Status
                 text={order?.order_status!}
                 textColor={
-                  order?.order_status === "Pending"
+                  order?.order_status === "pending"
                     ? "tomato"
-                    : order?.order_status === "Received"
+                    : order?.order_status === "received"
                       ? "#25a18e"
-                      : order?.order_status === "Delivered"
+                      : order?.order_status === "delivered"
                         ? "skyblue"
                         : "#e8ac65"
                 }
@@ -321,7 +322,7 @@ export default function HomeScreen() {
                   borderColor: activeColor.tabIconDefault,
                   borderRadius: 20,
                   paddingVertical: 5,
-                  paddingHorizontal: 15,
+                  paddingHorizontal: SIZES.paddingMedium,
                 }}
               >
                 <Ionicons
@@ -402,7 +403,11 @@ export default function HomeScreen() {
                   lable="Service Charge"
                   value={order?.commission_delivery!}
                 />}
-                {user?.user_type === 'vendor' && <DetailLabel
+                {user?.user_type === 'restaurant' && <DetailLabel
+                  lable="Service Charge"
+                  value={order?.commission_food!}
+                />}
+                {user?.user_type === 'laundry' && <DetailLabel
                   lable="Service Charge"
                   value={order?.commission_food!}
                 />}
@@ -438,7 +443,7 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-          {order.order_status !== "Pending" && (
+          {order.order_status !== "pending" && (
             <View style={styles.container}>
               <View style={{ alignItems: "center" }}>
                 <MaterialCommunityIcons
@@ -471,28 +476,28 @@ export default function HomeScreen() {
       </View>
       <View style={styles.btnContainer}>
         <View style={{ flex: 1 }}>
-          {order?.order_status === "Pending" &&
+          {order?.order_status === "pending" &&
             order?.payment_status === "paid" &&
             user?.user_type === "rider" ? (
             <CustomBtn
-              disabled={order?.order_status === "Pending" ? false : true}
+              disabled={order?.order_status === "pending" ? false : true}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Pickup"
               onPress={handlePickup}
             />
-          ) : order?.order_status === "Picked up" &&
+          ) : order?.order_status === "in transit" &&
             user?.user_type === "rider" ? (
             <CustomBtn
-              disabled={order?.order_status === "Picked up" ? false : true}
+              disabled={order?.order_status === "in transit" ? false : true}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Delivered"
               onPress={handleDelivered}
             />
-          ) : order?.order_status === "Pending" &&
+          ) : order?.order_status === "pending" &&
             order?.vendor_username === user?.username &&
-            user?.user_type === "vendor" ? (
+            user?.user_type === "user" ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -500,7 +505,7 @@ export default function HomeScreen() {
               label="Cancel"
               onPress={handleCancelOrderByVendor}
             />
-          ) : order?.order_status === "Picked up" &&
+          ) : order?.order_status === "in transit" &&
             user?.user_type === "rider" &&
             order?.rider_phone_number === user?.phone_number ? (
             <CustomBtn
@@ -510,8 +515,8 @@ export default function HomeScreen() {
               label="Cancel"
               onPress={handleRiderCancelOrder}
             />
-          ) : order?.order_status === "Pending" &&
-            user?.user_type === "vendor" &&
+          ) : order?.order_status === "pending" &&
+            user?.user_type !== "user" &&
             order?.vendor_username === user?.username ? (
             <CustomBtn
               disabled={false}
@@ -520,8 +525,8 @@ export default function HomeScreen() {
               label="List order"
               onPress={handleRelistOrderByVendor}
             />
-          ) : user?.user_type === "vendor" && user?.phone_number === (order?.vendor_phone_number || order?.order_owner_phone_number) &&
-            order?.order_status === "Delivered" ? (
+          ) : user?.phone_number === order?.order_owner_phone_number &&
+            order?.order_status === "delivered" ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -530,13 +535,13 @@ export default function HomeScreen() {
               onPress={handleReceived}
             />
           ) : order?.order_type === "laundry" &&
-            order.order_status === "Delivered" &&
-            order?.vendor_username === user?.username ? (
+            order.order_status === "delivered" &&
+            order?.vendor_username === user?.company_name ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
               btnColor={
-                order.order_status === "Delivered"
+                order.order_status === "delivered"
                   ? activeColor.profileCard
                   : Colors.btnPrimaryColor
               }
@@ -544,7 +549,7 @@ export default function HomeScreen() {
               onPress={handleLaundryReceived}
             />
           ) : (
-            order.order_status === "Received" && (
+            order.order_status === "received" && (
               <CustomBtn
                 disabled
                 btnBorderRadius={50}

@@ -14,6 +14,7 @@ import { addMealCategory } from '@/api/foods';
 import { useMutation } from '@tanstack/react-query';
 import CustomBtn from '@/components/CustomBtn';
 
+
 const addCategory = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
@@ -22,7 +23,6 @@ const addCategory = () => {
         mutationFn: (name: string) => addMealCategory(name),
     });
 
-    console.log(data)
     useEffect(() => {
         if (error) {
             showMessage({

@@ -24,7 +24,7 @@ interface OptionItem {
 
 interface CustomPickerTextInputProps {
     label: string
-    categories: OptionItem[];
+    categories: OptionItem[] | unknown;
     onSelect: (item: OptionItem) => void;
 
 }
