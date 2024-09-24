@@ -8,7 +8,7 @@ import {
     Text,
     View,
 } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { focusManager, useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
@@ -17,13 +17,11 @@ import { SIZES } from "@/constants/Sizes";
 import ordersApi from "@/api/orders";
 import { StatusBar } from "expo-status-bar";
 import OrderCard from "@/components/OrderCard";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { OrderResponseType } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 
-
-const index = () => {
+const food = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth();
@@ -31,8 +29,8 @@ const index = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ["package", user?.id],
-        queryFn: ordersApi.getUserOrderItems,
+        queryKey: ["food", user?.id],
+        queryFn: ordersApi.getUserRestaurantOrderItems,
     });
 
     function onAppStateChange(status: AppStateStatus) {
@@ -40,7 +38,7 @@ const index = () => {
             focusManager.setFocused(status === "active");
         }
     }
-
+    console.log(data)
 
     useEffect(() => {
         const subscription = AppState.addEventListener("change", onAppStateChange);
@@ -57,7 +55,6 @@ const index = () => {
 
     useRefreshOnFocus(refetch);
 
-
     return (
         <>
             <StatusBar
@@ -67,30 +64,6 @@ const index = () => {
             <View
                 style={[styles.container, { backgroundColor: activeColor.background }]}
             >
-                <View style={[styles.statWrapper]}>
-                    <View
-                        style={[
-                            styles.statContainer
-                        ]}
-                    >
-                        <Feather name="package" color={activeColor.icon} size={18} />
-                        <Text style={[styles.text, { color: activeColor.text }]}>
-                            All: {data?.data?.total_order}
-                        </Text>
-                    </View>
-                    <View
-                        style={[
-                            styles.statContainer
-                        ]}
-                    >
-                        <MaterialIcons name="pending" color={activeColor.icon} size={18} />
-                        <Text style={[styles.text, { color: activeColor.text }]}>
-                            Pending: {data?.data?.pending_orders}
-                        </Text>
-                    </View>
-                </View>
-
-
                 <FlatList
                     data={data}
                     keyExtractor={(item) => item?.id}
@@ -106,7 +79,7 @@ const index = () => {
     );
 };
 
-export default index;
+export default food;
 
 const styles = StyleSheet.create({
     container: {
@@ -116,18 +89,18 @@ const styles = StyleSheet.create({
     statWrapper: {
         flexDirection: "row",
         alignItems: "center",
-        marginVertical: SIZES.marginLarge,
+        marginVertical: SIZES.marginSmall,
         gap: 20,
         width: "95%",
         alignSelf: "center",
     },
     text: {
-        fontFamily: "Poppins-Regular",
-        fontSize: 14,
+        fontFamily: "Poppins-Light",
+        fontSize: 12,
     },
     number: {
         fontFamily: "Poppins-Bold",
-        fontSize: 16,
+        fontSize: 14,
     },
     statContainer: {
         flexDirection: "row",

@@ -3,7 +3,9 @@ export type OrderStatus =
   | "in transit"
   | "delivered"
   | "received"
-  | "cancelled";
+  | "cancelled"
+  | "laundry received"
+  | "laundry-returned";
 
 export type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
 type OrderType = "delivery" | "food" | "laundry";
@@ -66,16 +68,64 @@ export interface LaundryOrderType extends IOrderBase {
   laundry_cost: number;
 }
 
-// export type ItemOrderType = {
-//   item_id: string;
-//   name: string;
-//   description: string;
-//   image_url: string;
-//   item_order: Item;
-// };
-
 type FoodUserType = {
   image_url: string;
+};
+
+type FoodResponseType = {
+  id: string;
+  restaurant_id: string;
+  name: string;
+  price: string;
+  quantity: number;
+  side: string;
+  ingredients: string;
+  image_url: string;
+};
+type LaundryResponseType = {
+  id: string;
+  laundry_id: string;
+  name: string;
+  price: string;
+  quantity: number;
+  image_url: string;
+};
+
+export type OrderResponseType = {
+  id: string;
+  package_name: string;
+  item_id: string;
+  image_url: string;
+  amount_due_vendor: string;
+  amount_due_dispatch: string;
+  commission_rate_item: string;
+  commission_rate_delivery: string;
+  delivery_fee: string;
+  description: string;
+  item_cost: string;
+  total_cost: string;
+  order_status: "pending" | "delivered" | "received";
+  item_status: string;
+  payment_status: string;
+  order_type: string;
+  payment_url: string;
+  order_owner_username: string;
+  dispatch_company_phone_number: string;
+  vendor_phone_number: string;
+  vendor_username: string;
+  origin: string;
+  destination: string;
+  distance: string;
+  order_owner_phone_number: string;
+  dispatch_company_name: string;
+  rider_phone_number: string;
+  rider_image_url: string;
+  rider_name: string;
+  rider_bike_plate_number: string;
+  foods: FoodResponseType[];
+  laundries: LaundryResponseType[];
+  created_at: string;
+  updated_at: string;
 };
 
 export type ItemOrderType = {
@@ -187,20 +237,12 @@ export type Transactions = {
 };
 
 type Role =
-  | "admin"
-  | "dispatcher"
-  | "rider"
+  | "Dispatch Provider"
+  | "Rider"
   | "staff"
-  | "user"
-  | "restaurant"
-  | "laundry";
-// enum Role {
-//   "admin",
-//   "dispatcher",
-//   "rider",
-//   "staff",
-//   "user",
-// }
+  | "Regular User"
+  | "Restaurant Service Provider"
+  | "Laundry Service Provider";
 
 export type CompanyProfileReturn = {
   sample_company_image: string;

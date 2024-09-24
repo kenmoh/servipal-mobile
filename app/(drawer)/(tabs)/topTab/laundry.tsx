@@ -30,12 +30,9 @@ const laundry = () => {
         isFetching,
         refetch,
     } = useQuery({
-        queryKey: ["foodOrders"],
-        queryFn: ordersApi.getFoodOrders,
-        select: (data) => data?.data?.filter((order: any) =>
-            (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'laundry')
+        queryKey: ["laundryOrders"],
+        queryFn: ordersApi.getLaundryOrders,
 
-        ),
     });
 
 

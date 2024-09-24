@@ -17,18 +17,18 @@ import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import { registerNotification } from "@/api/notification";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-import authStorage from '@/auth/storage'
+
 
 const TAB_BAR_ICON_SIZE = 25;
 
 const CustomTabBarIcon = ({
   children,
   focused,
-  label
+  label,
 }: {
   children: ReactNode;
   focused: boolean;
-  label: string
+  label: string;
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
@@ -43,13 +43,21 @@ const CustomTabBarIcon = ({
           borderRadius: 80,
           height: 40,
           width: 40,
-          justifyContent: 'center',
-          alignItems: 'center'
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         {children}
       </View>
-      <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 10, color: focused ? activeColor.text : activeColor.icon }}>{label}</Text>
+      <Text
+        style={{
+          fontFamily: "Poppins-Regular",
+          fontSize: 10,
+          color: focused ? activeColor.text : activeColor.icon,
+        }}
+      >
+        {label}
+      </Text>
     </>
   );
 };
@@ -84,8 +92,6 @@ export default function TabLayout() {
 
         if (!user?.notification_token) {
           registerNotification(token.data);
-
-
         }
       } catch (error) {
         throw new Error(`Error getting notification token. \n ERROR: ${error}`);
@@ -113,19 +119,20 @@ export default function TabLayout() {
           borderTopColor: activeColor.profileCard,
           borderTopWidth: 0,
           height: 70,
-          justifyContent: 'center',
+          justifyContent: "center",
           alignItems: "center",
         },
-
       }}
     >
       <Tabs.Screen
         name="topTab"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (<CustomTabBarIcon focused={focused} label="Home">
-            <AntDesign name="home" size={TAB_BAR_ICON_SIZE} color={color} />
-          </CustomTabBarIcon>),
+          tabBarIcon: ({ color, focused }) => (
+            <CustomTabBarIcon focused={focused} label="Home">
+              <AntDesign name="home" size={TAB_BAR_ICON_SIZE} color={color} />
+            </CustomTabBarIcon>
+          ),
           headerTitle: () => <AppHeader />,
           headerStyle: {
             backgroundColor: activeColor.background,
@@ -146,17 +153,20 @@ export default function TabLayout() {
             backgroundColor: activeColor.background,
           },
           tabBarIcon: ({ color, focused }) => (
-            (<CustomTabBarIcon focused={focused} label="Restaurants">
+            <CustomTabBarIcon focused={focused} label="Restaurants">
               <MaterialIcons
                 name="restaurant"
                 size={TAB_BAR_ICON_SIZE}
                 color={color}
-
               />
-            </CustomTabBarIcon>)
-
+            </CustomTabBarIcon>
           ),
-          href: user?.user_type === "vendor" ? undefined : null,
+          href:
+            user?.user_type === "Regular User" ||
+              user?.user_type === "Restaurant Service Provider" ||
+              user?.user_type === "Laundry Service Provider"
+              ? undefined
+              : null,
         }}
       />
 
@@ -172,7 +182,6 @@ export default function TabLayout() {
           },
           tabBarIcon: ({ color, focused }) => (
             <CustomTabBarIcon focused={focused} label="Laundry">
-
               <MaterialCommunityIcons
                 name="washing-machine"
                 size={TAB_BAR_ICON_SIZE}
@@ -180,7 +189,12 @@ export default function TabLayout() {
               />
             </CustomTabBarIcon>
           ),
-          href: user?.user_type === "vendor" ? undefined : null,
+          href:
+            user?.user_type === "Regular User" ||
+              user?.user_type === "Restaurant Service Provider" ||
+              user?.user_type === "Laundry Service Provider"
+              ? undefined
+              : null,
         }}
       />
 
@@ -196,11 +210,15 @@ export default function TabLayout() {
           },
           tabBarIcon: ({ color, focused }) => (
             <CustomTabBarIcon focused={focused} label="Buy/Sell">
-
               <Entypo name="shop" size={TAB_BAR_ICON_SIZE} color={color} />
             </CustomTabBarIcon>
           ),
-          href: user?.user_type === "vendor" ? undefined : null,
+          href:
+            user?.user_type === "Regular User" ||
+              user?.user_type === "Restaurant Service Provider" ||
+              user?.user_type === "Laundry Service Provider"
+              ? undefined
+              : null,
         }}
       />
 
@@ -209,12 +227,11 @@ export default function TabLayout() {
         options={{
           title: "Wallet",
           href:
-            user?.user_type === "dispatcher" || user?.user_type === "vendor"
-              ? undefined
-              : null,
+            user?.user_type === "Rider"
+              ? null
+              : undefined,
           tabBarIcon: ({ color, focused }) => (
             <CustomTabBarIcon focused={focused} label="Wallet">
-
               <Entypo name="wallet" size={TAB_BAR_ICON_SIZE} color={color} />
             </CustomTabBarIcon>
           ),
@@ -237,7 +254,6 @@ export default function TabLayout() {
           },
           tabBarIcon: ({ color, focused }) => (
             <CustomTabBarIcon focused={focused} label="History">
-
               <MaterialIcons
                 name="bar-chart"
                 size={TAB_BAR_ICON_SIZE}

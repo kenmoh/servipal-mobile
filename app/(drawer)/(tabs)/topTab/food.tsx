@@ -33,12 +33,10 @@ const food = () => {
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
         select: (data) => data?.data?.filter((order: any) =>
-            (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'food')
+            (order.order_status === 'pending' && order.payment_status === 'paid' && order.order_type === 'food')
 
         ),
     });
-    console.log(data)
-
 
 
     function onAppStateChange(status: AppStateStatus) {

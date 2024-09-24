@@ -114,7 +114,6 @@ const styles = StyleSheet.create<Styles>({
         alignItems: 'center',
         borderRadius: 50,
         paddingHorizontal: SIZES.paddingLarge,
-        marginBottom: 25
     },
     input: {
         flex: 1,

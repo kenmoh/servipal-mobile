@@ -116,7 +116,6 @@ const SignIn = () => {
                 <View>
                   <CustomTextInput
                     label="Email"
-
                     autoCapitalize="none"
                     keyboardType="email-address"
                     onChangeText={handleChange("username")}
@@ -131,7 +130,6 @@ const SignIn = () => {
                   )}
                   <CustomTextInput
                     label="Password"
-                    // hasBorder={theme.mode !== "dark"}
                     autoCapitalize="none"
                     secureTextEntry={true}
                     onChangeText={handleChange("password")}

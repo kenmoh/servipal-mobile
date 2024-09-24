@@ -18,7 +18,7 @@ const AuthLayout = () => {
         name="signup"
         options={{
           headerShown: true,
-          title: "Sign Up | User",
+          title: "Sign Up",
           headerShadowVisible: false,
           headerTintColor: activeColor.text,
           headerStyle: {

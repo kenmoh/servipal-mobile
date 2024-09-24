@@ -18,6 +18,7 @@ import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { StatusBar } from "expo-status-bar";
 import RenderBtn from "@/components/RenderBtn";
 import Empty from "@/components/Empty";
+import { OrderResponseType } from "@/utils/types";
 
 
 
@@ -32,12 +33,11 @@ const index = () => {
     queryKey: ["packageOrders"],
     queryFn: ordersApi.getItemOrders,
     enabled: false,
-    select: (data) => data?.data?.filter((order: any) =>
-      (order.order_status === 'Pending' && order.payment_status === 'paid' && order.order_type === 'delivery')
+    select: (data) => data?.data?.filter((order: OrderResponseType) =>
+      (order.order_status === 'pending' && order.order_type === 'delivery' && order.payment_status === 'paid')
 
     ),
   });
-
 
 
   function onAppStateChange(status: AppStateStatus) {

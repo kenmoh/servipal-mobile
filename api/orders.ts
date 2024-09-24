@@ -11,20 +11,56 @@ const getItemOrders = async () => await client.get(`${endpoint}/item-orders`);
 const getFoodOrders = async () => await client.get(`${endpoint}/food-orders`);
 
 // Get laundry orders
-const getLaundryOrders = async () =>
-  await client.get(`${endpoint}/laundry-orders`);
+const getLaundryOrders = async () => {
+  const result = await client.get(`${endpoint}/laundry-orders`);
+  if (!result.ok) {
+    throw new Error(result.data?.detail?.split(":")[1]);
+  }
+  return result.data;
+};
 
-// Get order by Sender
-const getVendorListings = async () =>
-  await client.get(`${endpoint}/user-item-orders`);
+// Current user Item orders
+const getUserOrderItems = async () => {
+  const result = await client.get(`${endpoint}/user-item-orders`);
+  if (!result.ok) {
+    throw new Error(result.data?.detail?.split(":")[1]);
+  }
+  return result.data;
+};
+// Current user Restaurant orders
+const getUserRestaurantOrderItems = async () => {
+  const result = await client.get(`${endpoint}/user-food-orders`);
+  if (!result.ok) {
+    throw new Error(result.data?.detail?.split(":")[1]);
+  }
+  return result.data;
+};
+// Current user Laundry orders
+const getUserLaundryOrderItems = async () => {
+  const result = await client.get(`${endpoint}/user-laundry-orders`);
+  if (!result.ok) {
+    throw new Error(result.data?.detail?.split(":")[1]);
+  }
+  return result.data;
+};
 
 // Get vendor new food orders
-const getVendorNewFoodOrder = async () =>
-  await client.get(`${endpoint}/new-food-orders`);
+const getRestaurantNewFoodOrder = async () => {
+  const result = await client.get(`${endpoint}/new-food-orders`);
+  if (!result.originalError) {
+    throw new Error(result.data?.detail?.split(":")[1]);
+  }
+  return result;
+};
 
 // Get vendor new laundry orders
-const getVendorNewLaundryOrder = async () =>
-  await client.get(`${endpoint}/new-ilaundry-orders`);
+const getLaundryNewLaundryOrder = async () => {
+  const result = await client.get(`${endpoint}/new-laundry-orders`);
+  if (!result.originalError) {
+    throw new Error(result.data?.detail?.split(":")[1]);
+  }
+  return result;
+};
 
 // Get order by Dispatch
 const getUserListings = () => client.get(`${endpoint}/user-orders`);
@@ -37,8 +73,8 @@ const orderItemDetails = async (orderId: string) =>
   await client.get(`${endpoint}/${orderId}/item-order`);
 
 // Food details
-const getFoodDetails = async (orderId: string, orderType: string = "food") =>
-  await client.get(`${endpoint}/${orderId}/item-food?order_type=${orderType}`);
+const getFoodDetails = async (orderId: string) =>
+  await client.get(`${endpoint}/${orderId}/food-order-details`);
 
 // Laundry details
 const getLaundryDetails = async (
@@ -55,6 +91,7 @@ const pickUpOrder = async (order_id: string) => {
   if (!response.ok) {
     throw new Error(response.data?.detail?.split(":")[1]);
   }
+  return response.data;
 };
 
 // Mark order as delivered [dispatch/rider users only]
@@ -83,7 +120,7 @@ const relistOrderByVendor = (order_id: string) =>
 const orderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/order-received`);
 
-// Mark laundry order as received [vendor users only]
+// Mark laundry order as received [by laundry vendor users only]
 const laundryOrderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/laundry-order-received`);
 
@@ -158,7 +195,7 @@ export default {
   getLaundryOrders,
   orderItemDetails,
   createOrder,
-  getVendorListings,
+  getUserOrderItems,
   getUserListings,
   pickUpOrder,
   orderDelievered,
@@ -171,7 +208,9 @@ export default {
   getFoodDetails,
   getLaundryDetails,
   getUserOrderStats,
-  getVendorNewFoodOrder,
-  getVendorNewLaundryOrder,
+  getRestaurantNewFoodOrder,
+  getLaundryNewLaundryOrder,
   laundryOrderReceived,
+  getUserLaundryOrderItems,
+  getUserRestaurantOrderItems,
 };

@@ -189,7 +189,7 @@ const CustomDrawerContent = (props: any) => {
                         <Feather name="edit" color={activeColor.icon} size={18} />
                     </TouchableOpacity>
                 </View>
-                {user?.user_type === "dispatcher" && (
+                {user?.user_type === "Dispatch Provider" && (
                     <>
                         <DrawerItem
                             label={"Add Rider"}

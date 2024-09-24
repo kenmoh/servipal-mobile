@@ -24,7 +24,7 @@ const ScreenWithFAB = ({ children, showFAB = true, onPressFAB }: ScreenWithFABTy
                 bottom: 10,
                 right: 10,
             }}>
-                {user?.user_type === 'vendor' && showFAB && <FloatingActionButton
+                {(user?.user_type === 'Laundry Service Provider' || user?.user_type === 'Restaurant Service Provider' || user?.user_type === 'Regular User') && showFAB && <FloatingActionButton
                     icon={<AntDesign name="pluscircleo" color={"#fff"} size={25} />}
                     onPress={onPressFAB}
                 />}

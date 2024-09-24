@@ -11,7 +11,7 @@ import {
   Ionicons,
 
 } from "@expo/vector-icons";
-import { ItemOrderType } from "@/utils/types";
+import { OrderResponseType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
@@ -27,17 +27,48 @@ const OrderCard = ({
   order,
   isHomeScreen,
 }: {
-  order: ItemOrderType;
+  order: OrderResponseType;
   isHomeScreen?: boolean;
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+  console.log(order.delivery_fee, '==============================')
 
   return (
     <TouchableOpacity
       onPress={() => router.push({
         pathname: `(order)/${order?.id}`,
-        params: { orderType: order.order_type }
+        params: {
+          packageName: order?.package_name || order.order_owner_username,
+          senderPhoneNumber: order?.order_owner_phone_number,
+          imageUrl: order?.image_url || order?.foods[0].image_url || order?.laundries[0].image_url,
+          itemCost: order?.item_cost,
+          amountDueVendor: order?.amount_due_vendor,
+          amountDueDispatch: order?.amount_due_dispatch,
+          totalCost: order?.total_cost,
+          commissionDispatch: order?.commission_rate_delivery,
+          commissionItem: order?.commission_rate_item,
+          orderStatus: order?.order_status,
+          paymentUrl: order?.payment_url,
+          paymntStatus: order?.payment_status,
+          vendorPhoneNumber: order?.vendor_phone_number,
+          vendorUserName: order?.vendor_username,
+          origin: order?.origin,
+          destination: order?.destination,
+          distance: order?.distance,
+          orderOwnerPhoneNumber: order?.order_owner_phone_number,
+          dispatchCompanyName: order?.dispatch_company_name,
+          riderPhoneNumber: order?.rider_phone_number,
+          plateNumber: order?.rider_bike_plate_number,
+          riderImageUrl: order?.rider_image_url,
+          riderName: order?.rider_name,
+          dispatchCompanyPhoneNumber: order?.dispatch_company_phone_number,
+          orderOwnerUsername: order?.order_owner_username,
+          orderId: order?.id,
+          deliveryFee: order?.delivery_fee,
+          orderType: order?.order_type,
+
+        }
       })}
       activeOpacity={0.7}
       style={[styles.container, { backgroundColor: activeColor.profileCard }]}
@@ -66,7 +97,7 @@ const OrderCard = ({
         </View>
         <View>
           <Image
-            source={order?.image_url || order.foods[0].image_url}
+            source={order?.image_url || order.foods[0].image_url || order.laundries[0].image_url}
             placeholder={{ blurhash }}
             contentFit="cover"
             transition={1000}
@@ -95,11 +126,11 @@ const OrderCard = ({
         ) : (
           <Status
             text={order?.order_status!}
-            textColor={`${order?.order_status === "Pending"
+            textColor={`${order?.order_status === "pending"
               ? "#f56991"
-              : order?.order_status === "Received"
+              : order?.order_status === "received"
                 ? "#25a18e"
-                : order?.order_status === "Delivered"
+                : order?.order_status === "delivered"
                   ? "#3bade2"
                   : "#e8ac65"
               }`}

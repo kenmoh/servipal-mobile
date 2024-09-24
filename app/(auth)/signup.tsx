@@ -28,10 +28,10 @@ interface RoleType {
   id: number;
 }
 const roleData = [
-  { id: 1, name: 'user' },
-  { id: 2, name: 'admin' },
-  { id: 3, name: 'restaurant' },
-  { id: 4, name: 'laundry' },
+  { id: 1, name: 'Regular User' },
+  { id: 2, name: 'Restaurant Service Provider' },
+  { id: 3, name: 'Laundry Service Provider' },
+  { id: 4, name: 'Dispatch Provider' },
 ]
 
 const SenderSignup = () => {
@@ -134,7 +134,7 @@ const SenderSignup = () => {
                     <InputErrorMessage error={errors.phoneNumber} />
                   )}
                   <CustomPickerTextInput
-                    label="Select user type"
+                    label="Select Role"
                     categories={roleData}
                     onSelect={(role: RoleType) =>
                       setFieldValue("userRole", role.name)

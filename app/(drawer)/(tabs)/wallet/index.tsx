@@ -155,7 +155,7 @@ const wallet = () => {
             Transactions
           </Text>
 
-          {user?.user_type === 'vendor' && <Text
+          {user?.user_type !== 'Dispatch Provider' && <Text
             onPress={() => router.push('/(tabs)/wallet/failedTranx')}
             style={{
               color: activeColor.text,

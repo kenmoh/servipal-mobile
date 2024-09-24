@@ -22,7 +22,7 @@ import DetailLabel from "@/components/DetailLabel";
 import Status from "@/components/Status";
 import { Colors } from "@/constants/Colors";
 import ordersApi from "@/api/orders";
-import { ItemOrderType } from "@/utils/types";
+import { ItemOrderType, OrderResponseType } from "@/utils/types";
 import CustomBtn from "@/components/CustomBtn";
 import { useContext, useMemo } from "react";
 import { ThemeContext } from "@/context/themeContext";
@@ -33,52 +33,53 @@ import { SIZES } from "@/constants/Sizes";
 const IMG_HEIGHT = 300;
 
 export default function HomeScreen() {
-  const { id, orderType } = useLocalSearchParams();
 
   const { user } = useAuth();
 
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-  // Get order details
-  // const { data, error, isFetching } = useQuery({
-  //   queryKey: ["orders", id],
-  //   queryFn: () => ordersApi.orderItemDetails(id),
-  // });
-
-  const fetchOrder = useMemo(() => {
-    if (orderType === "delivery") {
-      return ordersApi.orderItemDetails;
-    } else if (orderType === "food") {
-      return ordersApi.getFoodDetails;
-    } else {
-      return ordersApi.getLaundryDetails;
-    }
-    // switch (orderType) {
-    //   case 'delivery':
-    //     return ordersApi.orderItemDetails;
-    //   case 'food':
-    //     return ordersApi.getFoodDetails;
-    //   case 'laundry':
-    //     return ordersApi.getLaundryDetails;
-    //   default:
-    //     throw new Error(`Unknown order type: ${orderType}`);
-    // }
-  }, [orderType]);
-
-  // Fetch order details
-  const { data, isLoading, isError, error, isFetching } = useQuery({
-    queryKey: ["order", orderType, id],
-    queryFn: () => fetchOrder(id as string),
-  });
+  const {
+    orderId,
+    imageUrl,
+    orderStatus,
+    packageName,
+    // foods,
+    // laundries,
+    deliveryFee,
+    amountDueVendor,
+    amountDueDispatch,
+    commissionDispatch,
+    commissionItem,
+    totalCost,
+    paymntStatus,
+    paymentUrl,
+    vendorPhoneNumber,
+    origin,
+    destination,
+    distance,
+    orderOwnerPhoneNumber,
+    orderOwnerUsername,
+    dispatchCompanyName,
+    riderPhoneNumber,
+    plateNumber,
+    riderImageUrl,
+    dispatchCompanyPhoneNumber,
+    itemCost,
+    orderType,
+    vendorUsername,
+    riderName,
+    description
+  } = useLocalSearchParams();
 
   // Handle order Pickup
   const {
+    data,
     error: pickupError,
     mutate: handlePickup,
     isPending,
   } = useMutation({
-    mutationFn: () => ordersApi.pickUpOrder(id as string),
+    mutationFn: () => ordersApi.pickUpOrder(orderId as string),
     onSuccess: () => {
       showMessage({
         message: "Order Picked up",
@@ -93,10 +94,10 @@ export default function HomeScreen() {
       });
     },
   });
-
+  console.log(data)
   // Handle order Delivered
   const { mutate: handleDelivered, isPending: pendingDelivery } = useMutation({
-    mutationFn: () => ordersApi.orderDelievered(id as string),
+    mutationFn: () => ordersApi.orderDelievered(orderId as string),
     onSuccess: () => {
       showMessage({
         message: "Order Delivered",
@@ -119,7 +120,7 @@ export default function HomeScreen() {
     isPending: orderRecivedPending,
     data: receivedData,
   } = useMutation({
-    mutationFn: () => ordersApi.orderReceived(id as string),
+    mutationFn: () => ordersApi.orderReceived(orderId as string),
     onSuccess: () => {
       showMessage({
         message: "Order Completed",
@@ -141,7 +142,7 @@ export default function HomeScreen() {
     isPending: laundryReceivedPending,
     data: laundryData,
   } = useMutation({
-    mutationFn: () => ordersApi.laundryOrderReceived(id as string),
+    mutationFn: () => ordersApi.laundryOrderReceived(orderId as string),
     onSuccess: () => {
       showMessage({
         message: "Order Completed",
@@ -160,7 +161,7 @@ export default function HomeScreen() {
 
   // Handle vendor cancel order
   const { mutate: handleCancelOrderByVendor } = useMutation({
-    mutationFn: () => ordersApi.cancelOrderByVendor(id as string),
+    mutationFn: () => ordersApi.cancelOrderByVendor(orderId as string),
     onSuccess: () => {
       showMessage({
         message: "Order Cancelled",
@@ -180,7 +181,7 @@ export default function HomeScreen() {
   // Handle rider cancel order
   const { mutate: handleRiderCancelOrder, isPending: riderCancelPending } =
     useMutation({
-      mutationFn: () => ordersApi.cancelOrder(id as string),
+      mutationFn: () => ordersApi.cancelOrder(orderId as string),
       onSuccess: () => {
         showMessage({
           message: "Order Cancelled",
@@ -200,7 +201,7 @@ export default function HomeScreen() {
   // Handle vendor relist order
   const { mutate: handleRelistOrderByVendor, isPending: relistPending } =
     useMutation({
-      mutationFn: () => ordersApi.relistOrderByVendor(id as string),
+      mutationFn: () => ordersApi.relistOrderByVendor(orderId as string),
       onSuccess: () => {
         showMessage({
           message: "Order listed for delivery",
@@ -218,7 +219,6 @@ export default function HomeScreen() {
     });
 
   if (
-    isFetching ||
     isPending ||
     riderCancelPending ||
     relistPending ||
@@ -240,7 +240,6 @@ export default function HomeScreen() {
     );
   }
 
-  const order: ItemOrderType = data?.data;
 
   return (
     <View
@@ -260,25 +259,13 @@ export default function HomeScreen() {
           scrollEventThrottle={16}
         >
           <Image
-            source={order?.image_url || order?.foods[0].image_url}
+            source={imageUrl}
             contentFit="cover"
             transition={1000}
             style={styles.image}
           />
 
           <View style={{ paddingHorizontal: 15 }}>
-            <Text
-              style={{
-                marginTop: 25,
-                marginBottom: 10,
-                textTransform: "uppercase",
-                fontSize: 16,
-                fontWeight: "bold",
-                color: activeColor.text,
-              }}
-            >
-              Order Details
-            </Text>
             <View
               style={{
                 marginBottom: 25,
@@ -288,13 +275,13 @@ export default function HomeScreen() {
               }}
             >
               <Status
-                text={order?.order_status!}
+                text={orderStatus}
                 textColor={
-                  order?.order_status === "pending"
+                  orderStatus === "pending"
                     ? "tomato"
-                    : order?.order_status === "received"
+                    : orderStatus === "received"
                       ? "#25a18e"
-                      : order?.order_status === "delivered"
+                      : orderStatus === "delivered"
                         ? "skyblue"
                         : "#e8ac65"
                 }
@@ -305,11 +292,11 @@ export default function HomeScreen() {
                   router.push({
                     pathname: "/orderMap",
                     params: {
-                      id,
-                      distance: order?.distance,
-                      cost: order?.total_cost,
-                      origin: order?.origin,
-                      destination: order?.destination,
+                      orderId,
+                      distance: distance,
+                      cost: totalCost,
+                      origin: origin,
+                      destination: destination,
                     },
                   })
                 }
@@ -336,168 +323,184 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.container}>
-            <View style={{ alignItems: "center" }}>
-              <AntDesign name="user" size={20} color="gray" />
-              <Divider />
-            </View>
-            <View style={{ flex: 1, paddingHorizontal: 5 }}>
-              <Text style={[styles.text, { color: activeColor.text }]}>
-                Sender Details
-              </Text>
+          <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
+            <View>
+              <View style={styles.header}>
+                <AntDesign name="user" size={18} color={activeColor.text} />
+                <Text style={[styles.text, { color: activeColor.text }]}>
+                  Sender Details
+                </Text>
+              </View>
               <View>
                 <DetailLabel
                   lable="Name"
-                  value={order?.vendor_username || order?.order_owner_username!}
+                  value={vendorUsername || orderOwnerUsername}
                 />
                 <DetailLabel
                   lable="Phone"
-                  value={order?.vendor_phone_number || ""}
+                  value={orderOwnerPhoneNumber || ""}
                 />
-                <DetailLabel lable="Location" value={order?.origin || ""} />
+                <DetailLabel lable="Location" value={origin || ""} />
               </View>
             </View>
           </View>
-          <View style={styles.container}>
-            <View style={{ alignItems: "center" }}>
-              <Feather name="box" size={20} color={activeColor.icon} />
-              <Divider />
-            </View>
-            <View style={{ flex: 1, paddingHorizontal: 5 }}>
-              <Text style={[styles.text, { color: activeColor.text }]}>
-                Order Details
-              </Text>
+          <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
+            <View >
+              <View style={styles.header}>
+                <Feather name="box" size={20} color={activeColor.icon} />
+                <Text style={[styles.text, { color: activeColor.text }]}>
+                  Order Details
+                </Text>
+              </View>
               <View>
                 <DetailLabel
                   lable="Name"
-                  value={order?.package_name || order?.order_owner_username!}
+                  value={packageName}
                 />
-                <DetailLabel lable="Origin" value={order?.origin || ""} />
+                <DetailLabel lable="Origin" value={origin || ""} />
                 <DetailLabel
                   lable="Destination"
-                  value={order?.destination || ""}
+                  value={destination || ""}
                 />
-                <DetailLabel lable="Distance" value={order?.distance || ""} />
-                {user?.username === order?.order_owner_username && (
+                <DetailLabel lable="Distance" value={distance || ""} />
+                {user?.username === orderOwnerUsername && (
                   <>
                     <DetailLabel
                       lable="Delivery Fee"
-                      value={order?.delivery_fee!}
+                      value={deliveryFee}
                     />
-                    <DetailLabel lable="Food Cost" value={order?.food_cost} />
-                    <DetailLabel lable="Total Cost" value={order?.total_cost} />
+                    <DetailLabel lable="Food Cost" value={itemCost} />
+                    <DetailLabel lable="Total Cost" value={totalCost} />
                   </>
                 )}
-                {user?.username === order?.vendor_username && (
-
+                {user?.username === vendorUsername && (
                   <DetailLabel
                     lable="Delivery Fee"
-                    value={order?.delivery_fee!}
+                    value={deliveryFee}
                   />
-
                 )}
-                {user?.phone_number === order?.vendor_phone_number && order?.order_type !== 'delivery' && (
-                  <DetailLabel lable="Food Cost" value={order?.food_cost} />
+                {user?.phone_number === vendorPhoneNumber &&
+                  orderType !== "food" && (
+                    <DetailLabel lable="Food Cost" value={itemCost} />
+                  )}
+                {user?.user_type === "Dispatch Provider" ||
+                  (user?.user_type === "Rider" && (
+                    <DetailLabel
+                      lable="Service Charge"
+                      value={commissionDispatch}
+                    />
+                  ))}
+                {user?.user_type === "Restaurant Service Provider" && (
+                  <DetailLabel
+                    lable="Service Charge"
+                    value={commissionItem}
+                  />
                 )}
-                {user?.user_type === 'dispatcher' || user?.user_type === 'rider' && <DetailLabel
-                  lable="Service Charge"
-                  value={order?.commission_delivery!}
-                />}
-                {user?.user_type === 'restaurant' && <DetailLabel
-                  lable="Service Charge"
-                  value={order?.commission_food!}
-                />}
-                {user?.user_type === 'laundry' && <DetailLabel
-                  lable="Service Charge"
-                  value={order?.commission_food!}
-                />}
-                {(user?.phone_number === order?.dispatch_company_phone_number || user?.phone_number === order?.rider_phone_number) && <DetailLabel
-                  lable="Amount payable"
-                  value={order?.amount_payable_delivery}
-                />}
-                {user?.phone_number === order?.vendor_phone_number && <DetailLabel
-                  lable="Amount payable"
-                  value={order?.amount_payable_food}
-                />}
-                {order?.description && <View style={{ marginVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: activeColor.tabIconDefault,
-                      marginBottom: 5,
-                      fontFamily: "Poppins-Light",
-                    }}
-                  >
-                    Description:
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 13,
-                      color: activeColor.tabIconDefault,
-                      fontFamily: "Poppins-Light",
-                    }}
-                  >
-                    {order?.description}
-                  </Text>
-                </View>}
+                {user?.user_type === "Laundry Service Provider" && (
+                  <DetailLabel
+                    lable="Service Charge"
+                    value={commissionItem}
+                  />
+                )}
+                {(user?.phone_number === dispatchCompanyPhoneNumber ||
+                  user?.phone_number === riderPhoneNumber) && (
+                    <DetailLabel
+                      lable="Amount Due"
+                      value={amountDueDispatch}
+                    />
+                  )}
+                {user?.phone_number === vendorPhoneNumber && (
+                  <DetailLabel
+                    lable="Amount Due"
+                    value={amountDueVendor}
+                  />
+                )}
+                {description && (
+                  <View style={{ marginVertical: 10 }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: activeColor.tabIconDefault,
+                        marginBottom: 5,
+                        fontFamily: "Poppins-Light",
+                      }}
+                    >
+                      Description:
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: activeColor.tabIconDefault,
+                        fontFamily: "Poppins-Light",
+                      }}
+                    >
+                      {description}
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
           </View>
-          {order.order_status !== "pending" && (
-            <View style={styles.container}>
-              <View style={{ alignItems: "center" }}>
-                <MaterialCommunityIcons
-                  name="bike-fast"
-                  size={20}
-                  color="grey"
-                />
-                <Divider />
-              </View>
-              <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                <Text style={[styles.text, { color: activeColor.text }]}>
-                  Rider Details
-                </Text>
+          {orderStatus !== "pending" && (
+            <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
+
+              <View >
+                <View style={styles.header}>
+                  <MaterialCommunityIcons
+                    name="bike-fast"
+                    size={20}
+                    color={activeColor.text}
+                  />
+                  <Text style={[styles.text, { color: activeColor.text }]}>
+                    Rider Details
+                  </Text>
+                </View>
                 <DetailLabel
                   lable="Rider Name"
-                  value={order?.rider_name || ""}
+                  value={riderName || ""}
                 />
                 <DetailLabel
                   lable="Phone Number"
-                  value={order?.rider_phone_number!}
+                  value={riderPhoneNumber}
+                />
+                <DetailLabel
+                  lable="Bike Plate Numbe"
+                  value={plateNumber}
                 />
                 <DetailLabel
                   lable="Company Name"
-                  value={order?.dispatch_company_name || ""}
+                  value={dispatchCompanyName || ''}
                 />
               </View>
             </View>
           )}
         </ScrollView>
       </View>
+      <View style={{ marginVertical: 10 }} />
       <View style={styles.btnContainer}>
         <View style={{ flex: 1 }}>
-          {order?.order_status === "pending" &&
-            order?.payment_status === "paid" &&
-            user?.user_type === "rider" ? (
+          {orderStatus === "pending" &&
+            paymntStatus === "paid" &&
+            user?.user_type === "Rider" ? (
             <CustomBtn
-              disabled={order?.order_status === "pending" ? false : true}
+              disabled={orderStatus === "pending" ? false : true}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Pickup"
               onPress={handlePickup}
             />
-          ) : order?.order_status === "in transit" &&
-            user?.user_type === "rider" ? (
+          ) : orderStatus === "in transit" &&
+            user?.user_type === "Rider" ? (
             <CustomBtn
-              disabled={order?.order_status === "in transit" ? false : true}
+              disabled={orderStatus === "in transit" ? false : true}
               btnBorderRadius={50}
               btnColor={Colors.btnPrimaryColor}
               label="Delivered"
               onPress={handleDelivered}
             />
-          ) : order?.order_status === "pending" &&
-            order?.vendor_username === user?.username &&
-            user?.user_type === "user" ? (
+          ) : orderStatus === "pending" &&
+            vendorUsername === user?.username &&
+            user?.user_type === "Regular User" ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -505,9 +508,9 @@ export default function HomeScreen() {
               label="Cancel"
               onPress={handleCancelOrderByVendor}
             />
-          ) : order?.order_status === "in transit" &&
-            user?.user_type === "rider" &&
-            order?.rider_phone_number === user?.phone_number ? (
+          ) : orderStatus === "in transit" &&
+            user?.user_type === "Rider" &&
+            riderPhoneNumber === user?.phone_number ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -515,9 +518,9 @@ export default function HomeScreen() {
               label="Cancel"
               onPress={handleRiderCancelOrder}
             />
-          ) : order?.order_status === "pending" &&
-            user?.user_type !== "user" &&
-            order?.vendor_username === user?.username ? (
+          ) : orderStatus === "pending" &&
+            user?.user_type !== "Regular User" &&
+            vendorUsername === user?.username ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -525,8 +528,10 @@ export default function HomeScreen() {
               label="List order"
               onPress={handleRelistOrderByVendor}
             />
-          ) : user?.phone_number === order?.order_owner_phone_number &&
-            order?.order_status === "delivered" ? (
+          ) : (user?.phone_number === orderOwnerPhoneNumber &&
+            orderStatus === "delivered") ||
+            (user?.phone_number === orderOwnerPhoneNumber &&
+              orderStatus === "laundry received") ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
@@ -534,14 +539,14 @@ export default function HomeScreen() {
               label="Received"
               onPress={handleReceived}
             />
-          ) : order?.order_type === "laundry" &&
-            order.order_status === "delivered" &&
-            order?.vendor_username === user?.company_name ? (
+          ) : orderType === "laundry" &&
+            orderStatus === "laundry received" &&
+            vendorUsername === user?.company_name ? (
             <CustomBtn
               disabled={false}
               btnBorderRadius={50}
               btnColor={
-                order.order_status === "delivered"
+                orderStatus === "laundry received"
                   ? activeColor.profileCard
                   : Colors.btnPrimaryColor
               }
@@ -549,7 +554,7 @@ export default function HomeScreen() {
               onPress={handleLaundryReceived}
             />
           ) : (
-            order.order_status === "received" && (
+            orderStatus === "received" && (
               <CustomBtn
                 disabled
                 btnBorderRadius={50}
@@ -560,7 +565,7 @@ export default function HomeScreen() {
           )}
         </View>
       </View>
-      {order?.payment_status != "paid" && (
+      {paymntStatus != "paid" && (
         <View
           style={{
             position: "absolute",
@@ -578,12 +583,12 @@ export default function HomeScreen() {
               router.push({
                 pathname: "/payment",
                 params: {
-                  paymentUrl: order?.payment_url,
-                  orderType: order.order_type,
-                  id: order?.id,
-                  totalCost: order?.total_cost,
-                  items: JSON.stringify(order?.foods),
-                  itemCost: "",
+                  paymentUrl: paymentUrl,
+                  orderType: orderType,
+                  id: orderId,
+                  totalCost: totalCost,
+                  // items: JSON.stringify(foods) || JSON.stringify(laundries),
+                  itemCost: itemCost || "",
                 },
               })
             }
@@ -597,8 +602,10 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
-    padding: 10,
+    // flexDirection: "row",
+    paddingHorizontal: SIZES.paddingMedium,
+    paddingVertical: SIZES.paddingSmall,
+    marginVertical: 5
   },
   mainContainer: {
     flex: 6,
@@ -614,15 +621,21 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     position: "absolute",
-    bottom: 10,
-    zIndex: 999,
+    bottom: 5,
+    // zIndex: 999,
     width: "90%",
     alignSelf: "center",
   },
+
   image: {
     height: IMG_HEIGHT,
     width: Dimensions.get("window").width,
     alignSelf: "stretch",
     resizeMode: "cover",
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 5
+  }
 });

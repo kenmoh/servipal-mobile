@@ -18,16 +18,16 @@ import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
 import Empty from "@/components/Empty";
-import { ItemOrderType } from "@/utils/types";
+import { OrderResponseType } from "@/utils/types";
 
-export const imageUrl = "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png"
+export const imageUrl =
+    "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png";
 
 const Delivery = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [refreshing, setRefreshing] = useState(false);
-    const { user } = useAuth()
-
+    const { user } = useAuth();
 
     const { data, refetch, error, isFetching } = useQuery({
         queryKey: ["newFoodOrders"],
@@ -46,11 +46,9 @@ const Delivery = () => {
         return () => subscription.remove();
     }, []);
 
-
-
     const handleRefretch = () => {
         setRefreshing(true);
-        refetch()
+        refetch();
         setRefreshing(false);
     };
 
@@ -84,7 +82,7 @@ const Delivery = () => {
                     fontFamily: "Poppins-Light",
                     fontSize: 12,
                     color: Colors.error,
-                    alignSelf: 'center'
+                    alignSelf: "center",
                 }}
             >
                 Something went wrong!
@@ -94,7 +92,6 @@ const Delivery = () => {
 
     return (
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
-
             <StatusBar
                 backgroundColor={activeColor.background}
                 style={theme.mode === "dark" ? "light" : "dark"}
@@ -103,11 +100,14 @@ const Delivery = () => {
             <FlatList
                 data={data?.data}
                 keyExtractor={(item) => item?.id}
-                renderItem={({ item }: { item: ItemOrderType }) =>
-                    (item.order_type === "food" && (item.order_owner_phone_number === user?.phone_number || item.vendor_phone_number === user?.phone_number) && item.food_status === 'cooking' && item.payment_status === 'paid') &&
-                    (<OrderCard order={item} isHomeScreen={true} />)
-
-
+                renderItem={({ item }: { item: OrderResponseType }) =>
+                    item.order_type === "food" &&
+                    (item.order_owner_phone_number === user?.phone_number ||
+                        item.vendor_phone_number === user?.phone_number) &&
+                    item.item_status === "cooking" &&
+                    item.payment_status === "paid" && (
+                        <OrderCard order={item} isHomeScreen={true} />
+                    )
                 }
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}
@@ -116,7 +116,6 @@ const Delivery = () => {
                 onRefresh={handleRefretch}
                 ListEmptyComponent={() => <Empty />}
             />
-
         </View>
     );
 };

@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginVertical: 3.5,
     textTransform: "capitalize",
-    fontFamily: 'Poppins-Light'
+    fontFamily: 'Poppins-Medium'
   },
 });

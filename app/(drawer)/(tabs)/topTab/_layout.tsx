@@ -6,7 +6,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import ScreenWithFAB from "@/app/ScreenWithFAB";
-import FloatingActionButton from "@/components/FloatingActionBtn";
 import { useAuth } from "@/auth/authContext";
 
 const HomeTab = withLayoutContext(createMaterialTopTabNavigator().Navigator);
