@@ -151,7 +151,7 @@ const payment = () => {
         mutationFn: (orderId: string) => payWithWallet(orderId)
     })
 
-    console.log(data)
+
 
     if (error) {
         router.push("/failed");

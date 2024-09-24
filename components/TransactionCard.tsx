@@ -1,72 +1,78 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useContext } from "react";
-import { Transaction } from "@/utils/types";
+import { TransactionData } from "@/utils/types";
 import { Feather } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 
 const TransactionCard = ({
-    transaction,
+    transactions,
     isLastTranx,
 }: {
-    transaction: Transaction;
+    transactions: TransactionData;
     isLastTranx: boolean;
 }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
+    console.log(transactions);
+
     return (
         <>
-            {
-                transaction.fund_status !== 'pending' && (
-                    <View
+            {transactions.status === "pending" ||
+                transactions.status === "cancelled" ||
+                transactions.status === "failed" ? (
+                ""
+            ) : (
+                <View
+                    style={[
+                        styles.container,
+                        {
+                            backgroundColor: activeColor.profileCard,
+                            marginBottom: isLastTranx ? 20 : 0,
+                        },
+                    ]}
+                >
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+                        {transactions?.status === "paid" ||
+                            transactions.transaction_type === "fund wallet" ||
+                            transactions.transaction_type === "credit" ? (
+                            <Feather name="arrow-down-left" size={15} color={"teal"} />
+                        ) : (
+                            <Feather name="arrow-up-right" size={15} color={Colors.error} />
+                        )}
+                        <View>
+                            <Text style={[styles.text, { color: activeColor.text }]}>
+                                kttt{transactions.name}
+                            </Text>
+                            <Text
+                                style={{
+                                    fontFamily: "Poppins-Thin",
+                                    fontSize: 12,
+                                    color: activeColor.text,
+                                }}
+                            >
+                                {transactions.created_at.split("T")[0]}{" "}
+                                {transactions.created_at.split("T")[1].split(".")[0]}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <Text
                         style={[
-                            styles.container,
+                            styles.text,
                             {
-                                backgroundColor: activeColor.profileCard,
-                                marginBottom: isLastTranx ? 20 : 0,
+                                color:
+                                    parseInt(transactions.amount) < 1
+                                        ? Colors.error
+                                        : activeColor.text,
                             },
                         ]}
                     >
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            {parseInt(transaction.amount) < 0 ? (
-                                <Feather name="arrow-up-right" size={15} color={Colors.error} />
-                            ) : (
-                                <Feather name="arrow-down-left" size={15} color={"green"} />
-                            )}
-                            <View>
-                                <Text style={[styles.text, { color: activeColor.text }]}>
-                                    {transaction.username}
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontFamily: "Poppins-Thin",
-                                        fontSize: 12,
-                                        color: activeColor.text,
-                                    }}
-                                >
-                                    {transaction.created_at.split("T")[0]}{" "}
-                                    {transaction.created_at.split("T")[1].split(".")[0]}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <Text
-                            style={[
-                                styles.text,
-                                {
-                                    color:
-                                        parseInt(transaction.amount) < 1
-                                            ? Colors.error
-                                            : activeColor.text,
-                                },
-                            ]}
-                        >
-                            {transaction.amount}
-                        </Text>
-                    </View>
-                )
-            }
+                        {transactions.amount}
+                    </Text>
+                </View>
+            )}
         </>
     );
 };
@@ -80,7 +86,7 @@ const styles = StyleSheet.create({
         marginVertical: 2.5,
         padding: 10,
         borderRadius: 5,
-        opacity: 0.7
+        opacity: 0.7,
     },
     text: {
         fontFamily: "Poppins-SemiBold",

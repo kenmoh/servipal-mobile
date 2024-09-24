@@ -63,7 +63,6 @@ const deposit = () => {
     const params = useLocalSearchParams();
     const { depositUrl, amount, id } = params;
 
-    console.log(amount, id, depositUrl)
 
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 

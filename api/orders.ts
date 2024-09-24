@@ -66,7 +66,14 @@ const getLaundryNewLaundryOrder = async () => {
 const getUserListings = () => client.get(`${endpoint}/user-orders`);
 
 // Get user order stats
-const getUserOrderStats = () => client.get(`${endpoint}/user-order-stats`);
+const getUserOrderStats = async () => {
+  const result = await client.get(`${endpoint}/user-order-stats`);
+
+  if (!result.data) {
+    throw new Error(result?.data?.detail.split(":")[0]);
+  }
+  return result.data;
+};
 
 // get package details
 const orderItemDetails = async (orderId: string) =>

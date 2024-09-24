@@ -35,6 +35,12 @@ const index = () => {
         queryFn: ordersApi.getUserOrderItems,
     });
 
+
+    const { data: stat } = useQuery({
+        queryKey: ["stats", user?.id],
+        queryFn: ordersApi.getUserOrderStats,
+    });
+
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
             focusManager.setFocused(status === "active");
@@ -75,7 +81,7 @@ const index = () => {
                     >
                         <Feather name="package" color={activeColor.icon} size={18} />
                         <Text style={[styles.text, { color: activeColor.text }]}>
-                            All: {data?.data?.total_order}
+                            All: {stat?.total_orders}
                         </Text>
                     </View>
                     <View
@@ -85,7 +91,7 @@ const index = () => {
                     >
                         <MaterialIcons name="pending" color={activeColor.icon} size={18} />
                         <Text style={[styles.text, { color: activeColor.text }]}>
-                            Pending: {data?.data?.pending_orders}
+                            Pending: {stat?.total_pending_orders}
                         </Text>
                     </View>
                 </View>

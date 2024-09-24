@@ -23,7 +23,6 @@ const RiderCard = ({ rider }: { rider: UserReturn }) => {
 
     const blockRider = async () => {
         const response = await userApi.dispatchSuspenRider(rider?.id);
-        console.log(response.data)
         return response.data;
     };
 

@@ -1,3 +1,5 @@
+import { string } from "yup";
+
 export type OrderStatus =
   | "pending"
   | "in transit"
@@ -7,7 +9,12 @@ export type OrderStatus =
   | "laundry received"
   | "laundry-returned";
 
-export type PaymentStatus = "paid" | "pending" | "cancelled" | "failed";
+export type PaymentStatus =
+  | "paid"
+  | "pending"
+  | "cancelled"
+  | "failed"
+  | "completed";
 type OrderType = "delivery" | "food" | "laundry";
 
 type AccountStatus = "pending" | "confirmed";
@@ -216,26 +223,6 @@ export type SetupCompany = {
   bankName: string;
 };
 
-type TransactionType = "deposit" | "withdrawal" | string;
-type PaymentTransactionType = "pay_with_wallet" | "fund_wallet" | string;
-
-export type Transaction = {
-  id: string;
-  amount: string;
-  username: string;
-  transaction_type: TransactionType;
-  payment_transaction_type: PaymentTransactionType;
-  fund_status: PaymentStatus;
-  created_at: string;
-};
-
-export type Transactions = {
-  user_id: string;
-  id: string;
-  balance: string;
-  transactions: Transaction[];
-};
-
 type Role =
   | "Dispatch Provider"
   | "Rider"
@@ -416,4 +403,12 @@ export type UpdateUser = {
   bankAccountNumber: string;
   accountHolderName: string;
   companyRegNum?: string;
+};
+
+export type TransactionData = {
+  name: string;
+  transaction_type: "paid with wallet" | "fund wallet" | "credit" | "debit";
+  amount: string;
+  status: PaymentStatus;
+  created_at: string;
 };

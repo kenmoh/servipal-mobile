@@ -94,7 +94,7 @@ export default function HomeScreen() {
       });
     },
   });
-  console.log(data)
+
   // Handle order Delivered
   const { mutate: handleDelivered, isPending: pendingDelivery } = useMutation({
     mutationFn: () => ordersApi.orderDelievered(orderId as string),

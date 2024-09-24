@@ -29,7 +29,6 @@ const reviewForm = () => {
 
     const { id } = useLocalSearchParams()
 
-    console.log(id)
     const { error, isSuccess, mutate, isPending, data } = useMutation({
         mutationFn: (rating: RatingType) => rateItem(id as string, rating),
     });

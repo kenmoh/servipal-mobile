@@ -35,7 +35,7 @@ const fundWallet = () => {
         mutationFn: (amount: number) => userApi.fundWallet(amount),
     });
 
-    console.log(data)
+
 
 
     useEffect(() => {

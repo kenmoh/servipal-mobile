@@ -86,7 +86,6 @@ const SignIn = () => {
     }
   }, [isSuccess, data])
 
-  console.log('PROFILE: ', profileData)
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View

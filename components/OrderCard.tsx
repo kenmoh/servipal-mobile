@@ -32,7 +32,7 @@ const OrderCard = ({
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  console.log(order.delivery_fee, '==============================')
+
 
   return (
     <TouchableOpacity

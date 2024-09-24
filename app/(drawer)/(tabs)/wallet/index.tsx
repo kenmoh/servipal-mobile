@@ -23,6 +23,7 @@ import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { SIZES } from "@/constants/Sizes";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
+import { TransactionData } from "@/utils/types";
 
 const wallet = () => {
   const { theme } = useContext(ThemeContext);
@@ -44,9 +45,7 @@ const wallet = () => {
     mutationFn: walletApi.withdrawFunds,
   });
 
-  console.log(wallet)
 
-  const walletData = data?.data?.transactions;
 
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
@@ -169,12 +168,12 @@ const wallet = () => {
           </Text>}
         </View>
         <FlatList
-          data={walletData}
+          data={data?.data?.wallet_transactions}
           keyExtractor={(item) => item?.id?.toString()}
-          renderItem={({ item, index }) => {
-            const isLastTranx = index === walletData.length - 1;
+          renderItem={({ item, index }: { item: TransactionData, index: number }) => {
+            const isLastTranx = index === data?.data?.wallet_transactions.length - 1;
             return (
-              <TransactionCard transaction={item} isLastTranx={isLastTranx} />
+              <TransactionCard transactions={item} isLastTranx={isLastTranx} />
             );
           }}
           showsVerticalScrollIndicator={false}

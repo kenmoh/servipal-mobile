@@ -65,7 +65,7 @@ const AppImagePicker = ({
       try {
         onChangeImage(result.assets[0].uri);
       } catch (error) {
-        console.log(error);
+        throw new Error(error.message)
       }
     }
   };

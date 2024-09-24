@@ -94,7 +94,7 @@ const index = () => {
             </Text>
         </View>;
     }
-    console.log(laundryOrdersQuery.data?.data);
+
     return (
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
             <StatusBar

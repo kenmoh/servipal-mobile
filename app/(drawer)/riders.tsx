@@ -43,7 +43,6 @@ const riders = () => {
         queryFn: userApi.getDispatchRiders,
     });
 
-    console.log(riders);
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {

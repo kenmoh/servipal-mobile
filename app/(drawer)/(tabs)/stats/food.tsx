@@ -38,7 +38,7 @@ const food = () => {
             focusManager.setFocused(status === "active");
         }
     }
-    console.log(data)
+
 
     useEffect(() => {
         const subscription = AppState.addEventListener("change", onAppStateChange);

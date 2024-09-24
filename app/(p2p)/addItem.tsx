@@ -32,7 +32,7 @@ const AddItem = () => {
             mutationFn: (listing: CreateListingType) => addListing(listing),
         });
 
-    console.log(data)
+
 
     useEffect(() => {
         if (error) {

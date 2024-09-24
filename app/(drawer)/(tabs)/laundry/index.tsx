@@ -1,4 +1,4 @@
-import { ActivityIndicator, AppState, AppStateStatus, FlatList, Platform, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import FoodLaundryCard from '@/components/FoodLaundryCard';
 import { StatusBar } from 'expo-status-bar';
@@ -22,7 +22,6 @@ const index = () => {
         queryFn: getLaundryServiceUsers,
     });
 
-    console.log(users?.data)
     if (isLoading || isFetching) {
         return (
             <View
