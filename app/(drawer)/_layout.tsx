@@ -185,10 +185,21 @@ const CustomDrawerContent = (props: any) => {
                             </Text>
                         </View>
                     </View>
-                    <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('(drawer)/me')}>
+                    {user?.user_type === 'Regular User' && <TouchableOpacity activeOpacity={0.7} onPress={() => router.push('(drawer)/me')}>
                         <Feather name="edit" color={activeColor.icon} size={18} />
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                 </View>
+                {user?.user_type === 'Dispatch Provider' || user?.user_type === 'Restaurant Service Provider' || user?.user_type === 'Laundry Service Provider' ? (
+
+                    <DrawerItem
+                        label={"Profile"}
+                        onPress={() => router.push("setupCompanyProfile")}
+                        labelStyle={[styles.text, { color: activeColor.text }]}
+                        icon={() => (
+                            <Feather name="user" color={activeColor.text} size={20} />
+                        )}
+                    />
+                ) : ''}
                 {user?.user_type === "Dispatch Provider" && (
                     <>
                         <DrawerItem

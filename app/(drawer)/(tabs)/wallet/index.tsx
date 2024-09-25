@@ -31,18 +31,31 @@ const wallet = () => {
   const { user } = useAuth();
 
   const { data, error, isFetching, isLoading, refetch } = useQuery({
-    queryKey: ["wallet", user?.id],
+    queryKey: ["userWallet", user?.id],
     queryFn: walletApi.getUserWallet,
   });
 
   const {
-    isSuccess: fundSuccess,
     mutate,
     isPending,
     data: wallet,
-    error: fundError,
+
   } = useMutation({
     mutationFn: walletApi.withdrawFunds,
+    onError: (error) => showMessage({
+      message: error.message,
+      type: "danger",
+      style: {
+        alignItems: "center",
+      },
+    }),
+    onSuccess: () => showMessage({
+      message: "Withrawal Successful!",
+      type: "success",
+      style: {
+        alignItems: "center",
+      },
+    })
   });
 
 
@@ -59,26 +72,26 @@ const wallet = () => {
     return () => subscription.remove();
   }, []);
 
-  useEffect(() => {
-    if (fundError) {
-      showMessage({
-        message: fundError.message,
-        type: "danger",
-        style: {
-          alignItems: "center",
-        },
-      });
-    }
-    if (fundSuccess) {
-      showMessage({
-        message: "Withrawal Successful!",
-        type: "success",
-        style: {
-          alignItems: "center",
-        },
-      });
-    }
-  }, [fundError, fundSuccess]);
+  // useEffect(() => {
+  //   if (fundError) {
+  //     showMessage({
+  //       message: fundError.message,
+  //       type: "danger",
+  //       style: {
+  //         alignItems: "center",
+  //       },
+  //     });
+  //   }
+  //   if (fundSuccess) {
+  //     showMessage({
+  //       message: "Withrawal Successful!",
+  //       type: "success",
+  //       style: {
+  //         alignItems: "center",
+  //       },
+  //     });
+  //   }
+  // }, [fundError, fundSuccess]);
 
   const handleRefresch = () => refetch();
 
@@ -154,7 +167,7 @@ const wallet = () => {
             Transactions
           </Text>
 
-          {user?.user_type !== 'Dispatch Provider' && <Text
+          {user?.user_type === 'Regular User' && <Text
             onPress={() => router.push('/(tabs)/wallet/failedTranx')}
             style={{
               color: activeColor.text,
@@ -179,7 +192,6 @@ const wallet = () => {
           showsVerticalScrollIndicator={false}
           refreshing={isFetching}
           onRefresh={handleRefresch}
-        // stickyHeaderIndices={[0]}
         />
       </View>
     </>

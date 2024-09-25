@@ -259,6 +259,8 @@ export type UserReturn = {
   is_suspended: true;
   account_status: AccountStatus;
   confirm_email: number;
+  opening_hour: string;
+  closing_hour: string;
   confirm_phone_number: number;
   created_at: string;
   updated_at: string;
@@ -406,6 +408,8 @@ export type UpdateUser = {
 };
 
 export type TransactionData = {
+  payment_url: string;
+  id: string;
   name: string;
   transaction_type: "paid with wallet" | "fund wallet" | "credit" | "debit";
   amount: string;

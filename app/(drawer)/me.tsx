@@ -70,7 +70,6 @@ const updateProfile = () => {
                     <Formik
                         initialValues={{
                             fullName: user?.full_name ? user.full_name : "",
-                            companyRegNum: user?.company_reg_number ? user.company_reg_number : "",
                             bankAccountNumber: user?.bank_account_number ? user.bank_account_number : "",
                             accountHolderName: user?.account_holder_name ? user.account_holder_name : "",
                             bankName: user?.bank_name ? user.bank_name : "",
@@ -82,42 +81,19 @@ const updateProfile = () => {
                         {({ handleChange, handleSubmit, values, errors, touched }) => (
                             <>
                                 <View style={{ padding: SIZES.paddingMedium }}>
-                                    {
-                                        user?.user_type === 'vendor' && (
-                                            <>
-                                                <CustomTextInput
-                                                    label="Full Name"
-                                                    autoCapitalize="word"
-                                                    onChangeText={handleChange("fullName")}
-                                                    labelColor={activeColor.text}
-                                                    inputBackgroundColor={activeColor.inputBackground}
-                                                    inputTextColor={activeColor.text}
-                                                    value={values.fullName}
-                                                />
-                                                {touched.fullName && errors.fullName && (
-                                                    <InputErrorMessage error={errors.fullName} />
-                                                )}
-                                            </>
-                                        )
-                                    }
-                                    {
-                                        user?.user_type === 'dispatcher' && (
-                                            <>
-                                                <CustomTextInput
-                                                    label="Company Reg. Number"
-                                                    editable={false}
-                                                    onChangeText={handleChange("companyRegNum")}
-                                                    value={values.companyRegNum}
-                                                    labelColor={activeColor.text}
-                                                    inputBackgroundColor={activeColor.inputBackground}
-                                                    inputTextColor={activeColor.text}
-                                                />
-                                                {touched.companyRegNum && errors.companyRegNum && (
-                                                    <InputErrorMessage error={errors.companyRegNum} />
-                                                )}
-                                            </>
-                                        )
-                                    }
+
+                                    <CustomTextInput
+                                        label="Full Name"
+                                        autoCapitalize="word"
+                                        onChangeText={handleChange("fullName")}
+                                        labelColor={activeColor.text}
+                                        inputBackgroundColor={activeColor.inputBackground}
+                                        inputTextColor={activeColor.text}
+                                        value={values.fullName}
+                                    />
+                                    {touched.fullName && errors.fullName && (
+                                        <InputErrorMessage error={errors.fullName} />
+                                    )}
                                     <CustomTextInput
                                         label="Account Number"
                                         onChangeText={handleChange("bankAccountNumber")}
@@ -156,11 +132,15 @@ const updateProfile = () => {
                                     )}
 
                                     <View style={{ marginVertical: 25 }}>
-                                        <CustomBtn
+                                        {user?.full_name ? (<CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
                                             label="Update"
                                             onPress={handleSubmit}
-                                        />
+                                        />) : (<CustomBtn
+                                            btnColor={Colors.btnPrimaryColor}
+                                            label="Submit"
+                                            onPress={handleSubmit}
+                                        />)}
                                     </View>
                                 </View>
                             </>

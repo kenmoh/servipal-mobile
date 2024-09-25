@@ -127,7 +127,7 @@ export default function RootLayout() {
                   },
 
                   headerTintColor: activeColor.text,
-                  headerTitleAlign: "center",
+
                   contentStyle: {
                     backgroundColor: activeColor.background,
                   },
@@ -154,7 +154,7 @@ export default function RootLayout() {
                 },
 
                 headerTintColor: activeColor.text,
-                headerTitleAlign: "center",
+
                 contentStyle: {
                   backgroundColor: activeColor.background,
                 },
@@ -167,7 +167,7 @@ export default function RootLayout() {
                 },
 
                 headerTintColor: activeColor.text,
-                headerTitleAlign: "center",
+
                 contentStyle: {
                   backgroundColor: activeColor.background,
                 },
@@ -180,20 +180,18 @@ export default function RootLayout() {
                 },
 
                 headerTintColor: activeColor.text,
-                headerTitleAlign: "center",
                 contentStyle: {
                   backgroundColor: activeColor.background,
                 },
               }} />
               <Stack.Screen name="setupCompanyProfile" options={{
-                title: "",
+                title: "Profile",
                 headerShadowVisible: false,
                 headerStyle: {
                   backgroundColor: activeColor.background,
                 },
 
                 headerTintColor: activeColor.text,
-                headerTitleAlign: "center",
                 contentStyle: {
                   backgroundColor: activeColor.background,
                 },

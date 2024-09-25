@@ -48,8 +48,11 @@ const SetupCompanyProfile = () => {
     let activeColor = Colors[theme.mode];
     const { user } = useAuth()
 
+
     const [showOpeningHour, setShowOpeningHour] = useState(false);
     const [showClosingHour, setShowClosingHour] = useState(false);
+
+
 
     const { mutate, isPending } = useMutation({
         mutationFn: (profile: SetupCompany) => userApi.setupCompanyProfile(profile),
@@ -88,16 +91,15 @@ const SetupCompanyProfile = () => {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Formik
                         initialValues={{
-                            openingHour: "",
-                            closingHour: "",
-                            companyName: "",
-                            location: "",
-                            accountHolderName: '',
-                            bankName: '',
-                            accountNumber: '',
-                            companyRegNum: '',
-                            backgroundImage: '',
-                            profileImage: ''
+                            openingHour: user?.opening_hour || "",
+                            closingHour: user?.closing_hour || "",
+                            companyName: user?.company_name || "",
+                            location: user?.location || "",
+                            accountHolderName: user?.account_holder_name || '',
+                            bankName: user?.bank_name || '',
+                            accountNumber: user?.bank_account_number || '',
+                            companyRegNum: user?.company_reg_number || '',
+
                         }}
                         onSubmit={(values, { resetForm }) =>
                             mutate(values, { onSuccess: () => resetForm() })
@@ -117,25 +119,26 @@ const SetupCompanyProfile = () => {
 
                                 <View style={styles.container}>
                                     <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                                        {user?.user_type !== 'user' && <CustomTextInput
+                                        <CustomTextInput
                                             onChangeText={handleChange("companyName")}
                                             value={values.companyName}
                                             labelColor={activeColor.text}
                                             label="Company Name"
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
-                                        />}
+                                            editable={user?.company_name === '' ? true : false}
+                                        />
                                         {touched.companyName && errors.companyName && (
                                             <InputErrorMessage error={errors.companyName} />
                                         )}
-                                        {user?.user_type !== 'user' && <CustomTextInput
+                                        <CustomTextInput
                                             onChangeText={handleChange("companyRegNum")}
                                             value={values.companyRegNum}
                                             labelColor={activeColor.text}
                                             label="Company Reg. Number"
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
-                                        />}
+                                        />
                                         {touched.companyRegNum && errors.companyRegNum && (
                                             <InputErrorMessage error={errors.companyRegNum} />
                                         )}
@@ -185,7 +188,7 @@ const SetupCompanyProfile = () => {
                                         )}
 
 
-                                        {user?.user_type !== 'user' && <CustomTextInput
+                                        <CustomTextInput
                                             onChangeText={handleChange("openingHour")}
                                             value={values.openingHour}
                                             labelColor={activeColor.text}
@@ -194,11 +197,11 @@ const SetupCompanyProfile = () => {
                                             inputTextColor={activeColor.text}
                                             onPress={() => setShowOpeningHour(true)}
 
-                                        />}
+                                        />
                                         {touched.openingHour && errors.openingHour && (
                                             <InputErrorMessage error={errors.openingHour} />
                                         )}
-                                        {user?.user_type !== 'user' && <CustomTextInput
+                                        <CustomTextInput
                                             onChangeText={handleChange("closingHour")}
                                             value={values.closingHour}
                                             labelColor={activeColor.text}
@@ -206,31 +209,28 @@ const SetupCompanyProfile = () => {
                                             inputBackgroundColor={activeColor.inputBackground}
                                             inputTextColor={activeColor.text}
                                             onPress={() => setShowClosingHour(true)}
-                                        />}
+                                        />
                                         {touched.closingHour && errors.closingHour && (
                                             <InputErrorMessage error={errors.closingHour} />
                                         )}
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20 }}>
-                                            <View>
-                                                <Text style={{ fontSize: 14, marginTop: 10, color: activeColor.text, fontFamily: "Poppins-Medium" }}>Profile Image</Text>
-                                                <ImagePickerForm field={"profileImage"} height={150} width={'100%'} />
-                                            </View>
-                                            {user?.user_type !== 'user' && <View>
-                                                <Text style={{ fontSize: 14, marginTop: 10, color: activeColor.text, fontFamily: "Poppins-Medium" }}>Background Barner</Text>
-                                                <ImagePickerForm field={"backgroundImage"} height={150} width={'100%'} />
-                                            </View>}
-                                        </View>
+
                                         <View style={styles.btnContainer}>
-                                            <CustomBtn
-                                                label="submit"
-                                                btnColor="orange"
-                                                onPress={handleSubmit}
-                                            />
+                                            {
+                                                user?.company_name ? (<CustomBtn
+                                                    label="Update"
+                                                    btnColor="orange"
+                                                    onPress={handleSubmit}
+                                                />) : (<CustomBtn
+                                                    label="submit"
+                                                    btnColor="orange"
+                                                    onPress={handleSubmit}
+                                                />)
+                                            }
                                         </View>
 
                                     </View>
                                 </View>
-                                {user?.user_type !== 'user' && showOpeningHour && (
+                                {showOpeningHour && (
                                     <DateTimePicker
                                         testID="openinHourPicker"
                                         value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
@@ -247,7 +247,7 @@ const SetupCompanyProfile = () => {
                                         }}
                                     />
                                 )}
-                                {user?.user_type !== 'user' && showClosingHour && (
+                                {showClosingHour && (
                                     <DateTimePicker
                                         testID="closingHourPicker"
                                         value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}

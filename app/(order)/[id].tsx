@@ -347,7 +347,7 @@ export default function HomeScreen() {
           <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
             <View >
               <View style={styles.header}>
-                <Feather name="box" size={20} color={activeColor.icon} />
+                <Feather name="box" size={20} color={activeColor.text} />
                 <Text style={[styles.text, { color: activeColor.text }]}>
                   Order Details
                 </Text>

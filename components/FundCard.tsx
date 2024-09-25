@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext } from "react";
-import { PaymentStatus } from "@/utils/types";
+import { PaymentStatus, TransactionData } from "@/utils/types";
 import CustomBtn from "./CustomBtn";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
@@ -8,20 +8,12 @@ import { SIZES } from "@/constants/Sizes";
 import { router } from "expo-router";
 
 
-type FundCardType = {
-    amount: number;
-    current_username_or_company_name: string;
-    fund_status: PaymentStatus;
-    payment_url: string
-    id: string
-    created_at: string;
-};
 
 const FundCard = ({
     item,
     isLastItem,
 }: {
-    item: FundCardType;
+    item: TransactionData;
     isLastItem: boolean;
 }) => {
     const { theme } = useContext(ThemeContext);
@@ -39,7 +31,7 @@ const FundCard = ({
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <View>
                     <Text style={[styles.text, { color: activeColor.icon }]}>
-                        Username: {item.current_username_or_company_name}
+                        Username: {item.name}
                     </Text>
                     <Text style={[styles.text, { color: activeColor.icon }]}>
                         Amount: ₦{item.amount}
@@ -49,17 +41,17 @@ const FundCard = ({
                             styles.text,
                             {
                                 color:
-                                    item.fund_status === "pending"
+                                    item.status === "pending"
                                         ? Colors.delivered
-                                        : item.fund_status === "paid"
+                                        : item.status === "paid"
                                             ? 'teal'
-                                            : item.fund_status === "failed"
+                                            : item.status === "failed"
                                                 ? Colors.error
                                                 : Colors.error,
                             },
                         ]}
                     >
-                        Status: {item.fund_status}
+                        Status: {item.status}
                     </Text>
                 </View>
                 <Text style={[styles.text, { color: activeColor.icon }]}>
@@ -67,7 +59,7 @@ const FundCard = ({
                 </Text>
             </View>
             {
-                item.fund_status === 'pending' && (
+                item.status === 'pending' && (
                     <TouchableOpacity activeOpacity={0.7} style={[styles.btn]} onPress={() => router.push({
                         pathname: "payment",
                         params: {

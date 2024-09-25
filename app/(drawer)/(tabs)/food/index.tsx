@@ -41,13 +41,13 @@ const index = () => {
         error,
         isLoading,
         isFetching,
-        refetch,
     } = useQuery({
         queryKey: ["usersByMeal", selectedCategory],
         queryFn: () => getUserByMealCategory(selectedCategory),
         enabled: !!selectedCategory,
     });
 
+    console.log(restaurants?.data)
 
     const handleCategoryPress = (category: CategoryType) => {
         setSelectedCategory(category.name);

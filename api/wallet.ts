@@ -5,7 +5,6 @@ const withdraw = "/withdrawals/";
 
 const getUserWallet = async () => {
   const result = await client.get(`${wallet}/user-wallet`);
-
   if (result.ok) {
     throw new Error(result?.data?.detail.split(":")[0]);
   }

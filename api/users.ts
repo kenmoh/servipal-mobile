@@ -89,7 +89,6 @@ const updateUser = async (data: UpdateUser) => {
     bank_account_number: data.bankAccountNumber,
     bank_name: data.bankName,
     account_holder_name: data.accountHolderName,
-    company_reg_number: data.companyRegNum,
   };
 
   const result = await client.patch(`${user}/me/dispatcher`, userData);

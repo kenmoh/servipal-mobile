@@ -21,7 +21,7 @@ export type CardProps = {
     sample_company_image: string;
     average_rating: number;
     numReviews?: number;
-    vendor_company_name?: string;
+    company_name?: string;
     opening_hour: string;
     location: string;
     closing_hour: string;
@@ -46,7 +46,7 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
                     pathname: isLaundry ? "(laundry)/laundry" : "(restaurant)/restaurant",
                     params: {
                         id: item.id,
-                        companyName: item.vendor_company_name,
+                        companyName: item.company_name,
                         avgRating: reviews?.data?.average_rating,
                         location: item.location,
                         imageUrl: item.sample_company_image,
@@ -64,7 +64,7 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
             <View style={[styles.wrapper]}>
                 <View>
                     <Text style={[styles.nameText, { color: activeColor.text }]}>
-                        {item.vendor_company_name}
+                        {item.company_name}
                     </Text>
 
                     <Text style={[styles.locationText, { color: activeColor.text }]}>

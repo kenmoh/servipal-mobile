@@ -79,6 +79,4 @@ export const SetupCompanyValidation = Yup.object().shape({
   companyRegNum: Yup.string(),
   openingHour: Yup.string().required().label("Opening hour"),
   closingHour: Yup.string().required().label("Closing hour"),
-  backgroundImage: Yup.string(),
-  profileImage: Yup.string(),
 });
