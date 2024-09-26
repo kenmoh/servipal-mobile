@@ -25,11 +25,7 @@ const confirmAccount = () => {
 
     const { error, isSuccess, mutate, isPending, data } = useMutation({
         mutationFn: ({ emailCode, phoneCode }: ConfirmAccount) => userApi.confirmAccount(emailCode, phoneCode),
-    });
-
-
-    useEffect(() => {
-        if (error) {
+        onError: (error) => {
             showMessage({
                 message: error.message,
                 type: "danger",
@@ -40,7 +36,8 @@ const confirmAccount = () => {
             router.replace("confirmAccount");
             return
         }
-    }, [error])
+    });
+
 
     useEffect(() => {
         if (isSuccess) {

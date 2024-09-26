@@ -9,12 +9,13 @@ import {
     ActivityIndicator,
 
 } from "react-native";
-import { ThemeContext } from "@/context/themeContext";
+import { StatusBar } from "expo-status-bar";
 
+import { ThemeContext } from "@/context/themeContext";
 import { getCategories, getUserByMealCategory } from "@/api/foods";
 import FoodLaundryCard from "@/components/FoodLaundryCard";
 import CategoryBtn from "@/components/CategoryBtn";
-import { StatusBar } from "expo-status-bar";
+
 
 
 type CategoryType = {

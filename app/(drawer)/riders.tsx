@@ -93,10 +93,11 @@ const riders = () => {
                 <FlatList
                     data={riders?.data}
                     keyExtractor={(item: UserReturn) => item?.id?.toString()}
-                    renderItem={({ item }) => <RiderCard rider={item} />}
+                    renderItem={({ item }: { item: UserReturn }) => <RiderCard rider={item} />}
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
                     vertical
+                    key={3}
                     refreshing={isFetching}
                     onRefresh={handleRefresch}
                 />

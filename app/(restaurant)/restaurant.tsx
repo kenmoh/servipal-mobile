@@ -56,7 +56,7 @@ const Menu = () => {
 const RestaurantDetails = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { id, location, companyName, imageUrl, numReview, avgRating } =
+    const { id, location, companyName, imageUrl, numReview, avgRating, closingHour, openingHour } =
         useLocalSearchParams();
     const { cart, getTotalPrice } = useCart();
 
@@ -140,7 +140,14 @@ const RestaurantDetails = () => {
                 >
                     {companyName}
                 </Text>
-                <Text style={[{ color: activeColor.text, fontFamily: "Poppins-Thin" }]}>
+                <View style={{ flexDirection: 'row', gap: 5, alignItems: 'baseline' }}>
+                    <AntDesign name="clockcircleo" size={16} color={activeColor.icon} />
+                    <Text style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}>
+                        {openingHour} {' '} - {' '}
+                        {closingHour}
+                    </Text>
+                </View>
+                <Text style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}>
                     {location}
                 </Text>
 

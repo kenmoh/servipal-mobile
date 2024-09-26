@@ -26,22 +26,7 @@ const addRider = () => {
 
     const { error, isSuccess, mutate, isPending } = useMutation({
         mutationFn: (rider: CreateRider) => usersApi.vendorAddRider(rider),
-    });
-
-
-    useEffect(() => {
-        if (error) {
-            showMessage({
-                message: error.message,
-                type: "danger",
-                style: {
-                    alignItems: "center",
-                },
-            });
-            router.push("addRider");
-        }
-
-        if (isSuccess) {
+        onSuccess: () => {
             showMessage({
                 message: "Rider Added.",
                 type: "success",
@@ -50,8 +35,22 @@ const addRider = () => {
                 },
             });
             router.push("riders");
-        }
-    }, [error, isSuccess]);
+        },
+        onError: (error) => {
+            showMessage({
+                message: error.message,
+                type: "danger",
+                style: {
+                    alignItems: "center",
+                },
+            });
+            router.push("addRider");
+        },
+
+    });
+
+
+
 
     return (
         < >

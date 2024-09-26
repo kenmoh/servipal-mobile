@@ -17,7 +17,7 @@ interface InputProps extends TextInputProps {
   keyboardType?: KeyboardTypeOptions;
   inputHeight?: number
   labelColor?: string;
-  inputTextColor: string;
+  inputTextColor?: string;
   borderRadius?: number
   inputBackgroundColor?: string
   onChangeText?: (text: string) => void

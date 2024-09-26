@@ -14,44 +14,78 @@ import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@/auth/authContext';
 import userApi from '@/api/users'
 import { showMessage } from 'react-native-flash-message';
-import { UpdateUser } from '@/utils/types';
+import { UserProfile } from '@/utils/types';
 
 const updateProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth()
 
-    const { mutate, isPending, error, isSuccess } = useMutation({
-        mutationFn: (data: UpdateUser) => userApi.updateUser(data),
+    const { mutate, isPending } = useMutation({
+        mutationFn: (data: UserProfile) => userApi.createUserProfile(data),
+
+        onSuccess: () => showMessage({
+            message: 'Profile updated successfully',
+            type: 'success',
+            textStyle: {
+                textAlign: 'center'
+            }
+        }),
+        onError: (error) => showMessage({
+            message: error.message || 'Something went wrong!',
+            type: 'danger',
+            textStyle: {
+                textAlign: 'center'
+            }
+        })
+
+    })
+    const { mutate: update, isPending: updatePending } = useMutation({
+        mutationFn: (data: UserProfile) => userApi.updateUserProfile(data),
+
+        onSuccess: () => showMessage({
+            message: 'Profile updated successfully',
+            type: 'success',
+            textStyle: {
+                textAlign: 'center'
+            }
+        }),
+        onError: (error) => showMessage({
+            message: error.message || 'Something went wrong!',
+            type: 'danger',
+            textStyle: {
+                textAlign: 'center'
+            }
+        })
 
     })
 
 
 
 
-    useEffect(() => {
-        if (isSuccess) {
-            showMessage({
-                message: 'Profile updated successfully',
-                type: 'success',
-                textStyle: {
-                    textAlign: 'center'
-                }
-            })
-        }
-        if (error) {
-            showMessage({
-                message: error.message || 'Something went wrong!',
-                type: 'danger',
-                textStyle: {
-                    textAlign: 'center'
-                }
-            })
-        }
-    }, [error, isSuccess])
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         showMessage({
+    //             message: 'Profile updated successfully',
+    //             type: 'success',
+    //             textStyle: {
+    //                 textAlign: 'center'
+    //             }
+    //         })
+    //     }
+    //     if (error) {
+    //         showMessage({
+    //             message: error.message || 'Something went wrong!',
+    //             type: 'danger',
+    //             textStyle: {
+    //                 textAlign: 'center'
+    //             }
+    //         })
+    //     }
+    // }, [error, isSuccess])
     return (
         < >
-            <CustomActivityIndicator visible={isPending} />
+            <CustomActivityIndicator visible={isPending || updatePending} />
             <View
                 style={{
                     backgroundColor: activeColor.background,
@@ -67,86 +101,161 @@ const updateProfile = () => {
                         backgroundColor: activeColor.background,
                     }}
                 >
-                    <Formik
-                        initialValues={{
-                            fullName: user?.full_name ? user.full_name : "",
-                            bankAccountNumber: user?.bank_account_number ? user.bank_account_number : "",
-                            accountHolderName: user?.account_holder_name ? user.account_holder_name : "",
-                            bankName: user?.bank_name ? user.bank_name : "",
+                    {
+                        user?.bank_account_number ? (<Formik
+                            initialValues={{
+                                location: user?.location || "",
+                                bankAccountNumber: user?.bank_account_number || "",
+                                accountHolderName: user?.account_holder_name || "",
+                                bankName: user?.bank_name || "",
 
-                        }}
-                        validationSchema={userUpdateValidationSchema}
-                        onSubmit={mutate}
-                    >
-                        {({ handleChange, handleSubmit, values, errors, touched }) => (
-                            <>
-                                <View style={{ padding: SIZES.paddingMedium }}>
+                            }}
+                            validationSchema={userUpdateValidationSchema}
+                            onSubmit={update}
+                        >
+                            {({ handleChange, handleSubmit, values, errors, touched }) => (
+                                <>
+                                    <View style={{ padding: SIZES.paddingMedium }}>
 
-                                    <CustomTextInput
-                                        label="Full Name"
-                                        autoCapitalize="word"
-                                        onChangeText={handleChange("fullName")}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                        value={values.fullName}
-                                    />
-                                    {touched.fullName && errors.fullName && (
-                                        <InputErrorMessage error={errors.fullName} />
-                                    )}
-                                    <CustomTextInput
-                                        label="Account Number"
-                                        onChangeText={handleChange("bankAccountNumber")}
-                                        value={values.bankAccountNumber}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                        keyboardType='number-pad'
-                                    />
-                                    {touched.bankAccountNumber && errors.bankAccountNumber && (
-                                        <InputErrorMessage error={errors.bankAccountNumber} />
-                                    )}
-                                    <CustomTextInput
-                                        label="Account Holder Name"
-                                        onChangeText={handleChange("accountHolderName")}
-                                        value={values.accountHolderName}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                        autoCapitalize="word"
+                                        <CustomTextInput
+                                            label="Location"
+                                            autoCapitalize="words"
+                                            onChangeText={handleChange("location")}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            value={values.location}
+                                        />
+                                        {touched.location && errors.location && (
+                                            <InputErrorMessage error={errors.location} />
+                                        )}
+                                        <CustomTextInput
+                                            label="Account Number"
+                                            onChangeText={handleChange("bankAccountNumber")}
+                                            value={values.bankAccountNumber}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            keyboardType='number-pad'
+                                        />
+                                        {touched.bankAccountNumber && errors.bankAccountNumber && (
+                                            <InputErrorMessage error={errors.bankAccountNumber} />
+                                        )}
+                                        <CustomTextInput
+                                            label="Account Holder Name"
+                                            onChangeText={handleChange("accountHolderName")}
+                                            value={values.accountHolderName}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            autoCapitalize="words"
 
-                                    />
-                                    {touched.accountHolderName && errors.accountHolderName && (
-                                        <InputErrorMessage error={errors.accountHolderName} />
-                                    )}
-                                    <CustomTextInput
-                                        label="Bank name"
-                                        onChangeText={handleChange("bankName")}
-                                        value={values.bankName}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                    />
-                                    {touched.bankName && errors.bankName && (
-                                        <InputErrorMessage error={errors.bankName} />
-                                    )}
+                                        />
+                                        {touched.accountHolderName && errors.accountHolderName && (
+                                            <InputErrorMessage error={errors.accountHolderName} />
+                                        )}
+                                        <CustomTextInput
+                                            label="Bank name"
+                                            onChangeText={handleChange("bankName")}
+                                            value={values.bankName}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            autoCapitalize="words"
+                                        />
+                                        {touched.bankName && errors.bankName && (
+                                            <InputErrorMessage error={errors.bankName} />
+                                        )}
 
-                                    <View style={{ marginVertical: 25 }}>
-                                        {user?.full_name ? (<CustomBtn
-                                            btnColor={Colors.btnPrimaryColor}
-                                            label="Update"
-                                            onPress={handleSubmit}
-                                        />) : (<CustomBtn
-                                            btnColor={Colors.btnPrimaryColor}
-                                            label="Submit"
-                                            onPress={handleSubmit}
-                                        />)}
+                                        <View style={{ marginVertical: 25 }}>
+                                            <CustomBtn
+                                                btnColor={Colors.btnPrimaryColor}
+                                                label="Update"
+                                                onPress={handleSubmit}
+                                            />
+                                        </View>
                                     </View>
-                                </View>
-                            </>
-                        )}
-                    </Formik>
+                                </>
+                            )}
+                        </Formik>
+                        ) : (<Formik
+                            initialValues={{
+                                location: "",
+                                bankAccountNumber: "",
+                                accountHolderName: "",
+                                bankName: "",
 
+                            }}
+                            validationSchema={userUpdateValidationSchema}
+                            onSubmit={mutate}
+                        >
+                            {({ handleChange, handleSubmit, values, errors, touched }) => (
+                                <>
+                                    <View style={{ padding: SIZES.paddingMedium }}>
+
+                                        <CustomTextInput
+                                            label="Location"
+                                            autoCapitalize="words"
+                                            onChangeText={handleChange("location")}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            value={values.location}
+                                        />
+                                        {touched.location && errors.location && (
+                                            <InputErrorMessage error={errors.location} />
+                                        )}
+                                        <CustomTextInput
+                                            label="Account Number"
+                                            onChangeText={handleChange("bankAccountNumber")}
+                                            value={values.bankAccountNumber}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            keyboardType='number-pad'
+                                        />
+                                        {touched.bankAccountNumber && errors.bankAccountNumber && (
+                                            <InputErrorMessage error={errors.bankAccountNumber} />
+                                        )}
+                                        <CustomTextInput
+                                            label="Account Holder Name"
+                                            onChangeText={handleChange("accountHolderName")}
+                                            value={values.accountHolderName}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            autoCapitalize="words"
+
+                                        />
+                                        {touched.accountHolderName && errors.accountHolderName && (
+                                            <InputErrorMessage error={errors.accountHolderName} />
+                                        )}
+                                        <CustomTextInput
+                                            label="Bank name"
+                                            onChangeText={handleChange("bankName")}
+                                            value={values.bankName}
+                                            labelColor={activeColor.text}
+                                            inputBackgroundColor={activeColor.inputBackground}
+                                            inputTextColor={activeColor.text}
+                                            autoCapitalize="words"
+                                        />
+                                        {touched.bankName && errors.bankName && (
+                                            <InputErrorMessage error={errors.bankName} />
+                                        )}
+
+                                        <View style={{ marginVertical: 25 }}>
+                                            <CustomBtn
+                                                btnColor={Colors.btnPrimaryColor}
+                                                label="Submit"
+                                                onPress={handleSubmit}
+                                            />
+                                        </View>
+                                    </View>
+                                </>
+                            )}
+                        </Formik>
+                        )
+                    }
                 </ScrollView>
             </View>
             <StatusBar style={theme.mode === 'dark' ? "light" : 'dark'} backgroundColor={activeColor.background} />

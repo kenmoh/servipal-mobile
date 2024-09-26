@@ -212,13 +212,11 @@ export type UpdateProfileImage = {
 
 export type SetupCompany = {
   companyName: string;
-  profileImage: string;
   openingHour: string;
   closingHour: string;
   location: string;
   accountHolderName: string;
   companyRegNum: string;
-  backgroundImage: string;
   accountNumber: string;
   bankName: string;
 };
@@ -399,12 +397,11 @@ export type ReviewType = {
   comments: Comment[];
 };
 
-export type UpdateUser = {
-  fullName?: string;
+export type UserProfile = {
+  location: string;
   bankName: string;
   bankAccountNumber: string;
   accountHolderName: string;
-  companyRegNum?: string;
 };
 
 export type TransactionData = {

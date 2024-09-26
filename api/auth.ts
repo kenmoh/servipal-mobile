@@ -40,7 +40,7 @@ const loginApi = async (username: string, password: string) => {
   });
 
   if (!response.ok) {
-    throw new Error(response?.data.detail.split(":")[1]);
+    throw new Error(response?.data.detail);
   }
   return response.data;
 };

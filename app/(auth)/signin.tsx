@@ -32,17 +32,7 @@ const SignIn = () => {
 
   const { error, isSuccess, mutate, isPending, data } = useMutation({
     mutationFn: ({ username, password }: Login) => authApi.loginApi(username, password),
-  });
-
-  const { data: profileData } = useQuery({
-    queryKey: ['user', authContext.user?.id],
-    queryFn: userApi.getCompanyProfile
-  })
-
-
-
-  useEffect(() => {
-    if (error) {
+    onError: (error) => {
       showMessage({
         message: error.message,
         type: "danger",
@@ -53,7 +43,16 @@ const SignIn = () => {
       router.replace("signin");
 
     }
-  }, [error])
+  });
+
+  const { data: profileData } = useQuery({
+    queryKey: ['user', authContext.user?.id],
+    queryFn: userApi.getCompanyProfile
+  })
+
+
+
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -148,19 +147,18 @@ const SignIn = () => {
                       onPress={handleSubmit}
                     />
                   </View>
+                  <View style={{ marginTop: 25 }}>
+                    <CustomBtn
+                      btnColor={Colors.primaryBtnColor}
+                      label="Register"
+                      onPress={() => router.push('/signup')}
+
+                    />
+                  </View>
                 </View>
               </>
             )}
           </Formik>
-          <AccountLinkText
-            isLoginSreen={true}
-            question="Sign up as a "
-            senderLabel="Sender"
-            senderLink="/signup"
-            riderLink="signupDispatch"
-            riderLabel="Rider"
-          />
-
         </View>
 
 

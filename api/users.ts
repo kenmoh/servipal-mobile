@@ -7,6 +7,7 @@ import {
   SetupCompany,
   UpdateProfileImage,
   UpdateUser,
+  UserProfile,
 } from "@/utils/types";
 
 const dispatchEndpoint = "/users/register-dispatch";
@@ -78,20 +79,35 @@ const vendorAddRider = async (rider: CreateRider) => {
 
   const result = await client.post(riderEndpoint, riderData);
 
-  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  if (!result.ok) throw new Error(result?.data.detail);
   return result.data;
 };
 
-// Update user(Dispatch and Vendor)
-const updateUser = async (data: UpdateUser) => {
+// create user profile
+const createUserProfile = async (data: UserProfile) => {
   const userData = {
-    full_name: data.fullName,
+    location: data.location,
     bank_account_number: data.bankAccountNumber,
     bank_name: data.bankName,
     account_holder_name: data.accountHolderName,
   };
 
-  const result = await client.patch(`${user}/me/dispatcher`, userData);
+  const result = await client.post(`${user}/create-user-profile`, userData);
+
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  return result.data;
+};
+
+// update user profile
+const updateUserProfile = async (data: UserProfile) => {
+  const userData = {
+    location: data.location,
+    bank_account_number: data.bankAccountNumber,
+    bank_name: data.bankName,
+    account_holder_name: data.accountHolderName,
+  };
+
+  const result = await client.patch(`${user}/update-user-profile`, userData);
 
   if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
@@ -106,7 +122,7 @@ const confirmAccount = async (emailCode: string, phoneCode: string) => {
 
   const result = await client.patch(`${user}/confirm-account`, data);
 
-  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  if (!result.ok) throw new Error(result?.data.detail);
   return result.data;
 };
 
@@ -131,32 +147,43 @@ const updateProfileImage = async (img: UpdateProfileImage) => {
   return response.data;
 };
 
-// Update Profile Image
+// Create company profile
 const setupCompanyProfile = async (profile: SetupCompany) => {
-  const data = new FormData();
-  data.append("location", profile.location);
-  data.append("company_name", profile.companyName);
-  data.append("company_reg_number", profile.companyRegNum);
-  data.append("opening_hour", profile.openingHour);
-  data.append("closing_hour", profile.closingHour);
-  data.append("account_holder_name", profile.accountHolderName);
-  data.append("bank_name", profile.bankName);
-  data.append("bank_account_number", profile.accountNumber);
-  data.append("image", {
-    type: "image/jpeg",
-    uri: profile.profileImage,
-    name: profile.profileImage.split("/").slice(-1)[0],
-  });
-  data.append("company_background_image", {
-    type: "image/jpeg",
-    uri: profile.backgroundImage,
-    name: profile.backgroundImage.split("/").slice(-1)[0],
-  });
-  const response = await client.put(`${user}/setup-company-profile`, data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const data = {
+    location: profile.location,
+    company_name: profile.companyName,
+    company_reg_number: profile.companyRegNum,
+    opening_hour: profile.openingHour,
+    closing_hour: profile.closingHour,
+    account_holder_name: profile.accountHolderName,
+    bank_name: profile.bankName,
+    bank_account_number: profile.accountNumber,
+  };
+
+  console.log(data);
+
+  const response = await client.post(`${user}/setup-company-profile`, data);
+
+  if (!response.ok) {
+    throw new Error(response?.data?.detail);
+  }
+  return response.data;
+};
+
+// Update company profile
+const updateCompanyProfile = async (profile: SetupCompany) => {
+  const data = {
+    location: profile.location,
+    company_name: profile.companyName,
+    company_reg_number: profile.companyRegNum,
+    opening_hour: profile.openingHour,
+    closing_hour: profile.closingHour,
+    account_holder_name: profile.accountHolderName,
+    bank_name: profile.bankName,
+    bank_account_number: profile.accountNumber,
+  };
+
+  const response = await client.patch(`${user}/update-company-profile`, data);
 
   if (!response.ok) {
     throw new Error(response?.data?.detail);
@@ -197,7 +224,9 @@ export default {
   vendorAddRider,
   updateProfileImage,
   getUserReviews,
-  updateUser,
   setupCompanyProfile,
   getCompanyProfile,
+  createUserProfile,
+  updateUserProfile,
+  updateCompanyProfile,
 };

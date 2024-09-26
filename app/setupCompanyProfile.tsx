@@ -75,6 +75,27 @@ const SetupCompanyProfile = () => {
             },
         })
     });
+    const { mutate: update, isPending: isUpdating } = useMutation({
+        mutationFn: (profile: SetupCompany) => userApi.updateCompanyProfile(profile),
+        onSuccess: () => {
+            showMessage({
+                message: 'Profile Updated!',
+                type: "success",
+                style: {
+                    alignItems: "center",
+                },
+
+            });
+            router.push('(restaurant)/addMeal')
+        },
+        onError: (error) => showMessage({
+            message: error.message || 'Something went wrong, please try again!',
+            type: "danger",
+            style: {
+                alignItems: "center",
+            },
+        })
+    });
 
 
     return (
@@ -85,192 +106,373 @@ const SetupCompanyProfile = () => {
                 justifyContent: "center",
             }}
         >
-            <CustomActivityIndicator visible={isPending} />
+            <CustomActivityIndicator visible={isPending || isUpdating} />
             <StatusBar style="inverted" />
             <View style={styles.mainContainer}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <Formik
-                        initialValues={{
-                            openingHour: user?.opening_hour || "",
-                            closingHour: user?.closing_hour || "",
-                            companyName: user?.company_name || "",
-                            location: user?.location || "",
-                            accountHolderName: user?.account_holder_name || '',
-                            bankName: user?.bank_name || '',
-                            accountNumber: user?.bank_account_number || '',
-                            companyRegNum: user?.company_reg_number || '',
+                    {
+                        user?.bank_account_number ? (<Formik
+                            initialValues={{
+                                openingHour: user?.opening_hour || "",
+                                closingHour: user?.closing_hour || "",
+                                companyName: user?.company_name || "",
+                                location: user?.location || "",
+                                accountHolderName: user?.account_holder_name || '',
+                                bankName: user?.bank_name || '',
+                                accountNumber: user?.bank_account_number || '',
+                                companyRegNum: user?.company_reg_number || '',
 
-                        }}
-                        onSubmit={(values, { resetForm }) =>
-                            mutate(values, { onSuccess: () => resetForm() })
-                        }
-                        validationSchema={SetupCompanyValidation}
-                    >
-                        {({
-                            handleChange,
-                            handleSubmit,
-                            values,
-                            errors,
-                            touched,
-                            setFieldValue
+                            }}
 
-                        }) => (
-                            <>
+                            onSubmit={(values, { resetForm }) => update(values, { onSuccess: () => resetForm() })}
+                            validationSchema={SetupCompanyValidation}
+                        >
+                            {({
+                                handleChange,
+                                handleSubmit,
+                                values,
+                                errors,
+                                touched,
+                                setFieldValue
 
-                                <View style={styles.container}>
-                                    <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                                        <CustomTextInput
-                                            onChangeText={handleChange("companyName")}
-                                            value={values.companyName}
-                                            labelColor={activeColor.text}
-                                            label="Company Name"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                            editable={user?.company_name === '' ? true : false}
-                                        />
-                                        {touched.companyName && errors.companyName && (
-                                            <InputErrorMessage error={errors.companyName} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("companyRegNum")}
-                                            value={values.companyRegNum}
-                                            labelColor={activeColor.text}
-                                            label="Company Reg. Number"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.companyRegNum && errors.companyRegNum && (
-                                            <InputErrorMessage error={errors.companyRegNum} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("location")}
-                                            value={values.location}
-                                            labelColor={activeColor.text}
-                                            label="Location"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.location && errors.location && (
-                                            <InputErrorMessage error={errors.location} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("accountNumber")}
-                                            value={values.accountNumber}
-                                            labelColor={activeColor.text}
-                                            label="Bank Account Number"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.accountNumber && errors.accountNumber && (
-                                            <InputErrorMessage error={errors.accountNumber} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("accountHolderName")}
-                                            value={values.accountHolderName}
-                                            labelColor={activeColor.text}
-                                            label="Account Holder Name"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.accountHolderName && errors.accountHolderName && (
-                                            <InputErrorMessage error={errors.accountHolderName} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("bankName")}
-                                            value={values.bankName}
-                                            labelColor={activeColor.text}
-                                            label="Bank Name"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                        />
-                                        {touched.bankName && errors.bankName && (
-                                            <InputErrorMessage error={errors.bankName} />
-                                        )}
+                            }) => (
+                                <>
+
+                                    <View style={styles.container}>
+                                        <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                                            <CustomTextInput
+                                                onChangeText={handleChange("companyName")}
+                                                value={values.companyName}
+                                                labelColor={activeColor.text}
+                                                label="Company Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="words"
+                                            // editable={user?.company_name === '' ? true : false}
+                                            />
+                                            {touched.companyName && errors.companyName && (
+                                                <InputErrorMessage error={errors.companyName} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("companyRegNum")}
+                                                value={values.companyRegNum}
+                                                labelColor={activeColor.text}
+                                                label="Company Reg. Number"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="characters"
+                                            />
+                                            {touched.companyRegNum && errors.companyRegNum && (
+                                                <InputErrorMessage error={errors.companyRegNum} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("location")}
+                                                value={values.location}
+                                                labelColor={activeColor.text}
+                                                label="Location"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                            />
+                                            {touched.location && errors.location && (
+                                                <InputErrorMessage error={errors.location} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("accountNumber")}
+                                                value={values.accountNumber}
+                                                labelColor={activeColor.text}
+                                                label="Bank Account Number"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                keyboardType="numeric"
+                                            />
+                                            {touched.accountNumber && errors.accountNumber && (
+                                                <InputErrorMessage error={errors.accountNumber} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("accountHolderName")}
+                                                value={values.accountHolderName}
+                                                labelColor={activeColor.text}
+                                                label="Account Holder Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="words"
+                                            />
+                                            {touched.accountHolderName && errors.accountHolderName && (
+                                                <InputErrorMessage error={errors.accountHolderName} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("bankName")}
+                                                value={values.bankName}
+                                                labelColor={activeColor.text}
+                                                label="Bank Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="words"
+                                            />
+                                            {touched.bankName && errors.bankName && (
+                                                <InputErrorMessage error={errors.bankName} />
+                                            )}
 
 
-                                        <CustomTextInput
-                                            onChangeText={handleChange("openingHour")}
-                                            value={values.openingHour}
-                                            labelColor={activeColor.text}
-                                            label="Opening Hour"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                            onPress={() => setShowOpeningHour(true)}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("openingHour")}
+                                                value={values.openingHour}
+                                                labelColor={activeColor.text}
+                                                label="Opening Hour"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                onPress={() => setShowOpeningHour(true)}
 
-                                        />
-                                        {touched.openingHour && errors.openingHour && (
-                                            <InputErrorMessage error={errors.openingHour} />
-                                        )}
-                                        <CustomTextInput
-                                            onChangeText={handleChange("closingHour")}
-                                            value={values.closingHour}
-                                            labelColor={activeColor.text}
-                                            label="Closing Hour"
-                                            inputBackgroundColor={activeColor.inputBackground}
-                                            inputTextColor={activeColor.text}
-                                            onPress={() => setShowClosingHour(true)}
-                                        />
-                                        {touched.closingHour && errors.closingHour && (
-                                            <InputErrorMessage error={errors.closingHour} />
-                                        )}
+                                            />
+                                            {touched.openingHour && errors.openingHour && (
+                                                <InputErrorMessage error={errors.openingHour} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("closingHour")}
+                                                value={values.closingHour}
+                                                labelColor={activeColor.text}
+                                                label="Closing Hour"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                onPress={() => setShowClosingHour(true)}
+                                            />
+                                            {touched.closingHour && errors.closingHour && (
+                                                <InputErrorMessage error={errors.closingHour} />
+                                            )}
 
-                                        <View style={styles.btnContainer}>
-                                            {
-                                                user?.company_name ? (<CustomBtn
+                                            <View style={styles.btnContainer}>
+                                                <CustomBtn
                                                     label="Update"
                                                     btnColor="orange"
                                                     onPress={handleSubmit}
-                                                />) : (<CustomBtn
+                                                />
+
+                                            </View>
+
+                                        </View>
+                                    </View>
+                                    {showOpeningHour && (
+                                        <DateTimePicker
+                                            testID="openinHourPicker"
+                                            value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedDate) => {
+                                                setShowOpeningHour(Platform.OS === 'ios');
+                                                if (selectedDate) {
+                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
+                                                    setFieldValue('openingHour', formattedTime);
+                                                }
+
+                                            }}
+                                        />
+                                    )}
+                                    {showClosingHour && (
+                                        <DateTimePicker
+                                            testID="closingHourPicker"
+                                            value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedDate) => {
+                                                setShowClosingHour(Platform.OS === 'ios');
+                                                if (selectedDate) {
+                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
+                                                    setFieldValue('closingHour', formattedTime);
+                                                }
+
+                                            }}
+
+                                        />
+                                    )}
+
+
+
+                                </>
+                            )}
+                        </Formik>) : (<Formik
+                            initialValues={{
+                                openingHour: "",
+                                closingHour: "",
+                                companyName: "",
+                                location: "",
+                                accountHolderName: '',
+                                bankName: '',
+                                accountNumber: '',
+                                companyRegNum: '',
+
+                            }}
+
+                            onSubmit={(values, { resetForm }) => mutate(values, { onSuccess: () => resetForm() })}
+                            validationSchema={SetupCompanyValidation}
+                        >
+                            {({
+                                handleChange,
+                                handleSubmit,
+                                values,
+                                errors,
+                                touched,
+                                setFieldValue
+
+                            }) => (
+                                <>
+
+                                    <View style={styles.container}>
+                                        <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                                            <CustomTextInput
+                                                onChangeText={handleChange("companyName")}
+                                                value={values.companyName}
+                                                labelColor={activeColor.text}
+                                                label="Company Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="words"
+                                            // editable={user?.company_name === '' ? true : false}
+                                            />
+                                            {touched.companyName && errors.companyName && (
+                                                <InputErrorMessage error={errors.companyName} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("companyRegNum")}
+                                                value={values.companyRegNum}
+                                                labelColor={activeColor.text}
+                                                label="Company Reg. Number"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="characters"
+                                            />
+                                            {touched.companyRegNum && errors.companyRegNum && (
+                                                <InputErrorMessage error={errors.companyRegNum} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("location")}
+                                                value={values.location}
+                                                labelColor={activeColor.text}
+                                                label="Location"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                            />
+                                            {touched.location && errors.location && (
+                                                <InputErrorMessage error={errors.location} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("accountNumber")}
+                                                value={values.accountNumber}
+                                                labelColor={activeColor.text}
+                                                label="Bank Account Number"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                keyboardType="numeric"
+                                            />
+                                            {touched.accountNumber && errors.accountNumber && (
+                                                <InputErrorMessage error={errors.accountNumber} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("accountHolderName")}
+                                                value={values.accountHolderName}
+                                                labelColor={activeColor.text}
+                                                label="Account Holder Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="words"
+                                            />
+                                            {touched.accountHolderName && errors.accountHolderName && (
+                                                <InputErrorMessage error={errors.accountHolderName} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("bankName")}
+                                                value={values.bankName}
+                                                labelColor={activeColor.text}
+                                                label="Bank Name"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                autoCapitalize="words"
+                                            />
+                                            {touched.bankName && errors.bankName && (
+                                                <InputErrorMessage error={errors.bankName} />
+                                            )}
+
+
+                                            <CustomTextInput
+                                                onChangeText={handleChange("openingHour")}
+                                                value={values.openingHour}
+                                                labelColor={activeColor.text}
+                                                label="Opening Hour"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                onPress={() => setShowOpeningHour(true)}
+
+                                            />
+                                            {touched.openingHour && errors.openingHour && (
+                                                <InputErrorMessage error={errors.openingHour} />
+                                            )}
+                                            <CustomTextInput
+                                                onChangeText={handleChange("closingHour")}
+                                                value={values.closingHour}
+                                                labelColor={activeColor.text}
+                                                label="Closing Hour"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                onPress={() => setShowClosingHour(true)}
+                                            />
+                                            {touched.closingHour && errors.closingHour && (
+                                                <InputErrorMessage error={errors.closingHour} />
+                                            )}
+
+                                            <View style={styles.btnContainer}>
+                                                <CustomBtn
                                                     label="submit"
                                                     btnColor="orange"
                                                     onPress={handleSubmit}
-                                                />)
-                                            }
+                                                />
+
+                                            </View>
+
                                         </View>
-
                                     </View>
-                                </View>
-                                {showOpeningHour && (
-                                    <DateTimePicker
-                                        testID="openinHourPicker"
-                                        value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
-                                        mode="time"
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={(event, selectedDate) => {
-                                            setShowOpeningHour(Platform.OS === 'ios');
-                                            if (selectedDate) {
-                                                const formattedTime = selectedDate.toTimeString().split(' ')[0];
-                                                setFieldValue('openingHour', formattedTime);
-                                            }
+                                    {showOpeningHour && (
+                                        <DateTimePicker
+                                            testID="openinHourPicker"
+                                            value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedDate) => {
+                                                setShowOpeningHour(Platform.OS === 'ios');
+                                                if (selectedDate) {
+                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
+                                                    setFieldValue('openingHour', formattedTime);
+                                                }
 
-                                        }}
-                                    />
-                                )}
-                                {showClosingHour && (
-                                    <DateTimePicker
-                                        testID="closingHourPicker"
-                                        value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
-                                        mode="time"
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={(event, selectedDate) => {
-                                            setShowClosingHour(Platform.OS === 'ios');
-                                            if (selectedDate) {
-                                                const formattedTime = selectedDate.toTimeString().split(' ')[0];
-                                                setFieldValue('closingHour', formattedTime);
-                                            }
+                                            }}
+                                        />
+                                    )}
+                                    {showClosingHour && (
+                                        <DateTimePicker
+                                            testID="closingHourPicker"
+                                            value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
+                                            mode="time"
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(event, selectedDate) => {
+                                                setShowClosingHour(Platform.OS === 'ios');
+                                                if (selectedDate) {
+                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
+                                                    setFieldValue('closingHour', formattedTime);
+                                                }
 
-                                        }}
+                                            }}
 
-                                    />
-                                )}
-
+                                        />
+                                    )}
 
 
-                            </>
-                        )}
-                    </Formik>
+
+                                </>
+                            )}
+                        </Formik>)
+                    }
                 </ScrollView>
             </View>
         </View>
