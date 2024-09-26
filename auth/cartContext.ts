@@ -8,7 +8,8 @@ export interface CartItem {
   quantity: number;
   image_url?: string;
   side?: string;
-  vendor_id: string;
+  restaurant_id: string;
+  laundry_id: string;
   ingredients?: string;
 }
 
@@ -20,6 +21,7 @@ export interface AdditionalInfo {
 }
 export interface CartState {
   foods: CartItem[];
+  laundries: CartItem[];
   origin: string;
   destination: string;
   distance: number;

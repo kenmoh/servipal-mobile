@@ -46,6 +46,7 @@ export default function HomeScreen() {
     packageName,
     // foods,
     // laundries,
+    items,
     deliveryFee,
     amountDueVendor,
     amountDueDispatch,
@@ -71,6 +72,7 @@ export default function HomeScreen() {
     riderName,
     description
   } = useLocalSearchParams();
+
 
   // Handle order Pickup
   const {
@@ -588,6 +590,8 @@ export default function HomeScreen() {
                   id: orderId,
                   totalCost: totalCost,
                   // items: JSON.stringify(foods) || JSON.stringify(laundries),
+                  items,
+                  deliveryFee,
                   itemCost: itemCost || "",
                 },
               })

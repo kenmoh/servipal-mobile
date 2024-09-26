@@ -27,7 +27,7 @@ type OrderParams = {
     paymentUrl: string;
     totalCost: string;
     id: string;
-    orderType: 'delivery' | 'food';
+    orderType: 'delivery' | 'food' | 'laundry';
     itemCost: string;
     items: [];
     deliveryFee: string;
@@ -137,6 +137,9 @@ const payment = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const params = useLocalSearchParams<OrderParams>()
+
+
+
 
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
@@ -289,7 +292,7 @@ const payment = () => {
                                 showsVerticalScrollIndicator={false}
                                 style={{ flex: 1, marginVertical: SIZES.paddingMedium, width: '90%', alignSelf: 'center' }}
                             >
-                                {JSON.parse(params.items)?.map((item) => (
+                                {JSON.parse(params?.items)?.map((item) => (
                                     <OrderItem
                                         label={item.name}
                                         amount={parseInt(item.price) * parseInt(item.quantity)}
@@ -427,7 +430,7 @@ const styles = StyleSheet.create({
     },
 
     text: {
-        fontFamily: 'Poppins-Light',
+        fontFamily: 'Poppins-Medium',
         fontSize: 12
     },
     btnContainer: {

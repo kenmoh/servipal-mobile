@@ -60,7 +60,7 @@ const Cart = () => {
 
     const { mutate, data, error, isSuccess, isPending } = useMutation({
         mutationFn: (orderData: OrderData) =>
-            orderApi.orderFood(orderData.foods[0].vendor_id, orderData),
+            orderApi.orderFood(orderData.foods[0].restaurant_id, orderData),
         onSuccess: () => { clearCart(); clearDeliveryInfo() }
     });
 

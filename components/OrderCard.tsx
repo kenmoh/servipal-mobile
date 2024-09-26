@@ -43,6 +43,7 @@ const OrderCard = ({
           senderPhoneNumber: order?.order_owner_phone_number,
           imageUrl: order?.image_url || order?.foods[0].image_url || order?.laundries[0].image_url,
           itemCost: order?.item_cost,
+          items: JSON.stringify(order?.foods) || JSON.stringify(order?.laundries),
           amountDueVendor: order?.amount_due_vendor,
           amountDueDispatch: order?.amount_due_dispatch,
           totalCost: order?.total_cost,

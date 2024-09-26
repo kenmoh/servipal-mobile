@@ -61,7 +61,7 @@ const Cart = () => {
     const { cart, getTotalPrice, clearCart, clearDeliveryInfo } = useCart();
     const { mutate, data, error, isSuccess, isPending } = useMutation({
         mutationFn: (orderData: LaundryOrderData) =>
-            orderApi.orderLaundry(orderData.foods[0].vendor_id, orderData),
+            orderApi.orderLaundry(orderData.laundries[0].laundry_id, orderData),
     });
 
 

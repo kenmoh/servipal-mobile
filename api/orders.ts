@@ -132,7 +132,7 @@ const laundryOrderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/laundry-order-received`);
 
 // Order food
-const orderFood = async (vendorId: string, item: OrderData) => {
+const orderFood = async (redtaurantId: string, item: OrderData) => {
   const data = {
     foods: item.foods,
     origin: item.origin,
@@ -142,7 +142,7 @@ const orderFood = async (vendorId: string, item: OrderData) => {
   };
 
   const response = await client.post(
-    `${endpoint}/${vendorId}/order-food`,
+    `${endpoint}/${redtaurantId}/order-food`,
     data
   );
 
@@ -151,7 +151,7 @@ const orderFood = async (vendorId: string, item: OrderData) => {
   }
   return response.data;
 };
-const orderLaundry = async (vendorId: string, item: LaundryOrderData) => {
+const orderLaundry = async (laundryId: string, item: LaundryOrderData) => {
   const data = {
     laundries: item.laundries,
     origin: item.origin,
@@ -161,7 +161,7 @@ const orderLaundry = async (vendorId: string, item: LaundryOrderData) => {
   };
 
   const response = await client.post(
-    `${endpoint}/${vendorId}/order-laundry`,
+    `${endpoint}/${laundryId}/order-laundry`,
     data
   );
 

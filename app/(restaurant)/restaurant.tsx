@@ -70,7 +70,7 @@ const RestaurantDetails = () => {
         queryFn: () => getRestaurantMeals(id),
     });
 
-
+    console.log(meals?.data)
     if (isLoading || isFetching) {
         return (
             <View
