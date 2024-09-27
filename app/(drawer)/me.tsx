@@ -63,26 +63,6 @@ const updateProfile = () => {
 
 
 
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         showMessage({
-    //             message: 'Profile updated successfully',
-    //             type: 'success',
-    //             textStyle: {
-    //                 textAlign: 'center'
-    //             }
-    //         })
-    //     }
-    //     if (error) {
-    //         showMessage({
-    //             message: error.message || 'Something went wrong!',
-    //             type: 'danger',
-    //             textStyle: {
-    //                 textAlign: 'center'
-    //             }
-    //         })
-    //     }
-    // }, [error, isSuccess])
     return (
         < >
             <CustomActivityIndicator visible={isPending || updatePending} />

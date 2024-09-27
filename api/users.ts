@@ -1,6 +1,7 @@
 import client from "@/api/client";
 import { ProfileReturnType, ProfileType } from "@/app/setupCompanyProfile";
 import {
+  companyImage,
   CreateDispatch,
   CreateRider,
   CreateUser,
@@ -213,6 +214,36 @@ const fundWallet = async ({ amount }: { amount: number }) => {
   return result.data;
 };
 
+// Update Profile Image
+const companyProfileImage = async (img: companyImage) => {
+  const data = new FormData();
+
+  data.append("image", {
+    type: "image/jpeg",
+    uri: img.logo,
+    name: img.backDrop.split("/").slice(-1)[0],
+  });
+  data.append("image", {
+    type: "image/jpeg",
+    uri: img.backDrop,
+    name: img.backDrop.split("/").slice(-1)[0],
+  });
+
+  const response = await client.post(
+    `${user}/update-company-background-image`,
+    data,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error(response?.data.detail.split(":")[1]);
+  }
+  return response.data;
+};
+
 export default {
   getDispatchRiders,
   createUser,
@@ -229,4 +260,5 @@ export default {
   createUserProfile,
   updateUserProfile,
   updateCompanyProfile,
+  companyProfileImage,
 };

@@ -196,6 +196,18 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
+              <Stack.Screen name="setupBackdrop" options={{
+                title: "Backdrop and Logo",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
             </Stack>
           </CartProvider>
         </AuthProvider>

@@ -15,7 +15,7 @@ const TransactionCard = ({
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    console.log(transactions);
+
 
     return (
         <>
@@ -43,7 +43,7 @@ const TransactionCard = ({
                         )}
                         <View>
                             <Text style={[styles.text, { color: activeColor.text }]}>
-                                kttt{transactions.name}
+                                {transactions.name}
                             </Text>
                             <Text
                                 style={{

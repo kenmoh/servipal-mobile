@@ -2,6 +2,7 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
+import { Link } from 'expo-router';
 
 const Empty = () => {
     const { theme } = useContext(ThemeContext);
@@ -26,6 +27,7 @@ const Empty = () => {
             >
                 No Order(s) yet
             </Text>
+            <Link href="/setupBackdrop" style={{ color: activeColor.text }}>setupBackdrop</Link>
         </View>
     )
 }

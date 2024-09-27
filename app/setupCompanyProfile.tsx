@@ -65,7 +65,7 @@ const SetupCompanyProfile = () => {
                 },
 
             });
-            router.push('(restaurant)/addMeal')
+            router.push('setupBackdrop')
         },
         onError: (error) => showMessage({
             message: error.message || 'Something went wrong, please try again!',
@@ -86,7 +86,7 @@ const SetupCompanyProfile = () => {
                 },
 
             });
-            router.push('(restaurant)/addMeal')
+            router.push('topTab')
         },
         onError: (error) => showMessage({
             message: error.message || 'Something went wrong, please try again!',

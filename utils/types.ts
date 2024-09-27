@@ -209,6 +209,10 @@ export type CreateRider = {
 export type UpdateProfileImage = {
   profileImageUrl: string;
 };
+export type companyImage = {
+  logo: string;
+  backDrop: string;
+};
 
 export type SetupCompany = {
   companyName: string;
@@ -413,3 +417,20 @@ export type TransactionData = {
   status: PaymentStatus;
   created_at: string;
 };
+
+export interface WalletTransaction {
+  amount: string;
+  created_at: string;
+  name: string;
+  status: string;
+  transaction_type: "credit" | "debit";
+  user_id: string;
+  wallet_id: string;
+}
+
+export interface Wallet {
+  balance: string;
+  id: string;
+  user_id: string;
+  wallet_transactions: WalletTransaction[];
+}

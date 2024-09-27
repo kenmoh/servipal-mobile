@@ -33,7 +33,11 @@ const wallet = () => {
   const { data, error, isFetching, isLoading, refetch } = useQuery({
     queryKey: ["userWallet", user?.id],
     queryFn: walletApi.getUserWallet,
+    enabled: !!user?.id,
+
   });
+
+
 
   const {
     mutate,
@@ -72,32 +76,13 @@ const wallet = () => {
     return () => subscription.remove();
   }, []);
 
-  // useEffect(() => {
-  //   if (fundError) {
-  //     showMessage({
-  //       message: fundError.message,
-  //       type: "danger",
-  //       style: {
-  //         alignItems: "center",
-  //       },
-  //     });
-  //   }
-  //   if (fundSuccess) {
-  //     showMessage({
-  //       message: "Withrawal Successful!",
-  //       type: "success",
-  //       style: {
-  //         alignItems: "center",
-  //       },
-  //     });
-  //   }
-  // }, [fundError, fundSuccess]);
+
 
   const handleRefresch = () => refetch();
 
   useRefreshOnFocus(refetch);
 
-  if (isPending) {
+  if (isPending || isLoading) {
     return (
       <View
         style={{
@@ -142,7 +127,7 @@ const wallet = () => {
     <>
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
 
-      <WalletCard onPress={mutate} wallet={data?.data} user={user!} />
+      <WalletCard onPress={mutate} wallet={data} user={user!} />
 
       <View
         style={[styles.container, { backgroundColor: activeColor.background }]}
@@ -181,7 +166,7 @@ const wallet = () => {
           </Text>}
         </View>
         <FlatList
-          data={data?.data?.wallet_transactions}
+          data={data?.wallet_transactions}
           keyExtractor={(item) => item?.id?.toString()}
           renderItem={({ item, index }: { item: TransactionData, index: number }) => {
             const isLastTranx = index === data?.data?.wallet_transactions.length - 1;

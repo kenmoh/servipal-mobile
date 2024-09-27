@@ -99,3 +99,8 @@ export const buyItemValidationSchema = Yup.object().shape({
   quantity: Yup.number().required().min(1).label("Quantity"),
   deliveryInfo: Yup.string().required().label("Delivery Info"),
 });
+
+export const backdropValidationSchema = Yup.object().shape({
+  backDrop: Yup.string(),
+  logo: Yup.string(),
+});

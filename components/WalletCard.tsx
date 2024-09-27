@@ -37,7 +37,7 @@ const WalletCard = ({ wallet, user, onPress }: { wallet: Transactions, user: Use
             </Text>
             <View style={{ flexDirection: 'row', gap: 20, marginTop: 10 }}>
                 {
-                    user.user_type === 'Regular User' && <FloatingActionButton
+                    user?.user_type === 'Regular User' && <FloatingActionButton
                         icon={
                             <Feather name="plus" size={24} color={activeColor.text} />
                         }

@@ -1,14 +1,18 @@
 import client from "@/api/client";
+import { Wallet } from "@/utils/types";
 
 const wallet = "/wallets";
 const withdraw = "/withdrawals/";
 
-const getUserWallet = async () => {
+const getUserWallet = async (): Promise<Wallet> => {
   const result = await client.get(`${wallet}/user-wallet`);
-  if (result.ok) {
-    throw new Error(result?.data?.detail.split(":")[0]);
+
+  if (!result.ok) {
+    throw new Error(
+      result?.data?.detail?.split(":")[0] || "Failed to fetch wallet data"
+    );
   }
-  return result.data;
+  return result.data as Wallet;
 };
 
 const withdrawFunds = async () => {
