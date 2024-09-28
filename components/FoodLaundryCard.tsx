@@ -13,9 +13,8 @@ import { Image } from "expo-image";
 
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
-import userApi from '@/api/users'
-import restaurant from '@/assets/images/restaurant.jpg'
-
+import userApi from "@/api/users";
+import restaurant from "@/assets/images/restaurant.jpg";
 
 export type CardProps = {
     id: string;
@@ -29,38 +28,41 @@ export type CardProps = {
 };
 const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.35;
 
-const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isLaundry: boolean, isLastItem: boolean }) => {
-
+const FoodLaundryCard = ({
+    item,
+    isLaundry,
+    isLastItem,
+}: {
+    item: CardProps;
+    isLaundry: boolean;
+    isLastItem: boolean;
+}) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
     const { data: reviews } = useQuery({
-        queryKey: ['reviews', item.id],
-        queryFn: () => userApi.getUserReviews(item.id)
-    })
+        queryKey: ["reviews", item.id],
+        queryFn: () => userApi.getUserReviews(item.id),
+    });
 
     return (
         <TouchableOpacity
             activeOpacity={0.9}
             onPress={() =>
                 router.push({
-                    pathname: isLaundry ? "(laundry)/laundry" : "(restaurant)/restaurant",
+                    pathname: isLaundry ? "(laundry)/laundry" : `(restaurant)/${item.id}`,
                     params: {
                         id: item.id,
-                        companyName: item.company_name,
-                        avgRating: reviews?.data?.average_rating,
-                        location: item.location,
-                        imageUrl: item.sample_company_image,
-                        numReview: reviews?.data?.total_reviews,
-                        closingHour: item?.closing_hour,
-                        openingHour: item?.opening_hour
                     },
                 })
             }
-            style={{ marginVertical: 5, marginBottom: isLastItem ? 80 : 0, }}
+            style={{ marginVertical: 5, marginBottom: isLastItem ? 80 : 0 }}
         >
             <View style={[styles.container]}>
-                <Image source={item.sample_company_image || restaurant} style={styles.image} />
+                <Image
+                    source={item.sample_company_image || restaurant}
+                    style={styles.image}
+                />
             </View>
             <View style={[styles.wrapper]}>
                 <View>
@@ -72,15 +74,16 @@ const FoodLaundryCard = ({ item, isLaundry, isLastItem }: { item: CardProps, isL
                         {item.location}
                     </Text>
                 </View>
-                {
-                    reviews?.data?.reviews?.length > 0 && (
-                        <Text style={[styles.locationText, { color: activeColor.text }]}>
-                            <Text style={styles.locationText}>{reviews?.data?.average_rating}</Text>{" "}
-                            <AntDesign name="staro" style={{ color: "gold" }} size={10} />{" "}
-                            ({reviews?.data?.total_reviews} {reviews?.data?.total_reviews === 1 ? 'review' : 'reviews'})
-                        </Text>
-                    )
-                }
+                {reviews?.data?.reviews?.length > 0 && (
+                    <Text style={[styles.locationText, { color: activeColor.text }]}>
+                        <Text style={styles.locationText}>
+                            {reviews?.data?.average_rating}
+                        </Text>{" "}
+                        <AntDesign name="staro" style={{ color: "gold" }} size={10} /> (
+                        {reviews?.data?.total_reviews}{" "}
+                        {reviews?.data?.total_reviews === 1 ? "review" : "reviews"})
+                    </Text>
+                )}
             </View>
         </TouchableOpacity>
     );
@@ -110,8 +113,7 @@ const styles = StyleSheet.create({
         fontFamily: "Poppins-Light",
     },
     image: {
-
-        aspectRatio: 4 / 2.25
+        aspectRatio: 4 / 2.25,
     },
     wrapper: {
         gap: 3,

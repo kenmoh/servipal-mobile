@@ -7,29 +7,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "@/auth/authContext";
 
 
+
 const services = [
-    {
-        href: "(order)/createOrder",
-        imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/package.png",
-        label: "Send Item(s)",
-    },
-    {
-        href: "(restaurant)/addMeal",
-        imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png",
-        label: "Add Meal",
-    },
-    {
-        href: "(laundry)/addLaundry",
-        imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/laundry.png",
-        label: "Add Laundry",
-    },
-    {
-        href: "(p2p)/addItem",
-        imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/trade.png",
-        label: "Sell",
-    },
-];
-const servicesUser = [
     {
         href: "(order)/createOrder",
         imageUrl: "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/package.png",
@@ -61,23 +40,17 @@ const welcome = () => {
                 flexWrap: 'wrap'
             }}>
                 {
-                    user?.user_type === 'Restaurant Service Provider' || user?.user_type === 'Laundry Service Provider' ? (
 
-                        services.map(service =>
-                            <ServiceCard
-                                key={service.href}
-                                href={service.href}
-                                imageUrl={service.imageUrl}
-                                label={service.label}
-                            />
-                        )
-                    ) : (servicesUser.map(service =>
+
+                    services.map(service =>
                         <ServiceCard
-                            key={service.imageUrl}
+                            key={service.href}
                             href={service.href}
                             imageUrl={service.imageUrl}
                             label={service.label}
-                        />))
+                        />
+                    )
+
                 }
 
             </View>

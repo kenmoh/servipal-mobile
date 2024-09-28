@@ -189,6 +189,22 @@ const CustomDrawerContent = (props: any) => {
                         <Feather name="edit" color={activeColor.icon} size={18} />
                     </TouchableOpacity>}
                 </View>
+                {user?.user_type === 'Restaurant Service Provider' || user?.user_type === 'Laundry Service Provider' ? (
+
+                    <DrawerItem
+                        label={"Store"}
+                        onPress={() => router.push({
+                            pathname: `(restaurant)/${user?.id}`,
+                            params: {
+                                id: user.id,
+                            },
+                        })}
+                        labelStyle={[styles.text, { color: activeColor.text }]}
+                        icon={() => (
+                            <Feather name="shopping-bag" color={activeColor.text} size={20} />
+                        )}
+                    />
+                ) : ''}
                 {user?.user_type === 'Dispatch Provider' || user?.user_type === 'Restaurant Service Provider' || user?.user_type === 'Laundry Service Provider' ? (
 
                     <DrawerItem
