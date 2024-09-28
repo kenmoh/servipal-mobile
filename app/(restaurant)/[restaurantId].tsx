@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 import { Image } from "expo-image";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { Link, router, useLocalSearchParams, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
@@ -21,8 +21,19 @@ import ViewCartBtn from "@/components/ViewCartBtn";
 import { useCart } from "@/components/CartProvider";
 import { AntDesign } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
-import restaurant from '@/assets/images/restaurant.jpg'
+import restaurant from "@/assets/images/restaurant.jpg";
 
+type VendorUserProfile = {
+    id: string;
+    company_name: string;
+    email: string;
+    phone_number: string;
+    profile_image: string;
+    location: string;
+    company_background_image: string;
+    opening_hour: string;
+    closing_hour: string;
+};
 
 const Menu = () => {
     const { theme } = useContext(ThemeContext);
@@ -50,14 +61,13 @@ const Menu = () => {
             </Text>
             <HDivider />
         </View>
-    )
-}
+    );
+};
 
 const RestaurantDetails = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { id, location, companyName, imageUrl, numReview, avgRating, closingHour, openingHour } =
-        useLocalSearchParams();
+    const { id, imageUrl, numReview, avgRating } = useLocalSearchParams();
     const { cart, getTotalPrice } = useCart();
 
     const {
@@ -70,9 +80,11 @@ const RestaurantDetails = () => {
         queryFn: () => getRestaurantMeals(id),
     });
 
-    console.log(meals)
+    const { data }: UseQueryResult<VendorUserProfile, Error> = useQuery({
+        queryKey: ["restaurantUser", id],
+        queryFn: () => useApi.getCurrentVendorUser(id as string),
+    });
 
-    console.log(meals?.data)
     if (isLoading || isFetching) {
         return (
             <View
@@ -120,11 +132,19 @@ const RestaurantDetails = () => {
                 backgroundColor={activeColor.background}
             />
             <Image
-                source={imageUrl || restaurant}
+                source={data?.company_background_image || restaurant}
                 contentFit="cover"
                 transition={1000}
                 style={styles.image}
             />
+            <View style={[styles.logo, { borderColor: activeColor.profileCard }]}>
+                <Image
+                    source={data?.company_background_image || restaurant}
+                    contentFit="cover"
+                    transition={1000}
+                    style={{ height: '100%', width: '100%' }}
+                />
+            </View>
             <View
                 style={{
                     padding: 10,
@@ -140,17 +160,20 @@ const RestaurantDetails = () => {
                         color: activeColor.text,
                     }}
                 >
-                    {companyName}
+                    {data?.company_name}
                 </Text>
-                <View style={{ flexDirection: 'row', gap: 5, alignItems: 'baseline' }}>
+                <View style={{ flexDirection: "row", gap: 5, alignItems: "baseline" }}>
                     <AntDesign name="clockcircleo" size={16} color={activeColor.icon} />
-                    <Text style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}>
-                        {openingHour} {' '} - {' '}
-                        {closingHour}
+                    <Text
+                        style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}
+                    >
+                        {data?.opening_hour} - {data?.closing_hour}
                     </Text>
                 </View>
-                <Text style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}>
-                    {location}
+                <Text
+                    style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}
+                >
+                    {data?.location}
                 </Text>
 
                 {numReview > 0 && (
@@ -186,13 +209,13 @@ const RestaurantDetails = () => {
                                 ({numReview} {numReview > 1 ? "reviews" : "review"})
                             </Text>
                         </View>
-                        <Link href={'sendItem'} asChild>
+                        <Link href={"sendItem"} asChild>
                             <Text
                                 style={{
                                     color: activeColor.icon,
                                     fontSize: 12,
                                     fontFamily: "Poppins-Thin",
-                                    textDecorationLine: 'underline'
+                                    textDecorationLine: "underline",
                                 }}
                             >
                                 Reviews
@@ -211,7 +234,6 @@ const RestaurantDetails = () => {
                     data={meals?.data}
                     keyExtractor={(item) => item?.id?.toString()}
                     renderItem={({ item }) => <FoodCard meal={item} />}
-
                 />
                 {cart.foods?.length >= 1 && (
                     <View style={{ paddingHorizontal: 10 }}>
@@ -240,5 +262,17 @@ const styles = StyleSheet.create({
         width: Dimensions.get("screen").width,
         alignSelf: "stretch",
         resizeMode: "cover",
+    },
+    logo: {
+        height: 70,
+        width: 70,
+        zIndex: 9999,
+        position: "absolute",
+        right: 10,
+        top: Dimensions.get("screen").height * 0.2 - 35,
+        borderRadius: 10,
+
+        overflow: 'hidden',
+        borderWidth: 3
     },
 });

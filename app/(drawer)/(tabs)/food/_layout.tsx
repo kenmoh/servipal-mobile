@@ -17,65 +17,34 @@ const FoodOrderLayout = () => {
   return (
 
     <>
-      {
-        user?.user_type === 'vendor' ? (
-          <FoodTabBar
-            screenOptions={{
-              tabBarLabelStyle: {
-                fontSize: 12,
-                textAlign: 'center',
-                textTransform: 'capitalize',
-                fontFamily: 'Poppins-Bold',
 
-              },
-              tabBarActiveTintColor: activeColor.text,
-              tabBarInactiveTintColor: activeColor.icon,
-              tabBarAndroidRipple: { borderless: false },
-              tabBarPressColor: "gray",
-              tabBarStyle: {
-                borderBottomColor: activeColor.borderColor,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                elevation: 0,
-                shadowOpacity: 0,
-                backgroundColor: activeColor.background,
-              },
-            }}
-          >
-            <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
-            <FoodTabBar.Screen name="delivery" options={{ title: "New Food Orders" }} />
+      <FoodTabBar
+        screenOptions={{
+          tabBarLabelStyle: {
+            fontSize: 12,
+            textAlign: 'center',
+            textTransform: 'capitalize',
+            fontFamily: 'Poppins-Bold',
 
-          </FoodTabBar>
-        ) : (
-          <FoodTabBar
-            screenOptions={{
-              tabBarLabelStyle: {
-                color: activeColor.tabIconDefault,
-                fontSize: 12,
-                textAlign: 'center',
-                textTransform: 'capitalize',
-                fontFamily: 'Poppins-Bold',
+          },
+          tabBarActiveTintColor: activeColor.text,
+          tabBarInactiveTintColor: activeColor.icon,
+          tabBarAndroidRipple: { borderless: false },
+          tabBarPressColor: "gray",
+          tabBarStyle: {
+            borderBottomColor: activeColor.borderColor,
+            borderBottomWidth: StyleSheet.hairlineWidth,
+            elevation: 0,
+            shadowOpacity: 0,
+            backgroundColor: activeColor.background,
+          },
+        }}
+      >
+        <FoodTabBar.Screen name="index" options={{ title: "Restaurants" }} />
+        <FoodTabBar.Screen name="delivery" options={{ title: "New" }} />
 
-                marginBottom: -15,
-                marginLeft: -10
+      </FoodTabBar>
 
-              },
-              tabBarAndroidRipple: { borderless: false },
-              tabBarPressColor: "gray",
-              tabBarStyle: {
-                borderBottomColor: activeColor.borderColor,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                elevation: 0,
-                shadowOpacity: 0,
-                backgroundColor: activeColor.background,
-              },
-            }}
-          >
-            <FoodTabBar.Screen name="index" options={{ title: "Eatries" }} />
-            {/* <FoodTabBar.Screen name="delivery" options={{ title: "New Food Orders" }} /> */}
-
-          </FoodTabBar>
-        )
-      }
     </>
 
   );

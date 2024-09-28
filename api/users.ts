@@ -35,6 +35,13 @@ const getCompanyProfile = async (): Promise<ProfileReturnType> => {
   return result.data;
 };
 
+// Get current vendor
+const getCurrentVendorUser = async (userId: string) => {
+  const result = await client.get(`${user}/${userId}/get-current-vendor-user`);
+  if (!result.data) throw new Error(result?.data?.detail.split(":")[1]);
+  return result.data;
+};
+
 // Get user reviews
 const getUserReviews = async (id: string) =>
   await client.get(`${user}/${id}/user-reviews`);
@@ -261,4 +268,5 @@ export default {
   updateUserProfile,
   updateCompanyProfile,
   companyProfileImage,
+  getCurrentVendorUser,
 };
