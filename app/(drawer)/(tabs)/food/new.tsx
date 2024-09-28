@@ -31,7 +31,7 @@ const Delivery = () => {
 
     const { data, refetch, error, isFetching } = useQuery({
         queryKey: ["newFoodOrders"],
-        queryFn: ordersApi.getVendorNewFoodOrder,
+        queryFn: ordersApi.getUserNewFoodOrder,
     });
 
     function onAppStateChange(status: AppStateStatus) {
@@ -100,15 +100,9 @@ const Delivery = () => {
             <FlatList
                 data={data?.data}
                 keyExtractor={(item) => item?.id}
-                renderItem={({ item }: { item: OrderResponseType }) =>
-                    item.order_type === "food" &&
-                    (item.order_owner_phone_number === user?.phone_number ||
-                        item.vendor_phone_number === user?.phone_number) &&
-                    item.item_status === "cooking" &&
-                    item.payment_status === "paid" && (
-                        <OrderCard order={item} isHomeScreen={true} />
-                    )
-                }
+                renderItem={({ item }: { item: OrderResponseType }) => (
+                    <OrderCard order={item} isHomeScreen={true} />
+                )}
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}
                 vertical

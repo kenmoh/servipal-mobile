@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
 import { showMessage } from "react-native-flash-message";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import CustomBtn from "@/components/CustomBtn";
 import { Colors } from "@/constants/Colors";
@@ -12,7 +12,7 @@ import CustomTextInput from "@/components/CustomTextInput";
 import { SetupCompanyValidation } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { ThemeContext } from "@/context/themeContext";
-import userApi from '@/api/users'
+import userApi from "@/api/users";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import ImagePickerForm from "@/components/ImageFormPicker";
 import { router } from "expo-router";
@@ -20,83 +20,84 @@ import { SetupCompany } from "@/utils/types";
 import { useAuth } from "@/auth/authContext";
 
 type ErrorType = {
-    detail: string
-}
+    detail: string;
+};
 
 type ProfileType = {
-    user_id: string,
-    location: string,
-    company_name: string,
-    company_background_image: string,
-    profile_image: string,
-    opening_hour: string,
-    closing_hour: string,
-    bank_account_number: string,
-    account_holder_name: string,
-    bank_name: string,
-    company_reg_number: string
+    user_id: string;
+    location: string;
+    company_name: string;
+    company_background_image: string;
+    profile_image: string;
+    opening_hour: string;
+    closing_hour: string;
+    bank_account_number: string;
+    account_holder_name: string;
+    bank_name: string;
+    company_reg_number: string;
 };
 
 export type ProfileReturnType = {
-    data: ProfileType | ErrorType
-}
-
-
+    data: ProfileType | ErrorType;
+};
 
 const SetupCompanyProfile = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { user } = useAuth()
-
+    const { user } = useAuth();
 
     const [showOpeningHour, setShowOpeningHour] = useState(false);
     const [showClosingHour, setShowClosingHour] = useState(false);
-
-
 
     const { mutate, isPending } = useMutation({
         mutationFn: (profile: SetupCompany) => userApi.setupCompanyProfile(profile),
         onSuccess: () => {
             showMessage({
-                message: 'Profile Updated!',
+                message: "Profile Updated!",
                 type: "success",
                 style: {
                     alignItems: "center",
                 },
-
             });
-            router.push('setupBackdrop')
+            router.push(
+                user?.user_type === "Restaurant Service Provider"
+                    ? `(restaurant)/${user?.id}`
+                    : user?.user_type === "Laundry Service Provider"
+                        ? `(laundry)/${user?.id}`
+                        : "topTap"
+            );
         },
-        onError: (error) => showMessage({
-            message: error.message || 'Something went wrong, please try again!',
-            type: "danger",
-            style: {
-                alignItems: "center",
-            },
-        })
+        onError: (error) =>
+            showMessage({
+                message: error.message || "Something went wrong, please try again!",
+                type: "danger",
+                style: {
+                    alignItems: "center",
+                },
+            }),
     });
     const { mutate: update, isPending: isUpdating } = useMutation({
-        mutationFn: (profile: SetupCompany) => userApi.updateCompanyProfile(profile),
+        mutationFn: (profile: SetupCompany) =>
+            userApi.updateCompanyProfile(profile),
         onSuccess: () => {
             showMessage({
-                message: 'Profile Updated!',
+                message: "Profile Updated!",
                 type: "success",
                 style: {
                     alignItems: "center",
                 },
-
             });
-            router.push('topTab')
+            router.push("topTab");
         },
-        onError: (error) => showMessage({
-            message: error.message || 'Something went wrong, please try again!',
-            type: "danger",
-            style: {
-                alignItems: "center",
-            },
-        })
+        onError: (error) =>
+            showMessage({
+                message: error.message || "Something went wrong, please try again!",
+                type: "danger",
+                style: {
+                    alignItems: "center",
+                },
+            }),
     });
-
 
     return (
         <View
@@ -110,21 +111,21 @@ const SetupCompanyProfile = () => {
             <StatusBar style="inverted" />
             <View style={styles.mainContainer}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {
-                        user?.bank_account_number ? (<Formik
+                    {user?.bank_account_number ? (
+                        <Formik
                             initialValues={{
                                 openingHour: user?.opening_hour || "",
                                 closingHour: user?.closing_hour || "",
                                 companyName: user?.company_name || "",
                                 location: user?.location || "",
-                                accountHolderName: user?.account_holder_name || '',
-                                bankName: user?.bank_name || '',
-                                accountNumber: user?.bank_account_number || '',
-                                companyRegNum: user?.company_reg_number || '',
-
+                                accountHolderName: user?.account_holder_name || "",
+                                bankName: user?.bank_name || "",
+                                accountNumber: user?.bank_account_number || "",
+                                companyRegNum: user?.company_reg_number || "",
                             }}
-
-                            onSubmit={(values, { resetForm }) => update(values, { onSuccess: () => resetForm() })}
+                            onSubmit={(values, { resetForm }) =>
+                                update(values, { onSuccess: () => resetForm() })
+                            }
                             validationSchema={SetupCompanyValidation}
                         >
                             {({
@@ -133,11 +134,9 @@ const SetupCompanyProfile = () => {
                                 values,
                                 errors,
                                 touched,
-                                setFieldValue
-
+                                setFieldValue,
                             }) => (
                                 <>
-
                                     <View style={styles.container}>
                                         <View style={{ flex: 1, paddingHorizontal: 5 }}>
                                             <CustomTextInput
@@ -197,9 +196,10 @@ const SetupCompanyProfile = () => {
                                                 inputTextColor={activeColor.text}
                                                 autoCapitalize="words"
                                             />
-                                            {touched.accountHolderName && errors.accountHolderName && (
-                                                <InputErrorMessage error={errors.accountHolderName} />
-                                            )}
+                                            {touched.accountHolderName &&
+                                                errors.accountHolderName && (
+                                                    <InputErrorMessage error={errors.accountHolderName} />
+                                                )}
                                             <CustomTextInput
                                                 onChangeText={handleChange("bankName")}
                                                 value={values.bankName}
@@ -213,7 +213,6 @@ const SetupCompanyProfile = () => {
                                                 <InputErrorMessage error={errors.bankName} />
                                             )}
 
-
                                             <CustomTextInput
                                                 onChangeText={handleChange("openingHour")}
                                                 value={values.openingHour}
@@ -222,7 +221,6 @@ const SetupCompanyProfile = () => {
                                                 inputBackgroundColor={activeColor.inputBackground}
                                                 inputTextColor={activeColor.text}
                                                 onPress={() => setShowOpeningHour(true)}
-
                                             />
                                             {touched.openingHour && errors.openingHour && (
                                                 <InputErrorMessage error={errors.openingHour} />
@@ -246,65 +244,71 @@ const SetupCompanyProfile = () => {
                                                     btnColor="orange"
                                                     onPress={handleSubmit}
                                                 />
-
                                             </View>
-
                                         </View>
                                     </View>
                                     {showOpeningHour && (
                                         <DateTimePicker
                                             testID="openinHourPicker"
-                                            value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
+                                            value={
+                                                values.openingHour
+                                                    ? new Date(`1970-01-01T${values.openingHour}`)
+                                                    : new Date()
+                                            }
                                             mode="time"
                                             is24Hour={true}
                                             display="default"
                                             onChange={(event, selectedDate) => {
-                                                setShowOpeningHour(Platform.OS === 'ios');
+                                                setShowOpeningHour(Platform.OS === "ios");
                                                 if (selectedDate) {
-                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
-                                                    setFieldValue('openingHour', formattedTime);
+                                                    const formattedTime = selectedDate
+                                                        .toTimeString()
+                                                        .split(" ")[0];
+                                                    setFieldValue("openingHour", formattedTime);
                                                 }
-
                                             }}
                                         />
                                     )}
                                     {showClosingHour && (
                                         <DateTimePicker
                                             testID="closingHourPicker"
-                                            value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
+                                            value={
+                                                values.closingHour
+                                                    ? new Date(`1970-01-01T${values.closingHour}`)
+                                                    : new Date()
+                                            }
                                             mode="time"
                                             is24Hour={true}
                                             display="default"
                                             onChange={(event, selectedDate) => {
-                                                setShowClosingHour(Platform.OS === 'ios');
+                                                setShowClosingHour(Platform.OS === "ios");
                                                 if (selectedDate) {
-                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
-                                                    setFieldValue('closingHour', formattedTime);
+                                                    const formattedTime = selectedDate
+                                                        .toTimeString()
+                                                        .split(" ")[0];
+                                                    setFieldValue("closingHour", formattedTime);
                                                 }
-
                                             }}
-
                                         />
                                     )}
-
-
-
                                 </>
                             )}
-                        </Formik>) : (<Formik
+                        </Formik>
+                    ) : (
+                        <Formik
                             initialValues={{
                                 openingHour: "",
                                 closingHour: "",
                                 companyName: "",
                                 location: "",
-                                accountHolderName: '',
-                                bankName: '',
-                                accountNumber: '',
-                                companyRegNum: '',
-
+                                accountHolderName: "",
+                                bankName: "",
+                                accountNumber: "",
+                                companyRegNum: "",
                             }}
-
-                            onSubmit={(values, { resetForm }) => mutate(values, { onSuccess: () => resetForm() })}
+                            onSubmit={(values, { resetForm }) =>
+                                mutate(values, { onSuccess: () => resetForm() })
+                            }
                             validationSchema={SetupCompanyValidation}
                         >
                             {({
@@ -313,11 +317,9 @@ const SetupCompanyProfile = () => {
                                 values,
                                 errors,
                                 touched,
-                                setFieldValue
-
+                                setFieldValue,
                             }) => (
                                 <>
-
                                     <View style={styles.container}>
                                         <View style={{ flex: 1, paddingHorizontal: 5 }}>
                                             <CustomTextInput
@@ -377,9 +379,10 @@ const SetupCompanyProfile = () => {
                                                 inputTextColor={activeColor.text}
                                                 autoCapitalize="words"
                                             />
-                                            {touched.accountHolderName && errors.accountHolderName && (
-                                                <InputErrorMessage error={errors.accountHolderName} />
-                                            )}
+                                            {touched.accountHolderName &&
+                                                errors.accountHolderName && (
+                                                    <InputErrorMessage error={errors.accountHolderName} />
+                                                )}
                                             <CustomTextInput
                                                 onChangeText={handleChange("bankName")}
                                                 value={values.bankName}
@@ -393,7 +396,6 @@ const SetupCompanyProfile = () => {
                                                 <InputErrorMessage error={errors.bankName} />
                                             )}
 
-
                                             <CustomTextInput
                                                 onChangeText={handleChange("openingHour")}
                                                 value={values.openingHour}
@@ -402,7 +404,6 @@ const SetupCompanyProfile = () => {
                                                 inputBackgroundColor={activeColor.inputBackground}
                                                 inputTextColor={activeColor.text}
                                                 onPress={() => setShowOpeningHour(true)}
-
                                             />
                                             {touched.openingHour && errors.openingHour && (
                                                 <InputErrorMessage error={errors.openingHour} />
@@ -426,53 +427,57 @@ const SetupCompanyProfile = () => {
                                                     btnColor="orange"
                                                     onPress={handleSubmit}
                                                 />
-
                                             </View>
-
                                         </View>
                                     </View>
                                     {showOpeningHour && (
                                         <DateTimePicker
                                             testID="openinHourPicker"
-                                            value={values.openingHour ? new Date(`1970-01-01T${values.openingHour}`) : new Date()}
+                                            value={
+                                                values.openingHour
+                                                    ? new Date(`1970-01-01T${values.openingHour}`)
+                                                    : new Date()
+                                            }
                                             mode="time"
                                             is24Hour={true}
                                             display="default"
                                             onChange={(event, selectedDate) => {
-                                                setShowOpeningHour(Platform.OS === 'ios');
+                                                setShowOpeningHour(Platform.OS === "ios");
                                                 if (selectedDate) {
-                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
-                                                    setFieldValue('openingHour', formattedTime);
+                                                    const formattedTime = selectedDate
+                                                        .toTimeString()
+                                                        .split(" ")[0];
+                                                    setFieldValue("openingHour", formattedTime);
                                                 }
-
                                             }}
                                         />
                                     )}
                                     {showClosingHour && (
                                         <DateTimePicker
                                             testID="closingHourPicker"
-                                            value={values.closingHour ? new Date(`1970-01-01T${values.closingHour}`) : new Date()}
+                                            value={
+                                                values.closingHour
+                                                    ? new Date(`1970-01-01T${values.closingHour}`)
+                                                    : new Date()
+                                            }
                                             mode="time"
                                             is24Hour={true}
                                             display="default"
                                             onChange={(event, selectedDate) => {
-                                                setShowClosingHour(Platform.OS === 'ios');
+                                                setShowClosingHour(Platform.OS === "ios");
                                                 if (selectedDate) {
-                                                    const formattedTime = selectedDate.toTimeString().split(' ')[0];
-                                                    setFieldValue('closingHour', formattedTime);
+                                                    const formattedTime = selectedDate
+                                                        .toTimeString()
+                                                        .split(" ")[0];
+                                                    setFieldValue("closingHour", formattedTime);
                                                 }
-
                                             }}
-
                                         />
                                     )}
-
-
-
                                 </>
                             )}
-                        </Formik>)
-                    }
+                        </Formik>
+                    )}
                 </ScrollView>
             </View>
         </View>

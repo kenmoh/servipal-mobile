@@ -41,7 +41,7 @@ const FoodOrderLayout = () => {
         }}
       >
         <FoodTabBar.Screen name="index" options={{ title: "Restaurants" }} />
-        <FoodTabBar.Screen name="delivery" options={{ title: "New" }} />
+        <FoodTabBar.Screen name="new" options={{ title: "New Order(s)" }} />
 
       </FoodTabBar>
 

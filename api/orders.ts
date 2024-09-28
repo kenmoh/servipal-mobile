@@ -45,9 +45,9 @@ const getUserLaundryOrderItems = async () => {
 };
 
 // Get vendor new food orders
-const getRestaurantNewFoodOrder = async () => {
+const getUserNewFoodOrder = async () => {
   const result = await client.get(`${endpoint}/new-food-orders`);
-  if (!result.originalError) {
+  if (!result.ok) {
     throw new Error(result.data?.detail?.split(":")[1]);
   }
   return result;
@@ -56,7 +56,7 @@ const getRestaurantNewFoodOrder = async () => {
 // Get vendor new laundry orders
 const getLaundryNewLaundryOrder = async () => {
   const result = await client.get(`${endpoint}/new-laundry-orders`);
-  if (!result.originalError) {
+  if (!result.ok) {
     throw new Error(result.data?.detail?.split(":")[1]);
   }
   return result;
@@ -215,7 +215,7 @@ export default {
   getFoodDetails,
   getLaundryDetails,
   getUserOrderStats,
-  getRestaurantNewFoodOrder,
+  getUserNewFoodOrder,
   getLaundryNewLaundryOrder,
   laundryOrderReceived,
   getUserLaundryOrderItems,
