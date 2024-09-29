@@ -4,7 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
 type ActionBtnProp = {
-    icon: ReactNode;
+    icon?: ReactNode;
     onPress: () => void;
     label?: string;
     height?: number;

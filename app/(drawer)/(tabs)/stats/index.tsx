@@ -73,28 +73,7 @@ const index = () => {
             <View
                 style={[styles.container, { backgroundColor: activeColor.background }]}
             >
-                <View style={[styles.statWrapper]}>
-                    <View
-                        style={[
-                            styles.statContainer
-                        ]}
-                    >
-                        <Feather name="package" color={activeColor.icon} size={18} />
-                        <Text style={[styles.text, { color: activeColor.text }]}>
-                            All: {stat?.total_orders}
-                        </Text>
-                    </View>
-                    <View
-                        style={[
-                            styles.statContainer
-                        ]}
-                    >
-                        <MaterialIcons name="pending" color={activeColor.icon} size={18} />
-                        <Text style={[styles.text, { color: activeColor.text }]}>
-                            Pending: {stat?.total_pending_orders}
-                        </Text>
-                    </View>
-                </View>
+
 
 
                 <FlatList

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, Image, View, TouchableOpacity } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
 
 

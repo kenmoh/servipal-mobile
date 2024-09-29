@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Image } from "expo-image";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 
@@ -11,10 +11,11 @@ import {
   Ionicons,
 
 } from "@expo/vector-icons";
+import BouncyCheckBox from "react-native-bouncy-checkbox";
 import { OrderResponseType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
-import Status from "./Status";
+
 
 
 const blurhash =
@@ -120,23 +121,7 @@ const OrderCard = ({
             45 mins
           </Text>
         </View>
-        {isHomeScreen ? (
-          <Text style={[styles.textStyle, { color: activeColor.icon }]}>
-            | {dayjs().to(dayjs(order?.created_at?.split("T")[0]))}
-          </Text>
-        ) : (
-          <Status
-            text={order?.order_status!}
-            textColor={`${order?.order_status === "pending"
-              ? "#f56991"
-              : order?.order_status === "received"
-                ? "#25a18e"
-                : order?.order_status === "delivered"
-                  ? "#3bade2"
-                  : "#e8ac65"
-              }`}
-          />
-        )}
+
       </View>
     </TouchableOpacity>
   );
@@ -173,6 +158,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: "row",
     alignItems: "baseline",
+    justifyContent: 'space-between',
     gap: 8,
     marginTop: 10,
   },
