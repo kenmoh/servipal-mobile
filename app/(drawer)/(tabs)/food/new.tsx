@@ -34,11 +34,14 @@ const Delivery = () => {
         queryFn: ordersApi.getUserNewFoodOrder,
     });
 
+    console.log(data)
+
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
             focusManager.setFocused(status === "active");
         }
     }
+
 
     useEffect(() => {
         const subscription = AppState.addEventListener("change", onAppStateChange);
