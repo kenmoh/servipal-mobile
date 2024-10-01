@@ -20,16 +20,9 @@ const AddLaundry = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
+    const { error, isSuccess, mutate, isPending } = useMutation({
         mutationFn: (laundry: CreateLaundry) => addLaundry(laundry),
-    });
-
-
-
-
-    useEffect(() => {
-
-        if (error) {
+        onError: (error: Error) => {
             showMessage({
                 message: error.message || 'Something went wrong!',
                 type: "danger",
@@ -37,9 +30,9 @@ const AddLaundry = () => {
                     alignItems: "center",
                 },
             });
-            router.push("sendItem");
-        }
-        if (isSuccess) {
+            router.push("(laundry)/addLaundry");
+        },
+        onSuccess: () => {
             showMessage({
                 message: "Item successfully.",
                 type: "success",
@@ -47,9 +40,14 @@ const AddLaundry = () => {
                     alignItems: "center",
                 },
             });
-            router.push('sendItem');
+            router.push("(laundry)/addLaundry");
         }
-    }, [error, isSuccess])
+    });
+
+
+
+
+
     return (
         <View
             style={{

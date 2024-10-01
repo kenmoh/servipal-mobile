@@ -7,38 +7,35 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import ScreenWithFAB from "@/app/ScreenWithFAB";
 import { useAuth } from "@/auth/authContext";
-import ordersApi from '@/api/orders'
-
+import ordersApi from "@/api/orders";
 
 const FoodTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
-
 
 const FoodOrderLayout = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const { data, refetch, error, isFetching } = useQuery({
     queryKey: ["newFoodOrders"],
     queryFn: ordersApi.getUserNewFoodOrder,
   });
 
-
-
   return (
-
-    <ScreenWithFAB onPressFAB={() => router.push('(restaurant)/addMeal')}>
-
+    <ScreenWithFAB
+      onPressFAB={() => router.push("(restaurant)/addMeal")}
+      fabCondition={(user) => user?.user_type === "Restaurant Service Provider"}
+    >
       <FoodTabBar
         screenOptions={{
           tabBarLabelStyle: {
             fontSize: 12,
-            textAlign: 'center',
-            textTransform: 'capitalize',
-            fontFamily: 'Poppins-Bold',
-
+            textAlign: "center",
+            textTransform: "capitalize",
+            fontFamily: "Poppins-Bold",
           },
-          swipeEnabled: user?.user_type === 'Restaurant Service Provider' ? false : true,
+          swipeEnabled:
+            user?.user_type === "Restaurant Service Provider" ? false : true,
           tabBarActiveTintColor: activeColor.text,
           tabBarInactiveTintColor: activeColor.icon,
           tabBarAndroidRipple: { borderless: false },
@@ -53,12 +50,15 @@ const FoodOrderLayout = () => {
         }}
       >
         <FoodTabBar.Screen name="index" options={{ title: "Restaurants" }} />
-        <FoodTabBar.Screen name="new" options={{ title: `New Orders(${data?.data !== 'undefined' && data?.data?.length})` }} />
-
+        <FoodTabBar.Screen
+          name="new"
+          options={{
+            title: `New Orders(${data?.data !== "undefined" && data?.data?.length
+              })`,
+          }}
+        />
       </FoodTabBar>
-
     </ScreenWithFAB>
-
   );
 };
 

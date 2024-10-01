@@ -4,17 +4,17 @@ import { router, Stack } from 'expo-router'
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
 import ScreenWithFAB from '../ScreenWithFAB';
-import { useAuth } from '@/auth/authContext';
+
 
 const LaundryLayout = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { user } = useAuth()
+
     return (
         <ScreenWithFAB
             fabCondition={(user) => user?.user_type === "Laundry Service Provider"}
             showFAB
-            onPressFAB={() => router.push("(laundry)/addLaundy")}
+            onPressFAB={() => router.push("(laundry)/addLaundry")}
         >
             <Stack screenOptions={{ contentStyle: { backgroundColor: activeColor.background } }}>
                 <Stack.Screen name='addLaundry' options={{
@@ -27,7 +27,7 @@ const LaundryLayout = () => {
                     }
                 }} />
 
-                <Stack.Screen name='laundry' options={{
+                <Stack.Screen name='[laundryId]' options={{
                     title: '',
                     headerShadowVisible: false,
                     headerTitleAlign: 'center',

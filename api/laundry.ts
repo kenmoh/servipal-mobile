@@ -9,7 +9,7 @@ export const getLaundryServiceUsers = async () =>
   await client.get(`${user}/get-user-by-laundry_service-provider`);
 
 export const getUserLaundryServices = async (vendorId: string) =>
-  await client.get(`${laundry}/${vendorId}/services`);
+  await client.get(`${laundry}/${vendorId}/laundry-services`);
 
 // Add Laundry
 export const addLaundry = async (

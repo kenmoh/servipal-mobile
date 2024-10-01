@@ -70,7 +70,7 @@ const RestaurantDetails = () => {
     const [image, setImage] = useState<string | null>(null);
     const [profileImage, setProfileImage] = useState<string | null>(null);
     const { user } = useAuth()
-    const queryClient = useQueryClient();
+
 
     const {
         data: meals,
@@ -367,7 +367,7 @@ const RestaurantDetails = () => {
             >
                 {isFetching || isLoading && <View
                     style={{
-                        // flex: 1,
+
                         backgroundColor: activeColor.background,
                         alignItems: "center",
                         justifyContent: "center",
