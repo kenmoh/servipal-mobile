@@ -26,16 +26,8 @@ const AuthLayout = () => {
           }
         }}
       />
-      <Stack.Screen name="authNav" />
-      <Stack.Screen name="signupDispatch" options={{
-        headerShown: true,
-        title: "Sign Up | Rider",
-        headerShadowVisible: false,
-        headerTintColor: activeColor.text,
-        headerStyle: {
-          backgroundColor: activeColor.background
-        }
-      }} />
+
+
       <Stack.Screen name="confirmAccount" />
       <Stack.Screen name="resetPassword" />
       <Stack.Screen

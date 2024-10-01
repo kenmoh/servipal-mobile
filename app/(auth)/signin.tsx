@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
@@ -30,7 +30,7 @@ const SignIn = () => {
   let activeColor = Colors[theme.mode];
   const authContext = useAuth();
 
-  const { error, isSuccess, mutate, isPending, data } = useMutation({
+  const { isSuccess, mutate, isPending, data } = useMutation({
     mutationFn: ({ username, password }: Login) => authApi.loginApi(username, password),
     onError: (error) => {
       showMessage({
@@ -44,13 +44,6 @@ const SignIn = () => {
 
     }
   });
-
-  const { data: profileData } = useQuery({
-    queryKey: ['user', authContext.user?.id],
-    queryFn: userApi.getCompanyProfile
-  })
-
-
 
 
 
@@ -147,13 +140,10 @@ const SignIn = () => {
                       onPress={handleSubmit}
                     />
                   </View>
-                  <View style={{ marginTop: 25 }}>
-                    <CustomBtn
-                      btnColor={Colors.primaryBtnColor}
-                      label="Register"
-                      onPress={() => router.push('/signup')}
+                  <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                    <Text style={[styles.text, { color: activeColor.text }]}>Dont't have an account?</Text>
+                    <Link href={'(auth)/signup'} style={[styles.text, { color: 'blue' }]}>Register</Link>
 
-                    />
                   </View>
                 </View>
               </>
@@ -171,6 +161,11 @@ const SignIn = () => {
 
 export default SignIn;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  text: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 14
+  }
+});
 
 

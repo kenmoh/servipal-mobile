@@ -48,7 +48,7 @@ const index = () => {
         enabled: !!selectedCategory,
     });
 
-    console.log(restaurants?.data)
+
 
     const handleCategoryPress = (category: CategoryType) => {
         setSelectedCategory(category.name);

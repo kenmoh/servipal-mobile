@@ -4,7 +4,7 @@ import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
 import { Link } from 'expo-router';
 
-const Empty = () => {
+const Empty = ({ label = ' No Order(s) yet' }: { label: string }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     return (
@@ -25,9 +25,9 @@ const Empty = () => {
                     alignSelf: 'center'
                 }}
             >
-                No Order(s) yet
+                {label}
             </Text>
-            <Link href="/setupBackdrop" style={{ color: activeColor.text }}>setupBackdrop</Link>
+
         </View>
     )
 }

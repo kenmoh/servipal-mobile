@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     Dimensions,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
@@ -20,6 +21,7 @@ import HDivider from "@/components/HDivider";
 import { SIZES } from "@/constants/Sizes";
 import { useMutation } from "@tanstack/react-query";
 import { payWithWallet } from "@/api/payment";
+import items from "./(drawer)/(tabs)/buySell/items";
 
 const TIME_OUT = 1500;
 
@@ -42,7 +44,7 @@ type OrderItemType = {
 
 type Labeltype = {
     label: string | undefined;
-    amount: string | undefined;
+    amount: string | number | undefined;
     textColor: string;
 };
 
@@ -150,39 +152,38 @@ const payment = () => {
         setShowWebView(true);
     };
 
-    const { data, error, isSuccess, mutate: handlePayWithWallet } = useMutation({
-        mutationFn: (orderId: string) => payWithWallet(orderId)
+    const { data, error, isSuccess, isPending, mutate: handlePayWithWallet } = useMutation({
+        mutationFn: (orderId: string) => payWithWallet(orderId),
+        onSuccess: () => {
+            router.push("/success");
+            showMessage({
+                message: 'Payment Successful',
+                type: "success",
+                textStyle: {
+                    alignItems: "center",
+                },
+            });
+
+            setTimeout(() => {
+                router.push("/(drawer)/topTab");
+            }, TIME_OUT);
+        },
+        onError: (error) => {
+            router.push("/failed");
+            showMessage({
+                message: error?.message,
+                type: "danger",
+                textStyle: {
+                    alignItems: "center",
+                },
+            });
+            setTimeout(() => {
+                router.push("/(drawer)/stats");
+            }, TIME_OUT);
+        },
     })
 
 
-
-    if (error) {
-        router.push("/failed");
-        showMessage({
-            message: error?.message,
-            type: "danger",
-            textStyle: {
-                alignItems: "center",
-            },
-        });
-        setTimeout(() => {
-            router.push("/(drawer)/stats");
-        }, TIME_OUT);
-    }
-    if (isSuccess) {
-        router.push("/success");
-        showMessage({
-            message: data?.message,
-            type: "success",
-            textStyle: {
-                alignItems: "center",
-            },
-        });
-
-        setTimeout(() => {
-            router.push("/(drawer)/topTab");
-        }, TIME_OUT);
-    }
 
 
     const handleGetTransferDetails = async () => {
@@ -225,6 +226,23 @@ const payment = () => {
             }, TIME_OUT);
         }
     }, [status]);
+
+
+
+    if (isPending) {
+        return (
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: activeColor.background,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
+            </View>
+        );
+    }
 
     return (
         <>
@@ -290,7 +308,7 @@ const payment = () => {
                         <>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
-                                style={{ flex: 1, marginVertical: SIZES.paddingMedium, width: '90%', alignSelf: 'center' }}
+                                style={{ flex: 1, marginVertical: SIZES.paddingLarge, width: '90%', alignSelf: 'center' }}
                             >
                                 {JSON.parse(params?.items)?.map((item) => (
                                     <OrderItem
@@ -311,7 +329,7 @@ const payment = () => {
 
                                     <Label
                                         label="Item Cost"
-                                        amount={params.itemCost}
+                                        amount={parseInt(params?.totalCost!) - parseInt(params?.deliveryFee!)}
                                         textColor={activeColor.icon}
                                     />
                                     <Label
@@ -323,7 +341,7 @@ const payment = () => {
 
                                 <View
                                     style={{
-                                        marginTop: SIZES.marginLarge,
+                                        marginTop: SIZES.marginXLarge,
                                         alignItems: "center",
                                     }}
                                 >

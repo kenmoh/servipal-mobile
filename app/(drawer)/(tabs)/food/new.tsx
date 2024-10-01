@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import OrderCard from "@/components/OrderCard";
 import { Colors } from "@/constants/Colors";
-import { focusManager, useQuery } from "@tanstack/react-query";
+import { focusManager, useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
 import {
     StyleSheet,
     Text,
@@ -19,6 +19,7 @@ import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
 import Empty from "@/components/Empty";
 import { OrderResponseType } from "@/utils/types";
+import AppSwipeable from "@/components/AppSwipeable";
 
 export const imageUrl =
     "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png";
@@ -34,7 +35,9 @@ const Delivery = () => {
         queryFn: ordersApi.getUserNewFoodOrder,
     });
 
-    console.log(data)
+    const { isPending, mutate } = useMutation({
+        mutationFn: (orderId: string) => ordersApi.updateFoodStatus(orderId)
+    })
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -57,7 +60,7 @@ const Delivery = () => {
 
     useRefreshOnFocus(refetch!);
 
-    if (isFetching) {
+    if (isFetching || isPending) {
         return (
             <View
                 style={{
@@ -104,7 +107,9 @@ const Delivery = () => {
                 data={data?.data}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }: { item: OrderResponseType }) => (
-                    <OrderCard order={item} isHomeScreen={true} />
+                    <AppSwipeable onPress={() => mutate(item.id)} orderId={item.id}>
+                        <OrderCard order={item} isHomeScreen={true} />
+                    </AppSwipeable>
                 )}
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}

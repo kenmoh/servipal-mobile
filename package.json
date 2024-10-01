@@ -64,7 +64,8 @@
     "yup": "^1.4.0",
     "@sentry/react-native": "~5.22.0",
     "@react-native-community/datetimepicker": "8.0.1",
-    "expo-clipboard": "~6.0.3"
+    "expo-clipboard": "~6.0.3",
+    "undefined": "react-native-gesture-handler/ReanimatedSwipeable"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -131,6 +131,18 @@ const orderReceived = (order_id: string) =>
 const laundryOrderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/laundry-order-received`);
 
+// Restaurant user update food status
+const updateFoodStatus = async (order_id: string) => {
+  const result = await client.patch(
+    `${endpoint}/${order_id}/update-food-order-status`
+  );
+  console.log(result.data, "===============================", order_id);
+  if (!result.ok) {
+    throw new Error(result?.data.detail);
+  }
+  return result.data;
+};
+
 // Order food
 const orderFood = async (redtaurantId: string, item: OrderData) => {
   const data = {
@@ -220,4 +232,5 @@ export default {
   laundryOrderReceived,
   getUserLaundryOrderItems,
   getUserRestaurantOrderItems,
+  updateFoodStatus,
 };

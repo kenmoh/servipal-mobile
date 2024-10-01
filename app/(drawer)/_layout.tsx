@@ -1,3 +1,4 @@
+import React from "react";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { Drawer } from "expo-router/drawer";
 import { useAuth } from "@/auth/authContext";
@@ -102,7 +103,7 @@ const CustomDrawerContent = (props: any) => {
                         },
                     }),
                 onSuccess: (data) => {
-                    setImage(data?.photo_url);
+                    setImage(data?.profile_image);
                     showMessage({
                         message: "Image uploaded!",
                         type: "success",
@@ -146,9 +147,9 @@ const CustomDrawerContent = (props: any) => {
                                     }}
                                 />
                             )}
-                            {user?.photo_url ? (
+                            {user?.profile_image ? (
                                 <Image
-                                    source={{ uri: user?.photo_url ? user.photo_url : image! }}
+                                    source={{ uri: user?.profile_image ? user.photo_url : image! }}
                                     style={{
                                         width: "100%",
                                         height: "100%",

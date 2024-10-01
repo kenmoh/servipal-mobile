@@ -40,8 +40,11 @@ const loginApi = async (username: string, password: string) => {
   });
 
   if (!response.ok) {
-    throw new Error(response?.data.detail);
+    throw new Error(
+      response?.data?.detail || "Something went wrong. Please try again."
+    );
   }
+
   return response.data;
 };
 

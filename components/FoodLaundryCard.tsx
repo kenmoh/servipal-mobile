@@ -5,7 +5,6 @@ import {
     View,
     Dimensions,
 } from "react-native";
-import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useContext } from "react";
@@ -13,19 +12,10 @@ import { Image } from "expo-image";
 
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
-import userApi from "@/api/users";
 import restaurant from "@/assets/images/restaurant.jpg";
+import { CardProps } from "@/utils/types";
 
-export type CardProps = {
-    id: string;
-    sample_company_image: string;
-    average_rating: number;
-    numReviews?: number;
-    company_name?: string;
-    opening_hour: string;
-    location: string;
-    closing_hour: string;
-};
+
 const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.35;
 
 const FoodLaundryCard = ({
@@ -40,17 +30,12 @@ const FoodLaundryCard = ({
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { data: reviews } = useQuery({
-        queryKey: ["reviews", item.id],
-        queryFn: () => userApi.getUserReviews(item.id),
-    });
-
     return (
         <TouchableOpacity
             activeOpacity={0.9}
             onPress={() =>
                 router.push({
-                    pathname: isLaundry ? "(laundry)/laundry" : `(restaurant)/${item.id}`,
+                    pathname: isLaundry ? `(laundry)/${item.id}` : `(restaurant)/${item.id}`,
                     params: {
                         id: item.id,
                     },
@@ -60,7 +45,7 @@ const FoodLaundryCard = ({
         >
             <View style={[styles.container]}>
                 <Image
-                    source={item.sample_company_image || restaurant}
+                    source={item.company_background_image || restaurant}
                     style={styles.image}
                 />
             </View>
@@ -74,16 +59,16 @@ const FoodLaundryCard = ({
                         {item.location}
                     </Text>
                 </View>
-                {reviews?.data?.reviews?.length > 0 && (
-                    <Text style={[styles.locationText, { color: activeColor.text }]}>
-                        <Text style={styles.locationText}>
-                            {reviews?.data?.average_rating}
-                        </Text>{" "}
-                        <AntDesign name="staro" style={{ color: "gold" }} size={10} /> (
-                        {reviews?.data?.total_reviews}{" "}
-                        {reviews?.data?.total_reviews === 1 ? "review" : "reviews"})
-                    </Text>
-                )}
+
+                {item?.rating?.number_of_ratings >= 1 && <Text style={[styles.locationText, { color: activeColor.text }]}>
+                    <Text style={styles.locationText}>
+                        {item.rating.average_rating}
+                    </Text>{" "}
+                    <AntDesign name="staro" style={{ color: "gold" }} size={10} /> (
+                    {item?.rating.number_of_ratings}{" "}
+                    {item?.rating.number_of_ratings === 1 ? "review" : "reviews"})
+                </Text>}
+
             </View>
         </TouchableOpacity>
     );

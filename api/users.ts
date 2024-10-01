@@ -227,16 +227,11 @@ const companyProfileImage = async (img: companyImage) => {
 
   data.append("image", {
     type: "image/jpeg",
-    uri: img.logo,
-    name: img.backDrop.split("/").slice(-1)[0],
-  });
-  data.append("image", {
-    type: "image/jpeg",
-    uri: img.backDrop,
-    name: img.backDrop.split("/").slice(-1)[0],
+    uri: img.image,
+    name: img.image.split("/").slice(-1)[0],
   });
 
-  const response = await client.post(
+  const response = await client.patch(
     `${user}/update-company-background-image`,
     data,
     {
@@ -245,9 +240,10 @@ const companyProfileImage = async (img: companyImage) => {
       },
     }
   );
-  if (!response.ok) {
-    throw new Error(response?.data.detail.split(":")[1]);
-  }
+
+  // if (!response.ok) {
+  //   throw new Error(response?.data?.detail.split(":")[1]);
+  // }
   return response.data;
 };
 

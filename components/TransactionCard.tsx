@@ -15,8 +15,6 @@ const TransactionCard = ({
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-
-
     return (
         <>
             {transactions.status === "pending" ||
@@ -34,13 +32,20 @@ const TransactionCard = ({
                     ]}
                 >
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                        {transactions?.status === "paid" ||
-                            transactions.transaction_type === "fund wallet" ||
-                            transactions.transaction_type === "credit" ? (
-                            <Feather name="arrow-down-left" size={15} color={"teal"} />
+
+                        {(
+                            transactions?.transaction_type === "debit" ||
+                            transactions?.transaction_type === "paid with wallet"
+                        ) ? (
+                            <Feather name="arrow-down-left" size={15} color={Colors.error} />
                         ) : (
-                            <Feather name="arrow-up-right" size={15} color={Colors.error} />
-                        )}
+                            transactions?.status === "paid" ||
+                            transactions.transaction_type === "fund wallet" ||
+                            transactions.transaction_type === "credit"
+                        ) ? (
+                            <Feather name="arrow-up-right" size={15} color={'teal'} />
+                        ) : null}
+
                         <View>
                             <Text style={[styles.text, { color: activeColor.text }]}>
                                 {transactions.name}
@@ -83,7 +88,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginVertical: 2.5,
+        marginVertical: 5,
         padding: 10,
         borderRadius: 5,
         opacity: 0.7,

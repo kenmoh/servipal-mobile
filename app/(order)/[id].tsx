@@ -46,6 +46,7 @@ export default function HomeScreen() {
     packageName,
     // foods,
     // laundries,
+    userId,
     items,
     deliveryFee,
     amountDueVendor,
@@ -567,7 +568,7 @@ export default function HomeScreen() {
           )}
         </View>
       </View>
-      {paymntStatus != "paid" && (
+      {paymntStatus != "paid" && user?.username === orderOwnerUsername && (
         <View
           style={{
             position: "absolute",

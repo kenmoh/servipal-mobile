@@ -11,10 +11,10 @@ import {
   Ionicons,
 
 } from "@expo/vector-icons";
-import BouncyCheckBox from "react-native-bouncy-checkbox";
 import { OrderResponseType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+import Status from "./Status";
 
 
 
@@ -40,6 +40,7 @@ const OrderCard = ({
       onPress={() => router.push({
         pathname: `(order)/${order?.id}`,
         params: {
+
           packageName: order?.package_name || order.order_owner_username,
           senderPhoneNumber: order?.order_owner_phone_number,
           imageUrl: order?.image_url || order?.foods[0].image_url || order?.laundries[0].image_url,
@@ -121,7 +122,21 @@ const OrderCard = ({
             45 mins
           </Text>
         </View>
+        {!isHomeScreen ? (
+          <Status
+            text={order.order_status}
+            textColor={
+              order.order_status === "pending"
+                ? "tomato"
+                : order.order_status === "received"
+                  ? "#25a18e"
+                  : order.order_status === "delivered"
+                    ? "skyblue"
+                    : "#e8ac65"
+            }
+          />
 
+        ) : ''}
       </View>
     </TouchableOpacity>
   );

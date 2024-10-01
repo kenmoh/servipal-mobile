@@ -210,8 +210,7 @@ export type UpdateProfileImage = {
   profileImageUrl: string;
 };
 export type companyImage = {
-  logo: string;
-  backDrop: string;
+  image: string;
 };
 
 export type SetupCompany = {
@@ -252,7 +251,7 @@ export type UserReturn = {
   bank_account_number: string;
   account_holder_name: string;
   location: string;
-  photo_url: string;
+  profile_image: string;
   user_type: Role;
   company_name: string;
   company_reg_number: string;
@@ -434,3 +433,20 @@ export interface Wallet {
   user_id: string;
   wallet_transactions: WalletTransaction[];
 }
+
+type RatingType = {
+  average_rating: string;
+  number_of_ratings: number;
+};
+export type CardProps = {
+  id: string;
+  company_name: string;
+  email: string;
+  phone_number: string;
+  profile_image?: string;
+  location: string;
+  company_background_image?: string;
+  opening_hour: string;
+  closing_hour: string;
+  rating: RatingType;
+};

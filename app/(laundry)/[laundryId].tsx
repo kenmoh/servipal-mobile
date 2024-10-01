@@ -19,8 +19,8 @@ const laundry = () => {
     const { cart, getTotalPrice } = useCart();
 
     const { data: laundries, isFetching, isLoading, error } = useQuery({
-        queryKey: ["restaurant", id],
-        queryFn: () => getUserLaundryServices(id),
+        queryKey: ["laundry", id],
+        queryFn: () => getUserLaundryServices(id as string),
     });
 
 
