@@ -67,7 +67,7 @@ const CustomDrawerContent = (props: any) => {
                 name: imageUri?.split("/").slice(-1)[0],
             });
 
-            const response = await client.post(
+            const response = await client.patch(
                 "/users/update-profile-image",
                 formData,
                 {

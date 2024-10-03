@@ -30,6 +30,7 @@ import { showMessage } from "react-native-flash-message";
 import client from "@/api/client";
 import { useAuth } from "@/auth/authContext";
 import Empty from "@/components/Empty";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 const TOP = Dimensions.get("screen").height * 0.1
 const CENTER = Dimensions.get("screen").width * 0.5
@@ -77,6 +78,7 @@ const RestaurantDetails = () => {
         isFetching,
         isLoading,
         error,
+        refetch
 
     } = useQuery({
         queryKey: ["restaurant", id],
@@ -89,6 +91,7 @@ const RestaurantDetails = () => {
         queryFn: () => useApi.getCurrentVendorUser(id as string),
     });
 
+    useRefreshOnFocus(refetch);
 
     const uploadCoverImageMutation = useMutation({
         mutationFn: async (imageUri) => {
@@ -282,7 +285,7 @@ const RestaurantDetails = () => {
             </TouchableOpacity>
 
 
-            <View
+            {data && <View
                 style={{
                     padding: 10,
                     marginBottom: 10,
@@ -346,7 +349,7 @@ const RestaurantDetails = () => {
                                 ({data?.rating.number_of_ratings} {data?.rating.number_of_ratings! > 1 ? "reviews" : "review"})
                             </Text>
                         </View>
-                        <Link href={"sendItem"} asChild>
+                        <Link href={"reviews"} asChild>
                             <Text
                                 style={{
                                     color: activeColor.icon,
@@ -360,7 +363,7 @@ const RestaurantDetails = () => {
                         </Link>
                     </View>
                 )}
-            </View>
+            </View>}
 
             <View
                 style={[styles.container, { backgroundColor: activeColor.background }]}
@@ -389,15 +392,17 @@ const RestaurantDetails = () => {
                     ListHeaderComponent={<Menu />}
                     showsVerticalScrollIndicator={false}
                     data={meals?.data ?? []}
-                    keyExtractor={(item) => item?.id?.toString() ?? ''}
+                    keyExtractor={(item) => item?.id?.toString() + item?.name}
                     renderItem={({ item }) => <FoodCard meal={item} />}
-                    ListEmptyComponent={<Empty label="No Meals Yet!" />}
+                    ListEmptyComponent={isFetching ? <Empty label="Loading Menu..." /> : <Empty label="No Meals Yet!" />}
+                    refreshing={isFetching}
+                    onRefresh={refetch}
                 />
-                {cart.foods?.length >= 1 && (
+                {cart.items?.length >= 1 && (
                     <View style={{ paddingHorizontal: 10 }}>
                         <ViewCartBtn
                             label="Delivery Info"
-                            totalItem={cart.foods.length}
+                            totalItem={cart.items.length}
                             totalCost={getTotalPrice().toFixed(2)}
                             onPress={() => router.push("(restaurant)/deliveryInfo")}
 

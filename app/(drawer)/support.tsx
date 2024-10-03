@@ -14,14 +14,14 @@ const support = () => {
     return (
         <View style={[styles.container, { backgroundColor: activeColor.background }]}>
             <View>
-                <Text style={[styles.text, { color: activeColor.text }]}>Call us on: </Text>
+                <Text style={[styles.text, { color: activeColor.text, marginTop: SIZES.marginLarge }]}>Call us on: </Text>
                 <ProfileContainer>
                     <SupportCard phoneNumber='+2347063692766' />
                     <SupportCard phoneNumber='+2347063692766' />
                     <SupportCard phoneNumber='+2347063692766' />
                 </ProfileContainer>
             </View>
-            <View>
+            <View style={{ marginVertical: SIZES.marginLarge }}>
                 <Text style={[styles.text, { color: activeColor.text }]}>Chat with us on whatsapp: </Text>
                 <ProfileContainer>
                     <SupportCard isWhatsapp={true} phoneNumber='+2347063692766' />
@@ -40,8 +40,8 @@ const support = () => {
                             <Text
                                 style={{
                                     color: activeColor.text,
-                                    fontFamily: "Poppins-Thin",
-                                    fontSize: 12,
+                                    fontFamily: "Poppins-Regular",
+                                    fontSize: 14,
                                 }}
                             >
                                 servipal@servipal.com
@@ -59,10 +59,13 @@ export default support
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: SIZES.paddingSmall
+        paddingHorizontal: SIZES.paddingMedium
     },
     text: {
-        fontFamily: 'Poppins-Regular',
-        fontSize: 12
+        fontFamily: 'Poppins-Medium',
+        fontSize: 15,
+        textTransform: 'uppercase',
+
+
     }
 })

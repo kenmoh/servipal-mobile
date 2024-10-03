@@ -1,34 +1,29 @@
+import React from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Formik, FormikHelpers, FormikValues } from "formik";
-import ImagePickerForm from "@/components/ImageFormPicker";
+import { Formik, FormikValues } from "formik";
+
 
 import CustomBtn from "@/components/CustomBtn";
 import { Colors } from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
-import { addMealValidation, DeliverySchema } from "@/utils/orderValidation";
+import { DeliverySchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 
 import { ThemeContext } from "@/context/themeContext";
-import { useContext, useEffect, useState } from "react";
-import { AddMealType } from "@/utils/types";
-import { showMessage } from "react-native-flash-message";
-import { router } from "expo-router";
-import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import { addMeal, getCategories } from "@/api/foods";
-import LocationPickerForm from "@/components/LocationPickerForm";
-import orderApi from "@/api/orders";
-import { useCart } from "@/components/CartProvider";
-import { CartState, OrderData } from "@/auth/cartContext";
+import { useContext } from "react";
 
-type CategoryType = {
-    name: string;
-};
+import { router, useLocalSearchParams } from "expo-router";
+
+import { useCart } from "@/components/CartProvider";
+
+
 const DliveryInfo = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [categories, setCategories] = useState([]);
+
+    const { storeId } = useLocalSearchParams()
+
 
     const { setDeliveryInfo } = useCart();
 
@@ -55,7 +50,7 @@ const DliveryInfo = () => {
                                 ...values,
                                 distance: Number(values.distance),
                             });
-                            router.push('/cart')
+                            router.push({ pathname: '/cart', params: { storeId } })
                         }}
                         validationSchema={DeliverySchema}
                     >

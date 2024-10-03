@@ -24,11 +24,7 @@ const SupportCard = ({ phoneNumber, isWhatsapp = false }: SupportCardPropType) =
                     <A href={`https://wa.me/${phoneNumber}`}>
 
                         <Text
-                            style={{
-                                color: activeColor.text,
-                                fontFamily: "Poppins-Thin",
-                                fontSize: 12,
-                            }}
+                            style={[styles.text, { color: activeColor.text }]}
                         >
                             {phoneNumber}
                         </Text>
@@ -42,11 +38,7 @@ const SupportCard = ({ phoneNumber, isWhatsapp = false }: SupportCardPropType) =
                         <MaterialIcons name="phone" size={18} color={activeColor.icon} />
 
                         <Text
-                            style={{
-                                color: activeColor.text,
-                                fontFamily: "Poppins-Thin",
-                                fontSize: 12,
-                            }}
+                            style={[styles.text, { color: activeColor.text }]}
                         >
                             {phoneNumber}
                         </Text>
@@ -70,4 +62,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 10,
     },
+    text: {
+        fontFamily: "Poppins-Regular",
+        fontSize: 14,
+    }
 });

@@ -20,8 +20,27 @@ export interface AdditionalInfo {
   additionalInfo: string;
 }
 export interface CartState {
-  foods: CartItem[];
-  laundries: CartItem[];
+  // foods?: CartItem[];
+  // laundries?: CartItem[];
+  items: CartItem[];
+  origin: string;
+  destination: string;
+  distance: number;
+  additional_info: string;
+  orderType: "food" | "laundry" | null;
+}
+
+export const initialState: CartState = {
+  items: [],
+  origin: "",
+  destination: "",
+  distance: 0,
+  additional_info: "",
+  orderType: null,
+};
+
+export interface ServerOrderData {
+  items: CartItem[];
   origin: string;
   destination: string;
   distance: number;
@@ -36,7 +55,8 @@ type CartAction =
   | { type: "UPDATE_QUANTITY"; payload: { id: string; quantity: number } }
   | { type: "INCREMENT_ITEM"; payload: { id: string } }
   | { type: "DECREMENT_ITEM"; payload: { id: string } }
-  | { type: "SET_DELIVERY_INFO"; payload: Omit<CartState, "foods"> };
+  | { type: "SET_DELIVERY_INFO"; payload: Omit<CartState, "food" | "laundry"> }
+  | { type: "SET_ORDER_TYPE"; payload: "food" | "laundry" };
 
 export interface CartContextType {
   cart: CartState;
@@ -49,10 +69,12 @@ export interface CartContextType {
   setDeliveryInfo: (info: Omit<CartState, "foods">) => void;
   clearCart: () => void;
   clearDeliveryInfo: () => void;
+  setOrderType: (type: "food" | "laundry") => void;
+  getServerOrderData: () => ServerOrderData;
 }
 
 export interface OrderData {
-  foods: CartItem[];
+  items: CartItem[];
   origin: string;
   destination: string;
   distance: number;
@@ -76,13 +98,13 @@ export const cartReducer = (
 ): CartState => {
   switch (action.type) {
     case "ADD_TO_CART":
-      const existingItem = state.foods.find(
+      const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
       if (existingItem) {
         return {
           ...state,
-          foods: state.foods.map((item) =>
+          items: state.items.map((item) =>
             item.id === action.payload.id
               ? { ...item, quantity: item.quantity + 1 }
               : item
@@ -91,17 +113,17 @@ export const cartReducer = (
       }
       return {
         ...state,
-        foods: [...state.foods, { ...action.payload, quantity: 1 }],
+        items: [...state.items, { ...action.payload, quantity: 1 }],
       };
     case "REMOVE_FROM_CART":
       return {
         ...state,
-        foods: state.foods.filter((item) => item.id !== action.payload.id),
+        items: state.items.filter((item) => item.id !== action.payload.id),
       };
     case "UPDATE_QUANTITY":
       return {
         ...state,
-        foods: state.foods.map((item) =>
+        items: state.items.map((item) =>
           item.id === action.payload.id
             ? { ...item, quantity: action.payload.quantity }
             : item
@@ -110,7 +132,7 @@ export const cartReducer = (
     case "INCREMENT_ITEM":
       return {
         ...state,
-        foods: state.foods.map((item) =>
+        items: state.items.map((item) =>
           item.id === action.payload.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
@@ -119,7 +141,7 @@ export const cartReducer = (
     case "DECREMENT_ITEM":
       return {
         ...state,
-        foods: state.foods.map((item) =>
+        items: state.items.map((item) =>
           item.id === action.payload.id
             ? { ...item, quantity: Math.max(1, item.quantity - 1) }
             : item
@@ -129,13 +151,7 @@ export const cartReducer = (
       return { ...state, ...action.payload };
 
     case "CLEAR_CART":
-      return {
-        foods: [],
-        origin: "",
-        destination: "",
-        distance: 0,
-        additional_info: "",
-      };
+      return initialState;
 
     case "CLEAR_DELIVERY_INFO":
       return {
@@ -145,6 +161,8 @@ export const cartReducer = (
         distance: 0,
         additional_info: "",
       };
+    case "SET_ORDER_TYPE":
+      return { ...state, orderType: action.payload };
     default:
       return state;
   }

@@ -141,8 +141,6 @@ const payment = () => {
     const params = useLocalSearchParams<OrderParams>()
 
 
-
-
     const status = redirectedUrl?.url?.split("?")[1]?.split("&");
 
     const handleOpenWebView = () => {
@@ -152,7 +150,7 @@ const payment = () => {
         setShowWebView(true);
     };
 
-    const { data, error, isSuccess, isPending, mutate: handlePayWithWallet } = useMutation({
+    const { isPending, mutate: handlePayWithWallet } = useMutation({
         mutationFn: (orderId: string) => payWithWallet(orderId),
         onSuccess: () => {
             router.push("/success");
@@ -329,7 +327,7 @@ const payment = () => {
 
                                     <Label
                                         label="Item Cost"
-                                        amount={parseInt(params?.totalCost!) - parseInt(params?.deliveryFee!)}
+                                        amount={params.itemCost}
                                         textColor={activeColor.icon}
                                     />
                                     <Label

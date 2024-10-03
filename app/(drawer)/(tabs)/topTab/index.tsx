@@ -117,7 +117,7 @@ const index = () => {
         showsVerticalScrollIndicator={false}
         refreshing={isFetching}
         onRefresh={handleRefretch}
-        ListEmptyComponent={() => <Empty />}
+        ListEmptyComponent={() => <Empty label="No orders yet!" />}
 
       />
 

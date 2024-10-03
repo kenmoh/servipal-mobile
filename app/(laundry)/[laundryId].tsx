@@ -30,6 +30,7 @@ import { useAuth } from "@/auth/authContext";
 import Empty from "@/components/Empty";
 import LaundryCard from "@/components/LaundryCard";
 import { getUserLaundryServices } from "@/api/laundry";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 const TOP = Dimensions.get("screen").height * 0.1
 const CENTER = Dimensions.get("screen").width * 0.5
@@ -69,6 +70,7 @@ const LaundryDetails = () => {
     const { cart, getTotalPrice } = useCart();
     const [image, setImage] = useState<string | null>(null);
     const [profileImage, setProfileImage] = useState<string | null>(null);
+    // const [refreshing, setRefreshing] = useState(false);
     const { user } = useAuth()
 
 
@@ -77,6 +79,7 @@ const LaundryDetails = () => {
         isFetching,
         isLoading,
         error,
+        refetch
 
     } = useQuery({
         queryKey: ["laundry", id],
@@ -86,10 +89,13 @@ const LaundryDetails = () => {
 
 
 
+    useRefreshOnFocus(refetch);
+
     const { data }: UseQueryResult<CardProps, Error> = useQuery({
         queryKey: ["restaurantUser", id],
         queryFn: () => useApi.getCurrentVendorUser(id as string),
     });
+    console.log(data?.opening_hour, data?.closing_hour)
 
 
     const uploadCoverImageMutation = useMutation({
@@ -393,13 +399,15 @@ const LaundryDetails = () => {
                     data={items?.data ?? []}
                     keyExtractor={(item) => item?.id?.toString() ?? ''}
                     renderItem={({ item }) => <LaundryCard laundry={item} />}
-                    ListEmptyComponent={<Empty label="No Meals Yet!" />}
+                    ListEmptyComponent={<Empty label="No Items Yet!" />}
+                    onRefresh={refetch}
+                    refreshing={isFetching}
                 />
-                {cart.foods?.length >= 1 && (
+                {cart.items?.length >= 1 && (
                     <View style={{ paddingHorizontal: 10 }}>
                         <ViewCartBtn
                             label="Delivery Info"
-                            totalItem={cart.foods.length}
+                            totalItem={cart.items.length}
                             totalCost={getTotalPrice().toFixed(2)}
                             onPress={() => router.push("(restaurant)/deliveryInfo")}
 

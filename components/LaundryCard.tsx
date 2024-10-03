@@ -19,7 +19,8 @@ const blurhash =
 
 export type LaundryType = {
     id: string;
-    vendor_id: string;
+    laundry_id: string;
+    restaurant_id: string;
     name: string;
     price: number;
     quantity: number;
@@ -31,8 +32,8 @@ const LaundryCard = ({ laundry }: { laundry: LaundryType }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { cart, addToCart, removeFromCart, incrementItem, decrementItem } = useCart();
-    const isItemInCart = cart.foods.some((cartItem) => cartItem.id === laundry.id);
+    const { cart, addToCart, removeFromCart, setOrderType } = useCart();
+    const isItemInCart = cart.items.some((cartItem) => cartItem.id === laundry.id);
     const [isChecked, setIsChecked] = useState(isItemInCart);
 
 
@@ -41,6 +42,7 @@ const LaundryCard = ({ laundry }: { laundry: LaundryType }) => {
         setIsChecked(newCheckedState);
         if (newCheckedState) {
             addToCart(laundry);
+            setOrderType('laundry')
         } else {
             removeFromCart(laundry);
         }

@@ -18,7 +18,8 @@ const blurhash =
 
 export type MealType = {
     id: string;
-    vendor_id: string;
+    restaurant_id: string;
+    laundry_id: string;
     name: string;
     price: number;
     quantity: number;
@@ -32,8 +33,8 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { cart, addToCart, removeFromCart, incrementItem, decrementItem } = useCart();
-    const isItemInCart = cart.foods.some((cartItem) => cartItem.id === meal.id);
+    const { cart, addToCart, removeFromCart, setOrderType } = useCart();
+    const isItemInCart = cart.items.some((cartItem) => cartItem.id === meal.id);
     const [isChecked, setIsChecked] = useState(isItemInCart);
 
 
@@ -42,6 +43,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
         setIsChecked(newCheckedState);
         if (newCheckedState) {
             addToCart(meal);
+            setOrderType('food')
         } else {
             removeFromCart(meal);
         }

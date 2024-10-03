@@ -5,24 +5,16 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 
 import { Colors } from "@/constants/Colors";
-import {
-  FontAwesome,
-  Fontisto,
-  Ionicons,
-
-} from "@expo/vector-icons";
+import { FontAwesome, Fontisto, Ionicons } from "@expo/vector-icons";
 import { OrderResponseType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
 
-
-
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
 dayjs.extend(relativeTime);
-
 
 const OrderCard = ({
   order,
@@ -34,51 +26,62 @@ const OrderCard = ({
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-
   return (
     <TouchableOpacity
-      onPress={() => router.push({
-        pathname: `(order)/${order?.id}`,
-        params: {
-
-          packageName: order?.package_name || order.order_owner_username,
-          senderPhoneNumber: order?.order_owner_phone_number,
-          imageUrl: order?.image_url || order?.foods[0].image_url || order?.laundries[0].image_url,
-          itemCost: order?.item_cost,
-          items: JSON.stringify(order?.foods) || JSON.stringify(order?.laundries),
-          amountDueVendor: order?.amount_due_vendor,
-          amountDueDispatch: order?.amount_due_dispatch,
-          totalCost: order?.total_cost,
-          commissionDispatch: order?.commission_rate_delivery,
-          commissionItem: order?.commission_rate_item,
-          orderStatus: order?.order_status,
-          paymentUrl: order?.payment_url,
-          paymntStatus: order?.payment_status,
-          vendorPhoneNumber: order?.vendor_phone_number,
-          vendorUserName: order?.vendor_username,
-          origin: order?.origin,
-          destination: order?.destination,
-          distance: order?.distance,
-          orderOwnerPhoneNumber: order?.order_owner_phone_number,
-          dispatchCompanyName: order?.dispatch_company_name,
-          riderPhoneNumber: order?.rider_phone_number,
-          plateNumber: order?.rider_bike_plate_number,
-          riderImageUrl: order?.rider_image_url,
-          riderName: order?.rider_name,
-          dispatchCompanyPhoneNumber: order?.dispatch_company_phone_number,
-          orderOwnerUsername: order?.order_owner_username,
-          orderId: order?.id,
-          deliveryFee: order?.delivery_fee,
-          orderType: order?.order_type,
-
-        }
-      })}
+      onPress={() =>
+        router.push({
+          pathname: `(order)/${order?.id}`,
+          params: {
+            packageName: order?.package_name || order.order_owner_username,
+            senderPhoneNumber: order?.order_owner_phone_number,
+            imageUrl:
+              order?.order_type === "delivery"
+                ? order?.image_url
+                : order.order_type === "food"
+                  ? order?.foods[0].image_url
+                  : order.order_type === "laundry" &&
+                  order?.laundries[0].image_url,
+            itemCost: order?.item_cost || null,
+            items:
+              JSON.stringify(order?.foods) || JSON.stringify(order?.laundries),
+            amountDueVendor: order?.amount_due_vendor,
+            amountDueDispatch: order?.amount_due_dispatch,
+            totalCost: order?.total_cost,
+            commissionDispatch: order?.commission_rate_delivery,
+            commissionItem: order?.commission_rate_item,
+            orderStatus: order?.order_status,
+            paymentUrl: order?.payment_url,
+            paymntStatus: order?.payment_status,
+            vendorPhoneNumber: order?.vendor_phone_number,
+            vendorUserName: order?.vendor_username,
+            origin: order?.origin,
+            destination: order?.destination,
+            distance: order?.distance,
+            orderOwnerPhoneNumber: order?.order_owner_phone_number,
+            dispatchCompanyName: order?.dispatch_company_name,
+            riderPhoneNumber: order?.rider_phone_number,
+            plateNumber: order?.rider_bike_plate_number,
+            riderImageUrl: order?.rider_image_url,
+            riderName: order?.rider_name,
+            dispatchCompanyPhoneNumber: order?.dispatch_company_phone_number,
+            orderOwnerUsername: order?.order_owner_username,
+            orderId: order?.id,
+            deliveryFee: order?.delivery_fee,
+            orderType: order?.order_type,
+          },
+        })
+      }
       activeOpacity={0.7}
       style={[styles.container, { backgroundColor: activeColor.profileCard }]}
     >
       <View style={styles.topWrapper}>
         <View>
-          <Text style={[styles.titleText, { color: activeColor.text, fontSize: 12 }]}>
+          <Text
+            style={[
+              styles.titleText,
+              { color: activeColor.text, fontSize: 12 },
+            ]}
+          >
             {order.package_name || order.order_owner_username}
           </Text>
           <View style={styles.locationStyle}>
@@ -98,15 +101,39 @@ const OrderCard = ({
             </Text>
           </View>
         </View>
-        <View>
-          <Image
-            source={order?.image_url || order.foods[0].image_url || order.laundries[0].image_url}
-            placeholder={{ blurhash }}
-            contentFit="cover"
-            transition={1000}
-            style={styles.image}
-          />
-        </View>
+        {order?.order_type === "delivery" ? (
+          <View>
+            <Image
+              source={order?.image_url}
+              placeholder={{ blurhash }}
+              contentFit="cover"
+              transition={1000}
+              style={styles.image}
+            />
+          </View>
+        ) : order?.order_type === "food" ? (
+          <View>
+            <Image
+              source={order?.foods[0].image_url}
+              placeholder={{ blurhash }}
+              contentFit="cover"
+              transition={1000}
+              style={styles.image}
+            />
+          </View>
+        ) : (
+          order?.order_type === "laundry" && (
+            <View>
+              <Image
+                source={order?.laundries[0].image_url}
+                placeholder={{ blurhash }}
+                contentFit="cover"
+                transition={1000}
+                style={styles.image}
+              />
+            </View>
+          )
+        )}
       </View>
       <View style={styles.bottomContainer}>
         <Text style={{ color: activeColor.text, fontFamily: "Poppins-Medium" }}>
@@ -135,8 +162,9 @@ const OrderCard = ({
                     : "#e8ac65"
             }
           />
-
-        ) : ''}
+        ) : (
+          ""
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -173,7 +201,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: "row",
     alignItems: "baseline",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     gap: 8,
     marginTop: 10,
   },

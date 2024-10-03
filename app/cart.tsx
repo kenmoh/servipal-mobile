@@ -13,9 +13,9 @@ import { Colors } from "@/constants/Colors";
 import CartItem from "@/components/CartItem";
 import OrderBtn from "@/components/OrderBtn";
 import { useMutation } from "@tanstack/react-query";
-import { OrderData } from "@/auth/cartContext";
+import { OrderData, ServerOrderData } from "@/auth/cartContext";
 import orderApi from "@/api/orders";
-import { router, Stack } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { showMessage } from "react-native-flash-message";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
@@ -56,36 +56,20 @@ const Cart = () => {
     let activeColor = Colors[theme.mode];
 
 
-    const { cart, getTotalPrice, clearCart, clearDeliveryInfo } = useCart();
+    const { cart, getTotalPrice, clearCart, clearDeliveryInfo, getServerOrderData } = useCart();
 
-    const { mutate, data, error, isSuccess, isPending } = useMutation({
-        mutationFn: (orderData: OrderData) =>
-            orderApi.orderFood(orderData.foods[0].restaurant_id, orderData),
-        onSuccess: () => { clearCart(); clearDeliveryInfo() }
-    });
+    const { mutate: submitOrder, isPending, data } = useMutation({
+        mutationFn: (orderData: ServerOrderData) => {
+            if (cart.orderType === 'food') {
+                return orderApi.orderFood(orderData.items[0].restaurant_id, orderData);
+            } else if (cart.orderType === 'laundry') {
+                return orderApi.orderLaundry(orderData.items[0].laundry_id, orderData);
+            }
+            throw new Error('Invalid order type');
+        },
+        onSuccess: (responseData) => {
 
 
-    const handleSubmitOrder = () => {
-        mutate(cart, { onSuccess: () => clearDeliveryInfo() });
-        if (isSuccess || error) {
-            clearCart();
-
-
-        }
-    };
-
-    useEffect(() => {
-        if (error) {
-            showMessage({
-                message: error.message,
-                type: "danger",
-                style: {
-                    alignItems: "center",
-                },
-            });
-            router.push("/cart");
-        }
-        if (isSuccess) {
             showMessage({
                 message: "Order added successfully.",
                 type: "success",
@@ -96,17 +80,36 @@ const Cart = () => {
             router.push({
                 pathname: "/payment",
                 params: {
-                    paymentUrl: data?.payment_url,
-                    orderType: data?.order_type,
-                    id: data?.id,
-                    totalCost: data?.total_cost,
-                    deliveryFee: data?.delivery_fee,
-                    itemCost: data?.food_cost,
-                    items: JSON.stringify(data?.foods),
+                    paymentUrl: responseData?.payment_url,
+                    orderType: responseData?.order_type,
+                    id: responseData?.id,
+                    totalCost: responseData?.total_cost,
+                    deliveryFee: responseData?.delivery_fee,
+                    itemCost: responseData?.item_cost,
+                    items: JSON.stringify(responseData?.order_type === 'food' ? responseData?.foods : responseData?.laundries)
+
                 },
             });
+
+            clearCart();
+            clearDeliveryInfo()
+        },
+        onError: (error: Error) => {
+            showMessage({
+                message: error.message,
+                type: "danger",
+                style: {
+                    alignItems: "center",
+                },
+            });
+            router.push("/cart");
         }
-    }, [isSuccess, error]);
+    });
+
+    const handleSubmitOrder = () => {
+        const serverOrderData = getServerOrderData();
+        submitOrder(serverOrderData);
+    };
 
 
     return (
@@ -120,7 +123,7 @@ const Cart = () => {
             <ScrollView
                 style={[styles.container, { backgroundColor: activeColor.background }]}
             >
-                {cart.foods.length > 0 ? (
+                {cart.items.length > 0 ? (
                     <CartItem />
                 ) : (
                     <View
@@ -152,12 +155,13 @@ const Cart = () => {
                     padding: 20,
                 }}
             >
-                {cart.foods.length >= 1 && (
+                {cart.items.length >= 1 && (
                     <OrderBtn
                         totalCost={getTotalPrice().toFixed(2)}
                         onPress={handleSubmitOrder}
                     />
                 )}
+
             </View>
         </>
     );

@@ -20,6 +20,7 @@ import { StatusBar } from "expo-status-bar";
 import Empty from "@/components/Empty";
 import { OrderResponseType } from "@/utils/types";
 import AppSwipeable from "@/components/AppSwipeable";
+import { showMessage } from "react-native-flash-message";
 
 export const imageUrl =
     "https://mohdelivery.s3.amazonaws.com/kiakiaIcons/fastfood.png";
@@ -36,8 +37,26 @@ const Delivery = () => {
     });
 
     const { isPending, mutate } = useMutation({
-        mutationFn: (orderId: string) => ordersApi.updateFoodStatus(orderId)
+        mutationFn: (orderId: string) => ordersApi.updateItemStatus(orderId),
+        onError: (error: Error) => {
+            showMessage({
+                message: error.message,
+                type: 'danger',
+                style: {
+                    alignContent: 'center'
+                }
+            })
+        },
+        onSuccess: () => {
+            showMessage({
+                message: 'Process completed!',
+                type: 'success'
+            })
+
+        }
     })
+
+
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -52,11 +71,11 @@ const Delivery = () => {
         return () => subscription.remove();
     }, []);
 
-    const handleRefretch = () => {
-        setRefreshing(true);
-        refetch();
-        setRefreshing(false);
-    };
+    // const handleRefretch = () => {
+    //     setRefreshing(true);
+    //     refetch();
+    //     setRefreshing(false);
+    // };
 
     useRefreshOnFocus(refetch!);
 
@@ -114,9 +133,9 @@ const Delivery = () => {
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}
                 vertical
-                refreshing={refreshing}
-                onRefresh={handleRefretch}
-                ListEmptyComponent={() => <Empty />}
+                refreshing={isFetching}
+                onRefresh={refetch}
+                ListEmptyComponent={() => <Empty label="No new order!" />}
             />
         </View>
     );

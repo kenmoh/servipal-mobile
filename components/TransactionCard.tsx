@@ -37,13 +37,13 @@ const TransactionCard = ({
                             transactions?.transaction_type === "debit" ||
                             transactions?.transaction_type === "paid with wallet"
                         ) ? (
-                            <Feather name="arrow-down-left" size={15} color={Colors.error} />
+                            <Feather name="arrow-up-right" size={15} color={Colors.error} />
                         ) : (
                             transactions?.status === "paid" ||
                             transactions.transaction_type === "fund wallet" ||
                             transactions.transaction_type === "credit"
                         ) ? (
-                            <Feather name="arrow-up-right" size={15} color={'teal'} />
+                            <Feather name="arrow-down-left" size={15} color={'teal'} />
                         ) : null}
 
                         <View>

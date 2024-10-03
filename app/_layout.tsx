@@ -202,7 +202,7 @@ export default function RootLayout() {
         </AuthProvider>
 
         <FlashMessage
-          position={"top"}
+          position={"bottom"}
           style={{
             zIndex: 999
           }}

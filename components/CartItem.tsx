@@ -22,7 +22,7 @@ const CartItem = () => {
     };
     return (
         <>
-            {cart.foods.map((cartItem) => (
+            {cart.items.map((cartItem) => (
                 <View
                     key={cartItem.id}
                     style={[
@@ -86,7 +86,7 @@ const CartItem = () => {
             ))}
 
             {
-                cart.foods.length > 0 && (
+                cart.items.length > 0 && (
                     <View
                         style={{
                             marginTop: 20,

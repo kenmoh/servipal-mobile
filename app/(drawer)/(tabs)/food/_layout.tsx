@@ -16,7 +16,7 @@ const FoodOrderLayout = () => {
   let activeColor = Colors[theme.mode];
   const { user } = useAuth();
 
-  const { data, refetch, error, isFetching } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["newFoodOrders"],
     queryFn: ordersApi.getUserNewFoodOrder,
   });
@@ -53,9 +53,9 @@ const FoodOrderLayout = () => {
         <FoodTabBar.Screen
           name="new"
           options={{
-            title: `New Orders(${data?.data !== "undefined" && data?.data?.length
-              })`,
+            title: `New(${isFetching ? 0 : data?.data?.length})`,
           }}
+
         />
       </FoodTabBar>
     </ScreenWithFAB>

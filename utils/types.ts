@@ -114,7 +114,7 @@ export type OrderResponseType = {
   order_status: "pending" | "delivered" | "received";
   item_status: string;
   payment_status: string;
-  order_type: string;
+  order_type: "delivery" | "food" | "laundry";
   payment_url: string;
   order_owner_username: string;
   dispatch_company_phone_number: string;

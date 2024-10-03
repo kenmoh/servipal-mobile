@@ -70,7 +70,7 @@ const getUserOrderStats = async () => {
   const result = await client.get(`${endpoint}/user-order-stats`);
 
   if (!result.data) {
-    throw new Error(result?.data?.detail.split(":")[0]);
+    throw new Error(result?.data?.detail.split(":")[1]);
   }
   return result.data;
 };
@@ -132,13 +132,13 @@ const laundryOrderReceived = (order_id: string) =>
   client.put(`${endpoint}/${order_id}/laundry-order-received`);
 
 // Restaurant user update food status
-const updateFoodStatus = async (order_id: string) => {
+const updateItemStatus = async (order_id: string) => {
   const result = await client.patch(
-    `${endpoint}/${order_id}/update-food-order-status`
+    `${endpoint}/${order_id}/update-item-order-status`
   );
-  console.log(result.data, "===============================", order_id);
+
   if (!result.ok) {
-    throw new Error(result?.data.detail);
+    throw new Error(result?.data.detail?.split(":")[1]);
   }
   return result.data;
 };
@@ -146,7 +146,7 @@ const updateFoodStatus = async (order_id: string) => {
 // Order food
 const orderFood = async (redtaurantId: string, item: OrderData) => {
   const data = {
-    foods: item.foods,
+    foods: item.items,
     origin: item.origin,
     destination: item.destination,
     distance: item.distance,
@@ -163,9 +163,9 @@ const orderFood = async (redtaurantId: string, item: OrderData) => {
   }
   return response.data;
 };
-const orderLaundry = async (laundryId: string, item: LaundryOrderData) => {
+const orderLaundry = async (laundryId: string, item: OrderData) => {
   const data = {
-    laundries: item.laundries,
+    laundries: item.items,
     origin: item.origin,
     destination: item.destination,
     distance: item.distance,
@@ -178,7 +178,7 @@ const orderLaundry = async (laundryId: string, item: LaundryOrderData) => {
   );
 
   if (!response.ok) {
-    throw new Error(response.data?.detail);
+    throw new Error(response.data?.detail?.split(":")[0]);
   }
   return response.data;
 };
@@ -232,5 +232,5 @@ export default {
   laundryOrderReceived,
   getUserLaundryOrderItems,
   getUserRestaurantOrderItems,
-  updateFoodStatus,
+  updateItemStatus,
 };

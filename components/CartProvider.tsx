@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext, useReducer, useState } from "react";
-import { cartReducer, CartContext, CartContextType, OrderData, CartItem, CartState } from "@/auth/cartContext";
+import { cartReducer, CartContext, CartContextType, OrderData, CartItem, CartState, initialState, ServerOrderData } from "@/auth/cartContext";
 import items from "@/app/(drawer)/(tabs)/buySell/items";
 
 
@@ -16,13 +16,7 @@ import items from "@/app/(drawer)/(tabs)/buySell/items";
 
 
 const CartProvider = ({ children }: { children: ReactNode }) => {
-    const [state, dispatch] = useReducer(cartReducer, {
-        foods: [],
-        origin: "",
-        destination: "",
-        distance: 0,
-        additional_info: "",
-    });
+    const [state, dispatch] = useReducer(cartReducer, initialState);
 
 
     const addToCart = (item: Omit<CartItem, "quantity">) => {
@@ -38,7 +32,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const getTotalPrice = () => {
-        return state.foods.reduce(
+        return state.items.reduce(
             (total, item) => total + item.price * item.quantity,
             0
         );
@@ -63,6 +57,14 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     const clearDeliveryInfo = () => dispatch({ type: "CLEAR_DELIVERY_INFO" });
 
 
+    const setOrderType = (type: 'food' | 'laundry') => {
+        dispatch({ type: "SET_ORDER_TYPE", payload: type });
+    };
+
+    const getServerOrderData = (): ServerOrderData => {
+        const { orderType, ...serverData } = state;
+        return serverData;
+    };
 
     const contextValue: CartContextType = {
         cart: state,
@@ -74,10 +76,9 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         decrementItem,
         setDeliveryInfo,
         clearCart,
-        clearDeliveryInfo
-
-
-
+        clearDeliveryInfo,
+        setOrderType,
+        getServerOrderData
     };
 
     return (
