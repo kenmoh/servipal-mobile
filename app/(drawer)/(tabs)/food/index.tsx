@@ -111,7 +111,7 @@ const index = () => {
             <FlatList
                 ref={ref}
                 data={categories?.data}
-                keyExtractor={(item) => item?.id?.toString()}
+                keyExtractor={(item) => item?.id?.toString() + item.name}
                 key={2}
                 showsHorizontalScrollIndicator={false}
                 horizontal

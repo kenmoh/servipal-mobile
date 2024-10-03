@@ -394,12 +394,6 @@ type Comment = {
   comment: string;
 };
 
-export type ReviewType = {
-  rating: number;
-  average_rating: string;
-  comments: Comment[];
-};
-
 export type UserProfile = {
   location: string;
   bankName: string;
@@ -434,10 +428,20 @@ export interface Wallet {
   wallet_transactions: WalletTransaction[];
 }
 
-type RatingType = {
+export type ReviewType = {
+  rating: string;
+  comment: string;
+  name: string;
+  profile_image: string;
+  created_at: string;
+};
+
+export type RatingType = {
   average_rating: string;
   number_of_ratings: number;
+  reviews: ReviewType[];
 };
+
 export type CardProps = {
   id: string;
   company_name: string;

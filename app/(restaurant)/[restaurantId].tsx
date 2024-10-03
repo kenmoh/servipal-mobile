@@ -349,7 +349,10 @@ const RestaurantDetails = () => {
                                 ({data?.rating.number_of_ratings} {data?.rating.number_of_ratings! > 1 ? "reviews" : "review"})
                             </Text>
                         </View>
-                        <Link href={"reviews"} asChild>
+                        <TouchableOpacity onPress={() => router.push({
+                            pathname: 'reviews',
+                            params: { reviews: JSON.stringify(data?.rating) }
+                        })}>
                             <Text
                                 style={{
                                     color: activeColor.icon,
@@ -360,7 +363,7 @@ const RestaurantDetails = () => {
                             >
                                 Reviews
                             </Text>
-                        </Link>
+                        </TouchableOpacity>
                     </View>
                 )}
             </View>}
