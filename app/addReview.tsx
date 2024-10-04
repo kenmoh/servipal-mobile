@@ -15,6 +15,8 @@ import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { SIZES } from "@/constants/Sizes";
 import RatingInput from "@/components/RatingInput";
 import { rateItem } from "@/api/items";
+import userApi from '@/api/users'
+import { ReviewType } from "@/utils/types";
 
 
 
@@ -23,14 +25,14 @@ type RatingType = {
     rating: string;
     comment: string;
 };
-const reviewForm = () => {
+const addReview = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
     const { id } = useLocalSearchParams()
 
-    const { mutate, isPending } = useMutation({
-        mutationFn: (rating: RatingType) => rateItem(id as string, rating),
+    const { mutate, isPending, data } = useMutation({
+        mutationFn: (rating: RatingType) => userApi.addReview(id as string, rating),
         onError: (error) => {
             showMessage({
                 message: error.message,
@@ -43,7 +45,7 @@ const reviewForm = () => {
         },
         onSuccess: () => {
             showMessage({
-                message: "Meal successfully.",
+                message: "Review successfully.",
                 type: "success",
                 style: {
                     alignItems: "center",
@@ -52,7 +54,6 @@ const reviewForm = () => {
             router.back();
         }
     });
-
 
     return (
         <View
@@ -132,7 +133,7 @@ const reviewForm = () => {
     );
 };
 
-export default reviewForm;
+export default addReview;
 
 const styles = StyleSheet.create({
     container: {

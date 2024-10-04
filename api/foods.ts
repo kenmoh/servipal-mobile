@@ -33,6 +33,7 @@ export const addMeal = async (meal: AddMealType) => {
   data.append("name", meal.name);
   data.append("price", meal.price);
   data.append("category", meal.category);
+  data.append("preparation_time", meal.preparationTime);
   data.append("side", meal.side!);
   data.append("ingredients", meal.ingredients!);
   data.append("image", {

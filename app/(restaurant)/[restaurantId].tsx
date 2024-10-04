@@ -24,8 +24,7 @@ import { useCart } from "@/components/CartProvider";
 import { AntDesign } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
 import restaurant from "@/assets/images/restaurant.jpg";
-import { CardProps, companyImage } from "@/utils/types";
-import usersApi from '@/api/users'
+import { CardProps } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import client from "@/api/client";
 import { useAuth } from "@/auth/authContext";
@@ -83,7 +82,7 @@ const RestaurantDetails = () => {
     } = useQuery({
         queryKey: ["restaurant", id],
         queryFn: () => getRestaurantMeals(id as string),
-        staleTime: 60 * 60 * 60
+        staleTime: 60 * 60 * 60,
     });
 
     const { data }: UseQueryResult<CardProps, Error> = useQuery({

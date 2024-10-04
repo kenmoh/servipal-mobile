@@ -275,9 +275,10 @@ export default function HomeScreen() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                marginTop: 10
               }}
             >
-              <Status
+              {/* <Status
                 text={orderStatus}
                 textColor={
                   orderStatus === "pending"
@@ -288,7 +289,16 @@ export default function HomeScreen() {
                         ? "skyblue"
                         : "#e8ac65"
                 }
-              />
+                /> */}
+
+              <TouchableOpacity onPress={() => router.push({ pathname: 'addReview', params: { orderId } })}>
+                <Text style={[styles.linkText, { color: activeColor.text }]}>Add Review</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <Text style={[styles.linkText, { color: activeColor.text }]}>Open Dispute</Text>
+              </TouchableOpacity>
+
               <TouchableOpacity
                 hitSlop={25}
                 onPress={() =>
@@ -627,7 +637,6 @@ const styles = StyleSheet.create({
   btnContainer: {
     position: "absolute",
     bottom: 5,
-    // zIndex: 999,
     width: "90%",
     alignSelf: "center",
   },
@@ -642,5 +651,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'baseline',
     gap: 5
+  },
+  linkText: {
+    fontSize: 12,
+    textTransform: "capitalize",
+    fontFamily: "Poppins-Regular",
   }
 });

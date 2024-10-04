@@ -309,6 +309,7 @@ export type AddMealType = {
   side?: string;
   ingredients: string;
   image: string;
+  preparationTime: string;
 };
 
 type Food = {
@@ -429,7 +430,7 @@ export interface Wallet {
 }
 
 export type ReviewType = {
-  rating: string;
+  rating: string | number;
   comment: string;
   name: string;
   profile_image: string;

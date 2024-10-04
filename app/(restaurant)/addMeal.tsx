@@ -1,4 +1,5 @@
 import { StyleSheet, ScrollView, View, Text } from "react-native";
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Formik } from "formik";
@@ -86,6 +87,7 @@ const AddMeal = () => {
                                 category: "",
                                 side: "",
                                 ingredients: "",
+                                preparationTime: "",
                                 image: "",
                             }}
                             onSubmit={(values, { resetForm }) =>
@@ -155,6 +157,20 @@ const AddMeal = () => {
                                             />
                                             {touched.ingredients && errors.ingredients && (
                                                 <InputErrorMessage error={errors.ingredients} />
+                                            )}
+                                            <CustomTextInput
+                                                label="Preparation Time"
+                                                onChangeText={handleChange("preparationTime")}
+                                                value={values.preparationTime}
+                                                multiline
+                                                numberOfLines={4}
+                                                textAlignVertical="top"
+                                                inputBackgroundColor={activeColor.inputBackground}
+                                                inputTextColor={activeColor.text}
+                                                labelColor={activeColor.text}
+                                            />
+                                            {touched.preparationTime && errors.preparationTime && (
+                                                <InputErrorMessage error={errors.preparationTime} />
                                             )}
 
                                             <CustomPickerTextInput

@@ -5,6 +5,7 @@ import {
   CreateDispatch,
   CreateRider,
   CreateUser,
+  ReviewType,
   SetupCompany,
   UpdateProfileImage,
   UpdateUser,
@@ -15,10 +16,6 @@ const dispatchEndpoint = "/users/register-dispatch";
 const riderEndpoint = "/users/register-rider";
 const userEndpoint = "/users/register";
 const user = "/users";
-
-type ErrorType = {
-  detail: string;
-};
 
 // Dispatch get all riders
 const getDispatchRiders = async () =>
@@ -247,6 +244,23 @@ const companyProfileImage = async (img: companyImage) => {
   return response.data;
 };
 
+type RatingType = {
+  rating: string;
+  comment: string;
+};
+// Confirm Account
+const addReview = async (orderId: string, reviewData: RatingType) => {
+  const data = {
+    rating: reviewData.rating,
+    comment: reviewData.comment,
+  };
+
+  const result = await client.patch(`${user}/${orderId}}/add-review`, data);
+
+  if (!result.ok) throw new Error(result?.data?.detail.split(":")[0]);
+  return result.data;
+};
+
 export default {
   getDispatchRiders,
   createUser,
@@ -265,4 +279,5 @@ export default {
   updateCompanyProfile,
   companyProfileImage,
   getCurrentVendorUser,
+  addReview,
 };
