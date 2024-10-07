@@ -456,8 +456,8 @@ const SetupCompanyProfile = () => {
                                         <DateTimePicker
                                             testID="closingHourPicker"
                                             value={
-                                                values.openingHour && !isNaN(new Date(`1970-01-01T${values.openingHour}`).getTime())
-                                                    ? new Date(`1970-01-01T${values.openingHour}`)
+                                                values.closingHour && !isNaN(new Date(`1970-01-01T${values.closingHour}`).getTime())
+                                                    ? new Date(`1970-01-01T${values.closingHour}`)
                                                     : new Date()
                                             }
                                             mode="time"
