@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 
 
 import { Formik } from "formik";
@@ -65,7 +65,8 @@ const SenderSignup = () => {
 
   return (
     < >
-      <View
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{
           backgroundColor: activeColor.background,
           flex: 1,
@@ -187,7 +188,7 @@ const SenderSignup = () => {
             senderLabel="Sign In"
           />
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
       <StatusBar style={theme.mode === 'dark' ? "light" : 'dark'} backgroundColor={activeColor.background} />
 
     </>

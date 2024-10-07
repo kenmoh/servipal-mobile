@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View, Text, Platform } from "react-native";
+import { StyleSheet, ScrollView, View, Text, Platform, KeyboardAvoidingView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
@@ -100,7 +100,8 @@ const SetupCompanyProfile = () => {
     });
 
     return (
-        <View
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{
                 backgroundColor: activeColor.background,
                 flex: 1,
@@ -480,7 +481,7 @@ const SetupCompanyProfile = () => {
                     )}
                 </View>
             </ScrollView>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 
