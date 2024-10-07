@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -42,13 +42,8 @@ const SignIn = () => {
       });
       router.replace("signin");
 
-    }
-  });
-
-
-
-  useEffect(() => {
-    if (isSuccess) {
+    },
+    onSuccess: (data) => {
       const user = jwtDecode(data?.access_token) as UserReturn;
 
       if (user?.account_status === 'confirmed') {
@@ -76,83 +71,83 @@ const SignIn = () => {
       router.replace("(tabs)/topTab");
       return;
     }
-  }, [isSuccess, data])
+  });
+
+
+
+  // useEffect(() => {
+  //   if 
+  // }, [isSuccess, data])
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background, }}>
+
+      <CustomActivityIndicator visible={isPending} />
       <View
         style={{
-          backgroundColor: activeColor.background,
           flex: 1,
-          alignItems: "center",
+          width: "100%",
+          backgroundColor: activeColor.background,
+          paddingHorizontal: SIZES.paddingMedium
         }}
       >
-        <CustomActivityIndicator visible={isPending} />
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            backgroundColor: activeColor.background,
-            paddingHorizontal: SIZES.paddingMedium
-          }}
+        {/* <TitleText label="Sign In" textColor={activeColor.text} /> */}
+        <Formik
+          initialValues={{ username: "", password: "" }}
+          validationSchema={loginValidationSchema}
+          onSubmit={mutate}
         >
-          <TitleText label="Sign In" textColor={activeColor.text} />
-          <Formik
-            initialValues={{ username: "", password: "" }}
-            validationSchema={loginValidationSchema}
-            onSubmit={mutate}
-          >
-            {({ handleChange, handleSubmit, values, errors, touched }) => (
-              <>
-                <View>
-                  <CustomTextInput
-                    label="Email"
-                    autoCapitalize="none"
-                    keyboardType="email-address"
-                    onChangeText={handleChange("username")}
-                    value={values.username}
-                    labelColor={activeColor.text}
+          {({ handleChange, handleSubmit, values, errors, touched }) => (
+            <>
+              <View>
+                <CustomTextInput
+                  label="Email"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  onChangeText={handleChange("username")}
+                  value={values.username}
+                  labelColor={activeColor.text}
 
 
 
+                />
+                {touched.username && errors.username && (
+                  <InputErrorMessage error={errors.username} />
+                )}
+                <CustomTextInput
+                  label="Password"
+                  autoCapitalize="none"
+                  secureTextEntry={true}
+                  onChangeText={handleChange("password")}
+                  value={values.password}
+                  labelColor={activeColor.text}
+                />
+                {touched.password && errors.password && (
+                  <InputErrorMessage error={errors.password} />
+                )}
+                <Link href={'resetPasswordLink'} style={{ alignSelf: 'flex-end', color: activeColor.icon }}>
+                  Forgot Password?
+                </Link>
+                <View style={{ marginVertical: 25 }}>
+                  <CustomBtn
+                    btnColor={Colors.btnPrimaryColor}
+                    label="Login"
+                    onPress={handleSubmit}
                   />
-                  {touched.username && errors.username && (
-                    <InputErrorMessage error={errors.username} />
-                  )}
-                  <CustomTextInput
-                    label="Password"
-                    autoCapitalize="none"
-                    secureTextEntry={true}
-                    onChangeText={handleChange("password")}
-                    value={values.password}
-                    labelColor={activeColor.text}
-                  />
-                  {touched.password && errors.password && (
-                    <InputErrorMessage error={errors.password} />
-                  )}
-                  <Link href={'resetPasswordLink'} style={{ alignSelf: 'flex-end', color: activeColor.icon }}>
-                    Forgot Password?
-                  </Link>
-                  <View style={{ marginVertical: 25 }}>
-                    <CustomBtn
-                      btnColor={Colors.btnPrimaryColor}
-                      label="Login"
-                      onPress={handleSubmit}
-                    />
-                  </View>
-                  <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                    <Text style={[styles.text, { color: activeColor.text }]}>Dont't have an account?</Text>
-                    <Link href={'(auth)/signup'} style={[styles.text, { color: 'blue' }]}>Register</Link>
-
-                  </View>
                 </View>
-              </>
-            )}
-          </Formik>
-        </View>
+                <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                  <Text style={[styles.text, { color: activeColor.text }]}>Dont't have an account?</Text>
+                  <Link href={'(auth)/signup'} style={[styles.text, { color: 'skyblue' }]}>Register</Link>
 
-
+                </View>
+              </View>
+            </>
+          )}
+        </Formik>
       </View>
+
+
+
       <StatusBar style="light" backgroundColor={activeColor.background} />
       <Link href={'(auth)/welcome'} style={{ color: 'red' }}>Onboarding</Link>
     </SafeAreaView>

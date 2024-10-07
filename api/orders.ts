@@ -28,8 +28,13 @@ const getUserOrderItems = async () => {
   return result.data;
 };
 // Current user Restaurant orders
-const getUserRestaurantOrderItems = async () => {
-  const result = await client.get(`${endpoint}/user-food-orders`);
+const getUserRestaurantOrderItems = async (
+  pageSize: number,
+  pageNumber: number
+) => {
+  const result = await client.get(
+    `${endpoint}/user-food-orders?page_size=${pageSize}&page_number=${pageNumber}`
+  );
   if (!result.ok) {
     throw new Error(result.data?.detail?.split(":")[1]);
   }

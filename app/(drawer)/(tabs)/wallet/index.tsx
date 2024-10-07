@@ -167,7 +167,7 @@ const wallet = () => {
         </View>
         <FlatList
           data={data?.wallet_transactions}
-          keyExtractor={(item) => item?.id?.toString()}
+          keyExtractor={(item, index) => `${item?.id?.toString()}-${index}`}
           renderItem={({ item, index }: { item: TransactionData, index: number }) => {
             const isLastTranx = index === data?.data?.wallet_transactions.length - 1;
             return (

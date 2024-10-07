@@ -22,7 +22,7 @@ const orders = () => {
         queryFn: getUserTransactions
     })
 
-
+    console.log(data)
 
     const handleRefresch = () => refetch();
 
@@ -80,13 +80,13 @@ const orders = () => {
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.length - 1;
                     return (
-                        <TransactionDetail isLastItem={isLastItem} transaction={item} />
+                        <TransactionDetail isLastItem={isLastItem} transaction={item} isNew />
                     );
                 }}
                 showsVerticalScrollIndicator={false}
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
-                ListEmptyComponent={<Empty />}
+                ListEmptyComponent={<Empty label='No Order Yet!' />}
             />
         </View>
 

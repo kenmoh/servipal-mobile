@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useContext } from 'react'
-import SellCard from '@/components/SellCard'
+import SellCard, { CardType } from '@/components/SellCard'
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
 import { useQuery } from '@tanstack/react-query';
@@ -13,11 +13,12 @@ const index = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { data } = useQuery({
+    const { data, isFetching, refetch } = useQuery({
         queryKey: ['listings'],
         queryFn: getItemListings
     })
 
+    console.log(data)
 
     return (
         <View style={[styles.container, { backgroundColor: activeColor.background }]}>
@@ -25,22 +26,21 @@ const index = () => {
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={data?.data}
-                keyExtractor={(item) => item?.id?.toString()}
-                numColumns={2}
+                keyExtractor={(item: CardType, index: number) => `${item?.id?.toString()}-${index}`}
+
                 contentContainerStyle={{
                     alignSelf: 'center',
-                    justifyContent: 'center',
-                    gap: 15,
 
                 }}
-                columnWrapperStyle={{ gap: 10 }}
-                ListEmptyComponent={<Empty />}
+                ListEmptyComponent={<Empty label='No item yet!' />}
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.data.length - 1
                     return (
                         <SellCard item={item} isLastItem={isLastItem} />
                     )
                 }}
+                onRefresh={refetch}
+                refreshing={isFetching}
             />
         </View>
     )

@@ -55,73 +55,67 @@ const confirmAccount = () => {
     }, [isSuccess])
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background, }}>
+
+            <CustomActivityIndicator visible={isPending} />
             <View
                 style={{
-                    backgroundColor: activeColor.background,
                     flex: 1,
-                    alignItems: "center",
+                    width: "100%",
+                    borderRadius: 10,
+                    padding: 20,
+                    backgroundColor: activeColor.background,
                 }}
             >
-                <CustomActivityIndicator visible={isPending} />
-                <View
-                    style={{
-                        flex: 1,
-                        width: "100%",
-                        borderRadius: 10,
-                        padding: 20,
-                        backgroundColor: activeColor.background,
-                    }}
+
+                <Formik
+                    initialValues={{ emailCode: "", phoneCode: "" }}
+                    validationSchema={accountValidationSchema}
+                    onSubmit={mutate}
                 >
-                    <TitleText label="Confirm Account" textColor={activeColor.text} />
-                    <Formik
-                        initialValues={{ emailCode: "", phoneCode: "" }}
-                        validationSchema={accountValidationSchema}
-                        onSubmit={mutate}
-                    >
-                        {({ handleChange, handleSubmit, values, errors, touched }) => (
-                            <>
-                                <View>
-                                    <CustomTextInput
-                                        label="Email Code"
-                                        keyboardType="number-pad"
-                                        onChangeText={handleChange("emailCode")}
-                                        value={values.emailCode}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                    />
-                                    {touched.emailCode && errors.emailCode && (
-                                        <InputErrorMessage error={errors.emailCode} />
-                                    )}
-                                    <CustomTextInput
-                                        label="Phone Code"
-                                        keyboardType="number-pad"
+                    {({ handleChange, handleSubmit, values, errors, touched }) => (
+                        <>
+                            <View>
+                                <CustomTextInput
+                                    label="Email Code"
+                                    keyboardType="number-pad"
+                                    onChangeText={handleChange("emailCode")}
+                                    value={values.emailCode}
+                                    labelColor={activeColor.text}
+                                    inputBackgroundColor={activeColor.inputBackground}
+                                    inputTextColor={activeColor.text}
+                                />
+                                {touched.emailCode && errors.emailCode && (
+                                    <InputErrorMessage error={errors.emailCode} />
+                                )}
+                                <CustomTextInput
+                                    label="Phone Code"
+                                    keyboardType="number-pad"
 
-                                        onChangeText={handleChange("phoneCode")}
-                                        value={values.phoneCode}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                    />
-                                    {touched.phoneCode && errors.phoneCode && (
-                                        <InputErrorMessage error={errors.phoneCode} />
-                                    )}
-                                    <View style={{ marginVertical: 25 }}>
-                                        <CustomBtn
-                                            btnColor={Colors.btnPrimaryColor}
-                                            label="Send"
+                                    onChangeText={handleChange("phoneCode")}
+                                    value={values.phoneCode}
+                                    labelColor={activeColor.text}
+                                    inputBackgroundColor={activeColor.inputBackground}
+                                    inputTextColor={activeColor.text}
+                                />
+                                {touched.phoneCode && errors.phoneCode && (
+                                    <InputErrorMessage error={errors.phoneCode} />
+                                )}
+                                <View style={{ marginVertical: 25 }}>
+                                    <CustomBtn
+                                        btnColor={Colors.btnPrimaryColor}
+                                        label="Send"
 
-                                            onPress={handleSubmit}
-                                        />
-                                    </View>
+                                        onPress={handleSubmit}
+                                    />
                                 </View>
-                            </>
-                        )}
-                    </Formik>
-                </View>
-
+                            </View>
+                        </>
+                    )}
+                </Formik>
             </View>
+
+
             <StatusBar style="light" backgroundColor={activeColor.background} />
         </SafeAreaView>
     );

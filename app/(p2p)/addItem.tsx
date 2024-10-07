@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { showMessage } from "react-native-flash-message";
 import { useMutation } from "@tanstack/react-query";
 import CustomTextInput from "@/components/CustomTextInput";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import CustomBtn from "@/components/CustomBtn";
-import { Formik, } from "formik";
+import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
@@ -17,22 +17,38 @@ import { CreateListingType } from "@/utils/types";
 import { SIZES } from "@/constants/Sizes";
 import ImageListForm from "@/components/ImageListForm";
 import { addListing } from "@/api/items";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import ColorInput from "@/components/ColorInput";
 
-const INPUT_WIDTH = Dimensions.get('screen').width * 0.45
-
+const INPUT_WIDTH = Dimensions.get("screen").width * 0.45;
 
 const AddItem = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const [colors, setColors] = useState<string[]>([""]);
+    const [sizes, setSizes] = useState<number[]>([0]);
+    const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
+    const [selectedColorIndex, setSelectedColorIndex] = useState<number | null>(
+        null
+    );
 
+    const handleRemoveColor = (index: number) => {
+        const newColors = colors.filter(
+            (_, i) => i !== index
+        );
+        setColors(newColors);
+    }
 
+    const handleChangeText = (text: string, index: number) => {
+        const newColors = [...colors];
+        newColors[index] = text;
+        setColors(newColors);
+    }
 
-    const { error, isSuccess, mutate, isPending, data } =
+    const { error, isSuccess, mutate, isPending } =
         useMutation<CreateListingType>({
             mutationFn: (listing: CreateListingType) => addListing(listing),
         });
-
-
 
     useEffect(() => {
         if (error) {
@@ -59,38 +75,34 @@ const AddItem = () => {
     return (
         <>
             <CustomActivityIndicator visible={isPending} />
-            <View style={{
-                backgroundColor: activeColor.background,
-                flex: 1,
-                paddingHorizontal: SIZES.paddingSmall
-            }}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                >
+            <View
+                style={{
+                    backgroundColor: activeColor.background,
+                    flex: 1,
+                    paddingHorizontal: SIZES.paddingSmall,
+                }}
+            >
+                <ScrollView showsVerticalScrollIndicator={false}>
                     <StatusBar style="inverted" />
-
 
                     <Formik
                         initialValues={{
                             name: "",
                             price: "",
-
                             images: [],
+                            colors: [],
+                            sizes: [],
                             stock: "",
                             description: "",
-
                         }}
-                        onSubmit={(values, { resetForm }) => mutate(values, { onSuccess: () => resetForm() })}
+                        onSubmit={(values, { resetForm }) =>
+                            mutate(values, { onSuccess: () => resetForm() })
+                        }
                         validationSchema={addItemValidationSchema}
                     >
-                        {({
-                            handleChange,
-                            handleSubmit,
-                            values,
-                            errors,
-                            touched,
-                        }) => (
+                        {({ handleChange, handleSubmit, values, errors, touched }) => (
                             <>
+
                                 <CustomTextInput
                                     onChangeText={handleChange("name")}
                                     value={values.name}
@@ -102,7 +114,7 @@ const AddItem = () => {
                                 {touched.name && errors.name && (
                                     <InputErrorMessage error={errors.name} />
                                 )}
-                                <View style={{ flexDirection: 'row', gap: 10 }}>
+                                <View style={{ flexDirection: "row", gap: 10 }}>
                                     <View>
                                         <CustomTextInput
                                             onChangeText={handleChange("price")}
@@ -117,7 +129,6 @@ const AddItem = () => {
                                         {touched.price && errors.price && (
                                             <InputErrorMessage error={errors.price} />
                                         )}
-
                                     </View>
                                     <View>
                                         <CustomTextInput
@@ -135,8 +146,61 @@ const AddItem = () => {
                                         )}
                                     </View>
                                 </View>
-                                <CustomTextInput
+                                {/* <View>
+                                    <View>
+                                        {sizes.map((size, index) => (
+                                            <View
+                                                key={index}
+                                                style={{ flexDirection: "row", alignItems: "center" }}
+                                            >
+                                                <CustomTextInput
+                                                    onChangeText={(text) => {
+                                                        const newSizes = [...sizes];
+                                                        newSizes[index] = Number(text);
+                                                        setSizes(newSizes);
+                                                    }}
+                                                    value={size.toString()}
+                                                    labelColor={activeColor.text}
+                                                    label={`Size ${index + 1}`}
+                                                    inputBackgroundColor={activeColor.inputBackground}
+                                                    inputTextColor={activeColor.text}
+                                                    keyboardType="numeric"
+                                                />
+                                                <CustomBtn
+                                                    btnColor="red"
+                                                    label="Remove"
+                                                    onPress={() => {
+                                                        const newSizes = sizes.filter(
+                                                            (_, i) => i !== index
+                                                        );
+                                                        setSizes(newSizes);
+                                                    }}
+                                                />
+                                            </View>
+                                        ))}
+                                    </View>
+                                </View> */}
 
+                                {/* <View style={{}}>
+                                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
+                                        {colors.map((color, index) => (
+                                            <View key={index} style={{ width: 100, flexDirection: 'row' }}>
+
+                                                <ColorInput inputBackgroundColor={'purple'} onPress={() => handleRemoveColor(index)} />
+                                            </View>
+                                        ))}
+                                    </View>
+                                    <TouchableOpacity
+                                        hitSlop={10}
+                                        activeOpacity={.6}
+                                        onPress={() => setColors([...colors, ""])}
+                                    >
+                                        <MaterialIcons name="add" size={25}
+                                            color={activeColor.icon}
+                                        />
+                                    </TouchableOpacity>
+                                </View> */}
+                                <CustomTextInput
                                     onChangeText={handleChange("description")}
                                     value={values.description}
                                     labelColor={activeColor.text}
@@ -144,31 +208,23 @@ const AddItem = () => {
                                     inputBackgroundColor={activeColor.inputBackground}
                                     inputTextColor={activeColor.text}
                                     multiline
-
-
                                 />
                                 {touched.description && errors.description && (
                                     <InputErrorMessage error={errors.description} />
                                 )}
-
 
                                 <ImageListForm field="images" />
 
                                 <View style={{ marginVertical: 30 }}>
                                     <CustomBtn
                                         label="submit"
-
                                         btnColor="orange"
                                         onPress={handleSubmit}
                                     />
                                 </View>
-
-
-
                             </>
                         )}
                     </Formik>
-
                 </ScrollView>
             </View>
         </>
@@ -178,7 +234,6 @@ const AddItem = () => {
 export default AddItem;
 
 const styles = StyleSheet.create({
-
     text: {
         fontSize: 16,
         color: "gray",

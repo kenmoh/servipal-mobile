@@ -22,9 +22,10 @@ const IMG_WIDTH = Dimensions.get("screen").width;
 const ItemDetails = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { imageUrls, name, price, description, stock, seller, id } =
+    const { imageUrls, name, price, description, stock, seller, id, totalSold } =
         useLocalSearchParams();
-    const images = JSON.parse(imageUrls);
+    const images = imageUrls && typeof imageUrls === 'string' ? JSON.parse(imageUrls) : []
+
     return (
         <>
             <Stack.Screen
@@ -33,13 +34,13 @@ const ItemDetails = () => {
                 }}
             />
             <ScrollView style={{ flex: 1 }}>
-                <View>
+                {imageUrls && typeof imageUrls === 'string' && <View>
                     <Swiper style={{ height: IMG_HEIGHT }}>
-                        {images?.map((image: string) => (
+                        {JSON.parse(imageUrls)?.map((image: string) => (
                             <Image src={image} key={image} style={styles.image} />
                         ))}
                     </Swiper>
-                </View>
+                </View>}
                 <View
                     style={[
                         styles.container,
@@ -77,13 +78,34 @@ const ItemDetails = () => {
                                 22 reviews
                             </Text>
                             <Text style={[styles.lightText, { color: activeColor.icon }]}>
-                                33 Sold
+                                {totalSold || 0} Sold
                             </Text>
                             <Text style={[styles.lightText, { color: activeColor.icon }]}>
                                 {stock} In Stock
                             </Text>
                         </View>
+                        {/* <View >
+                            <View style={{ flexDirection: 'row', gap: 10 }}>
+                                <Text>Colors: </Text>
+                                <TouchableOpacity onPress={() => console.log('Pressed!')} style={{
+                                    height: 25, width: 25, borderWidth: StyleSheet.hairlineWidth,
+                                    borderColor: activeColor.icon,
+                                    borderRadius: 12.5,
+                                    backgroundColor: 'red'
+                                }} />
 
+
+                            </View>
+                            <View style={{ flexDirection: 'row', gap: 10 }}>
+                                <Text>Sizes: </Text>
+                                <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+                                    <Text>45</Text>
+                                    <Text>45</Text>
+                                    <Text>45</Text>
+                                    <Text>45</Text>
+                                </View>
+                            </View>
+                        </View> */}
                         <View style={{ marginTop: 15 }}>
                             <View
                                 style={{
@@ -159,7 +181,7 @@ const ItemDetails = () => {
                         onPress={() =>
                             router.push({
                                 pathname: "/(p2p)/buyItem",
-                                params: { price, id, image: images[0], name, seller },
+                                params: { price, id, image: JSON.stringify(images[0]), name, seller },
                             })
                         }
                     />

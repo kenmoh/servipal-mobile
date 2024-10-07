@@ -9,7 +9,7 @@ import {
     View,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import { focusManager, useQuery } from "@tanstack/react-query";
+import { focusManager, keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/auth/authContext";
@@ -19,18 +19,20 @@ import { StatusBar } from "expo-status-bar";
 import OrderCard from "@/components/OrderCard";
 import { OrderResponseType } from "@/utils/types";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import CustomBtn from "@/components/CustomBtn";
 
 
 const food = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth();
+    const pageSize = 100
+    const [pageNumber, setPageNumber] = useState(1);
 
-    const [refreshing, setRefreshing] = useState(false);
-
-    const { data, refetch, isFetching } = useQuery({
-        queryKey: ["food", user?.id],
-        queryFn: ordersApi.getUserRestaurantOrderItems,
+    const { data, refetch, isFetching, } = useQuery({
+        queryKey: ["food", user?.id, pageNumber, pageSize],
+        queryFn: () => ordersApi.getUserRestaurantOrderItems(pageSize, pageNumber),
+        placeholderData: keepPreviousData,
     });
 
     function onAppStateChange(status: AppStateStatus) {
@@ -38,6 +40,11 @@ const food = () => {
             focusManager.setFocused(status === "active");
         }
     }
+
+    // Load More function
+    const loadMoreItems = () => {
+        setPageNumber(prev => prev + 1); // Increment page number
+    };
 
 
     useEffect(() => {
@@ -47,11 +54,6 @@ const food = () => {
     }, []);
 
 
-    const handleRefretch = () => {
-        setRefreshing(true);
-        refetch();
-        setRefreshing(false);
-    };
 
     useRefreshOnFocus(refetch);
 
@@ -66,14 +68,15 @@ const food = () => {
             >
                 <FlatList
                     data={data}
-                    keyExtractor={(item) => item?.id}
+                    keyExtractor={(item) => item?.id + item.image_url}
                     renderItem={({ item }: { item: OrderResponseType }) => <OrderCard order={item} isHomeScreen={false} />}
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
                     vertical
                     refreshing={isFetching}
-                    onRefresh={handleRefretch}
+                    onRefresh={refetch}
                 />
+                {/* <CustomBtn btnColor="red" label="Load More" onPress={loadMoreItems} /> */}
             </View>
         </>
     );

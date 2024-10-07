@@ -30,15 +30,16 @@ const FundCard = ({
         >
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <View>
-                    <Text style={[styles.text, { color: activeColor.icon }]}>
+                    {/* <Text style={[styles.text, { color: activeColor.icon }]}>
                         Username: {item.name}
-                    </Text>
-                    <Text style={[styles.text, { color: activeColor.icon }]}>
+                    </Text> */}
+                    <Text style={[styles.text, { color: activeColor.text }]}>
                         Amount: ₦{item.amount}
                     </Text>
                     <Text
                         style={[
                             styles.text,
+
                             {
                                 color:
                                     item.status === "pending"
@@ -48,6 +49,7 @@ const FundCard = ({
                                             : item.status === "failed"
                                                 ? Colors.error
                                                 : Colors.error,
+                                textTransform: 'uppercase'
                             },
                         ]}
                     >
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     text: {
-        fontFamily: "Poppins-Regular",
+        fontFamily: "Poppins-Medium",
         fontSize: 12,
     },
 });

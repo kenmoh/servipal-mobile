@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, ScrollView, View, Text, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useMutation } from "@tanstack/react-query";
@@ -109,8 +109,8 @@ const SetupCompanyProfile = () => {
         >
             <CustomActivityIndicator visible={isPending || isUpdating} />
             <StatusBar style="inverted" />
-            <View style={styles.mainContainer}>
-                <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={styles.mainContainer}>
                     {user?.bank_account_number ? (
                         <Formik
                             initialValues={{
@@ -434,7 +434,7 @@ const SetupCompanyProfile = () => {
                                         <DateTimePicker
                                             testID="openinHourPicker"
                                             value={
-                                                values.openingHour
+                                                values.openingHour && !isNaN(new Date(`1970-01-01T${values.openingHour}`).getTime())
                                                     ? new Date(`1970-01-01T${values.openingHour}`)
                                                     : new Date()
                                             }
@@ -456,8 +456,8 @@ const SetupCompanyProfile = () => {
                                         <DateTimePicker
                                             testID="closingHourPicker"
                                             value={
-                                                values.closingHour
-                                                    ? new Date(`1970-01-01T${values.closingHour}`)
+                                                values.openingHour && !isNaN(new Date(`1970-01-01T${values.openingHour}`).getTime())
+                                                    ? new Date(`1970-01-01T${values.openingHour}`)
                                                     : new Date()
                                             }
                                             mode="time"
@@ -478,8 +478,8 @@ const SetupCompanyProfile = () => {
                             )}
                         </Formik>
                     )}
-                </ScrollView>
-            </View>
+                </View>
+            </ScrollView>
         </View>
     );
 };

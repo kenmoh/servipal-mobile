@@ -65,7 +65,6 @@ export default function HomeScreen() {
     dispatchCompanyName,
     riderPhoneNumber,
     plateNumber,
-    riderImageUrl,
     dispatchCompanyPhoneNumber,
     itemCost,
     orderType,
@@ -73,7 +72,6 @@ export default function HomeScreen() {
     riderName,
     description
   } = useLocalSearchParams();
-
 
   // Handle order Pickup
   const {
@@ -314,23 +312,23 @@ export default function HomeScreen() {
                   })
                 }
                 style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "row",
-                  gap: 10,
-                  borderWidth: 1.5,
-                  borderColor: activeColor.tabIconDefault,
-                  borderRadius: 20,
-                  paddingVertical: 5,
-                  paddingHorizontal: SIZES.paddingMedium,
+                  // justifyContent: "center",
+                  // alignItems: "center",
+                  // flexDirection: "row",
+                  // // gap: 5,
+                  // // borderWidth: 1.5,
+                  // borderColor: activeColor.tabIconDefault,
+                  // // borderRadius: 20,
+                  // // paddingVertical: 5,
+                  // paddingHorizontal: SIZES.paddingMedium,
                 }}
               >
-                <Ionicons
+                {/* <Ionicons
                   name="map-outline"
                   size={24}
                   color={activeColor.tabIconDefault}
-                />
-                <Text style={{ color: activeColor.tabIconDefault }}>
+                /> */}
+                <Text style={{ color: activeColor.tabIconDefault, textDecorationLine: 'underline' }}>
                   View on map
                 </Text>
               </TouchableOpacity>
@@ -376,7 +374,7 @@ export default function HomeScreen() {
                   value={destination || ""}
                 />
                 <DetailLabel lable="Distance" value={distance || ""} />
-                {user?.username === orderOwnerUsername && (
+                {user?.username === orderOwnerUsername && orderType === 'food' && (
                   <>
                     <DetailLabel
                       lable="Delivery Fee"
@@ -393,7 +391,7 @@ export default function HomeScreen() {
                   />
                 )}
                 {user?.phone_number === vendorPhoneNumber &&
-                  orderType !== "food" && (
+                  orderType === 'food' && (
                     <DetailLabel lable="Food Cost" value={itemCost} />
                   )}
                 {user?.user_type === "Dispatch Provider" ||
@@ -656,5 +654,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textTransform: "capitalize",
     fontFamily: "Poppins-Regular",
+    textDecorationLine: 'underline'
   }
 });

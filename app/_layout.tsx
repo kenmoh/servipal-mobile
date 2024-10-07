@@ -208,6 +208,18 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
+              <Stack.Screen name="addReview" options={{
+                title: "Add Review",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
 
             </Stack>
           </CartProvider>

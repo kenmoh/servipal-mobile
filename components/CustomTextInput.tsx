@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     width: "100%",
 
     alignSelf: "center",
-    fontFamily: "Poppins-Light",
+    fontFamily: "Poppins-Regular",
     borderCurve: 'continuous',
 
   },

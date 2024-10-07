@@ -53,7 +53,7 @@ const createUser = async (user: CreateUser) => {
   };
 
   const result = await client.post(userEndpoint, reqData);
-  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  if (!result.ok) throw new Error(result?.data?.detail?.split(":")[1]);
   return result.data;
 };
 
@@ -165,8 +165,6 @@ const setupCompanyProfile = async (profile: SetupCompany) => {
     bank_account_number: profile.accountNumber,
   };
 
-  console.log(data);
-
   const response = await client.post(`${user}/setup-company-profile`, data);
 
   if (!response.ok) {
@@ -255,7 +253,7 @@ const addReview = async (orderId: string, reviewData: RatingType) => {
     comment: reviewData.comment,
   };
 
-  const result = await client.patch(`${user}/${orderId}}/add-review`, data);
+  const result = await client.post(`${user}/${orderId}}/add-review`, data);
 
   if (!result.ok) throw new Error(result?.data?.detail.split(":")[0]);
   return result.data;

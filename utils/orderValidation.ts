@@ -51,6 +51,8 @@ export const addItemValidationSchema = Yup.object().shape({
     .typeError("Enter a valid number!"),
   description: Yup.string().required().label("Description"),
   images: Yup.array().min(1, "At least one image is required."),
+  colors: Yup.array(),
+  sizes: Yup.array(),
 });
 
 export const DeliverySchema = Yup.object().shape({

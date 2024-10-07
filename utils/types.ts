@@ -364,6 +364,8 @@ export type ListingResponseType = {
   description: string;
   image_url: string;
   image_urls: string[];
+  colors: string[];
+  sizes: string[];
 };
 
 export type CreateListingType = {
@@ -371,8 +373,9 @@ export type CreateListingType = {
   price: string;
   stock: string;
   description: string;
-  image: string;
   images: string[];
+  colors: string[];
+  sizes: string[];
 };
 
 export type CreateLaundry = {

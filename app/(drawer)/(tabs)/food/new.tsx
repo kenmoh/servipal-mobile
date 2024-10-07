@@ -126,9 +126,9 @@ const Delivery = () => {
                 data={data?.data}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }: { item: OrderResponseType }) => (
-                    <AppSwipeable onPress={() => mutate(item.id)} orderId={item.id}>
-                        <OrderCard order={item} isHomeScreen={true} />
-                    </AppSwipeable>
+
+                    <OrderCard order={item} isHomeScreen={true} />
+
                 )}
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}

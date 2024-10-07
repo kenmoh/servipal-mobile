@@ -21,6 +21,8 @@ const failedTranx = () => {
         queryFn: walletApi.getUserTopUps
     })
 
+    console.log(data)
+
     const handleRefresch = () => refetch();
 
     useRefreshOnFocus(refetch);
@@ -83,7 +85,7 @@ const failedTranx = () => {
                 showsVerticalScrollIndicator={false}
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
-                ListEmptyComponent={<Empty />}
+                ListEmptyComponent={<Empty label='No transactions!' />}
             />
         </View>
 

@@ -20,7 +20,7 @@ const BuySellLayout = () => {
                 options={{
                     title: "Add Item",
                     headerShadowVisible: false,
-                    headerTitleAlign: "center",
+
                     headerTintColor: activeColor.text,
                     headerStyle: {
                         backgroundColor: activeColor.background,
@@ -32,7 +32,7 @@ const BuySellLayout = () => {
                 options={{
                     title: "Reviews",
                     headerShadowVisible: false,
-                    headerTitleAlign: "center",
+
                     headerTintColor: activeColor.text,
                     headerStyle: {
                         backgroundColor: activeColor.background,
@@ -44,7 +44,7 @@ const BuySellLayout = () => {
                 options={{
                     title: "Buy Item",
                     headerShadowVisible: false,
-                    headerTitleAlign: "center",
+
                     headerTintColor: activeColor.text,
                     headerStyle: {
                         backgroundColor: activeColor.background,
@@ -56,7 +56,6 @@ const BuySellLayout = () => {
                 options={{
                     title: "Item Details",
                     headerShadowVisible: false,
-                    headerTitleAlign: "center",
                     headerTintColor: activeColor.text,
                     headerStyle: {
                         backgroundColor: activeColor.background,
@@ -68,7 +67,7 @@ const BuySellLayout = () => {
                 options={{
                     title: "Add Review",
                     headerShadowVisible: false,
-                    headerTitleAlign: "center",
+
                     headerTintColor: activeColor.text,
                     headerStyle: {
                         backgroundColor: activeColor.background,

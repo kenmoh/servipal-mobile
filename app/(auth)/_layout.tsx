@@ -10,10 +10,15 @@ const AuthLayout = () => {
     <Stack
       screenOptions={{
         animation: "ios",
-        headerShown: false,
+        headerShown: true,
+        headerShadowVisible: false,
+        headerTintColor: activeColor.text,
+        headerStyle: {
+          backgroundColor: activeColor.background,
+        },
       }}
     >
-      <Stack.Screen name="signin" />
+      <Stack.Screen name="signin" options={{ title: 'Sign In' }} />
       <Stack.Screen
         name="signup"
         options={{
@@ -28,7 +33,7 @@ const AuthLayout = () => {
       />
 
 
-      <Stack.Screen name="confirmAccount" />
+      <Stack.Screen name="confirmAccount" options={{ title: 'Confirm Account' }} />
       <Stack.Screen name="resetPassword" />
       <Stack.Screen
         name="resetPasswordLink"

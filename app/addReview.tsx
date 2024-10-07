@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
 import CustomBtn from "@/components/CustomBtn";
 import { Colors } from "@/constants/Colors";
@@ -14,9 +14,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { SIZES } from "@/constants/Sizes";
 import RatingInput from "@/components/RatingInput";
-import { rateItem } from "@/api/items";
 import userApi from '@/api/users'
-import { ReviewType } from "@/utils/types";
+
 
 
 
@@ -29,10 +28,10 @@ const addReview = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { id } = useLocalSearchParams()
+    const { orderId } = useLocalSearchParams()
 
     const { mutate, isPending, data } = useMutation({
-        mutationFn: (rating: RatingType) => userApi.addReview(id as string, rating),
+        mutationFn: (rating: RatingType) => userApi.addReview(orderId as string, rating),
         onError: (error) => {
             showMessage({
                 message: error.message,

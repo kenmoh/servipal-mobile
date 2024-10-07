@@ -11,23 +11,25 @@ import { AntDesign } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { router } from "expo-router";
+import { SIZES } from "@/constants/Sizes";
 
-const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.20;
-const IMAGE_WIDTH = Dimensions.get("screen").width * 0.45;
+
+const IMAGE_WIDTH = Dimensions.get("screen").width * 0.9;
+const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.25;
 
 type SellerType = {
     username: string
 }
-type CardType = {
+export type CardType = {
     id: number;
     name: string;
     price: number;
     stock: number;
-    image_url: string;
     image_urls: string[];
     description: string;
     avgRating?: number;
     numReviews?: number;
+    total_sold?: number;
     seller: SellerType
 };
 const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean }) => {
@@ -41,9 +43,9 @@ const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean })
                     pathname: `/(p2p)/${item.id}`,
                     params: {
                         id: item.id,
-                        imageUrl: item.image_url,
                         imageUrls: JSON.stringify(item.image_urls),
                         name: item.name,
+                        totalSold: item.total_sold,
                         description: item.description,
                         price: item.price,
                         stock: item.stock,
@@ -51,25 +53,25 @@ const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean })
                     },
                 })
             }
-            style={{ marginBottom: isLastItem ? 80 : 0 }}
+            style={{ marginBottom: SIZES.marginLarge }}
         >
             <View style={styles.container}>
-                <Image source={item.image_url} style={styles.image} contentFit="fill" />
+                <Image source={item?.image_urls[0]} style={styles.image} contentFit="cover" />
             </View>
             <View style={{ marginTop: 5 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                    <Text style={[styles.text, { color: Colors.btnPrimaryColor }]}>
+                    <Text style={[styles.text, { color: Colors.btnPrimaryColor, fontSize: 15 }]}>
                         ₦ {item?.price}
                     </Text>
-                    <Text style={[styles.text, { color: activeColor.icon, fontSize: 10 }]}>
+                    <Text style={[styles.text, { color: activeColor.text }]}>
                         4{item.avgRating}
                         <AntDesign name="staro" color={Colors.btnPrimaryColor} size={8} />
 
                     </Text>
                 </View>
                 <View>
-                    <Text style={[styles.text, { color: activeColor.icon }]}>
+                    <Text style={[styles.text, { color: activeColor.text }]}>
                         {item?.name}
                     </Text>
                 </View>
@@ -85,6 +87,7 @@ const styles = StyleSheet.create({
         height: IMAGE_HEIGHT,
         width: IMAGE_WIDTH,
         overflow: "hidden",
+
     },
     image: {
         width: "100%",

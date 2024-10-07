@@ -46,6 +46,19 @@ export const addListing = async (
     });
   }
 
+  // Handle multiple colors
+  if (Array.isArray(item.colors)) {
+    item.colors.forEach((color) => {
+      data.append("colors", color);
+    });
+  }
+
+  // Handle multiple sizes
+  if (Array.isArray(item.sizes)) {
+    item.sizes.forEach((size) => {
+      data.append("sizes", size);
+    });
+  }
   const response: ApiResponse<ListingResponseType> = await client.post(
     `${endpoint}`,
     data,
@@ -72,7 +85,7 @@ export const makePayment = async (id: number, data: ItemInfo) => {
   const response = await client.post(`${endpoint}/${id}/buy-item`, reqData);
 
   if (!response.ok) {
-    throw new Error(response.data?.detail);
+    throw new Error(response.data?.detail.split(":")[1]);
   }
 
   return response?.data;

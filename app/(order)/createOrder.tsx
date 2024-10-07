@@ -1,6 +1,6 @@
 import { StyleSheet, ScrollView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, UseQueryResult } from "@tanstack/react-query";
 import { Formik } from "formik";
 import ImagePickerForm from "@/components/ImageFormPicker";
 
@@ -13,23 +13,30 @@ import orderApi from "@/api/orders";
 
 import { ThemeContext } from "@/context/themeContext";
 import { useContext, useEffect } from "react";
-import { CreateOrderType, ItemOrderType } from "@/utils/types";
+import { CreateOrderType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 
+type OrderItemType = {
+  payment_url: string;
+  order_type: string;
+  id: string;
+  total_cost: number,
+  delivery_fee: number,
+}
+
+type Data = {
+  item_order: OrderItemType
+}
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
-  const { error, mutate, isPending, data, isSuccess } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
-
-  });
-
-  useEffect(() => {
-    if (error) {
+    onError: (error: Error) => {
       showMessage({
         message: error.message,
         type: "danger",
@@ -37,15 +44,15 @@ export default function HomeScreen() {
           alignItems: "center",
         },
       });
-      router.push("/(order)/createOrder");;
-    }
-    if (isSuccess && data?.item_order) {
+      router.push("/(order)/createOrder");
+    },
+    onSuccess: (data: Data) => {
       showMessage({
         message: "Order added successfully.",
         type: "success",
         style: {
           alignItems: "center",
-        },
+        }
       });
       router.push({
         pathname: "payment",
@@ -59,7 +66,8 @@ export default function HomeScreen() {
         },
       });
     }
-  }, [isSuccess, error]);
+
+  });
 
   return (
     <View

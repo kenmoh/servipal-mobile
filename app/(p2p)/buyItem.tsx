@@ -21,44 +21,43 @@ const buyItem = () => {
     let activeColor = Colors[theme.mode];
     const { price, id, image, name, seller } = useLocalSearchParams()
 
+    // const image = JSON.parse(image)
 
-    const { error, isSuccess, mutate, isPending, data } =
+    const { mutate, isPending, data } =
         useMutation({
             mutationFn: (info: ItemInfo) => makePayment(id, info),
+            onError: (error: Error) => {
+                showMessage({
+                    message: error.message || "Something went wrong!",
+                    type: "danger",
+                    style: {
+                        alignItems: "center",
+                    },
+                });
+                router.back();
+            },
+            onSuccess: () => {
+                showMessage({
+                    message: "Purchase successful.",
+                    type: "success",
+                    style: {
+                        alignItems: "center",
+                    },
+                });
+                router.push({
+                    pathname: "payment",
+                    params: {
+                        paymentUrl: data?.payment_url,
+                        orderType: 'delivery',
+                        id: data?.id,
+                        totalCost: data?.total_cost,
+                    },
+                });
+            }
         });
 
 
 
-    useEffect(() => {
-        if (error) {
-            showMessage({
-                message: error.message || "Something went wrong!",
-                type: "danger",
-                style: {
-                    alignItems: "center",
-                },
-            });
-            router.push("(p2p)/buyItem");
-        }
-        if (isSuccess) {
-            showMessage({
-                message: "Item successfully.",
-                type: "success",
-                style: {
-                    alignItems: "center",
-                },
-            });
-            router.push({
-                pathname: "payment",
-                params: {
-                    paymentUrl: data?.payment_url,
-                    orderType: 'delivery',
-                    id: data?.id,
-                    totalCost: data?.total_cost,
-                },
-            });
-        }
-    }, [error, isSuccess]);
     return (
         <>
             <CustomActivityIndicator visible={isPending} />
@@ -77,7 +76,7 @@ const buyItem = () => {
                     <StatusBar style="inverted" />
 
                     <View style={{ width: '100%', height: 200, borderRadius: SIZES.paddingSmall, overflow: 'hidden' }}>
-                        <Image src={image} style={{ width: '100%', height: '100%' }} />
+                        {image && <Image src={JSON.parse(image)} style={{ width: '100%', height: '100%' }} />}
                     </View>
                     <View style={{ marginVertical: SIZES.marginSmall }}>
                         <Text style={[styles.label, { color: activeColor.icon }]}>{name}</Text>
@@ -90,7 +89,7 @@ const buyItem = () => {
 
                     <Formik
                         initialValues={{
-                            quantity: "",
+                            quantity: 1,
                             deliveryInfo: "",
 
 
