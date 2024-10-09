@@ -272,18 +272,7 @@ export default function HomeScreen() {
                 marginTop: 10,
               }}
             >
-              {/* <Status
-                text={orderStatus}
-                textColor={
-                  orderStatus === "pending"
-                    ? "tomato"
-                    : orderStatus === "received"
-                      ? "#25a18e"
-                      : orderStatus === "delivered"
-                        ? "skyblue"
-                        : "#e8ac65"
-                }
-                /> */}
+
 
               {paymntStatus === "paid" &&
                 orderType !== "delivery" &&
@@ -336,25 +325,8 @@ export default function HomeScreen() {
                     },
                   })
                 }
-                style={
-                  {
-                    // justifyContent: "center",
-                    // alignItems: "center",
-                    // flexDirection: "row",
-                    // // gap: 5,
-                    // // borderWidth: 1.5,
-                    // borderColor: activeColor.tabIconDefault,
-                    // // borderRadius: 20,
-                    // // paddingVertical: 5,
-                    // paddingHorizontal: SIZES.paddingMedium,
-                  }
-                }
+
               >
-                {/* <Ionicons
-                  name="map-outline"
-                  size={24}
-                  color={activeColor.tabIconDefault}
-                /> */}
                 <Text
                   style={{
                     color: activeColor.tabIconDefault,
@@ -410,11 +382,11 @@ export default function HomeScreen() {
                 <DetailLabel lable="Origin" value={origin || ""} />
                 <DetailLabel lable="Destination" value={destination || ""} />
                 <DetailLabel lable="Distance" value={distance || ""} />
-                {(user?.username === orderOwnerUsername || user?.phone_number === vendorPhoneNumber) &&
-                  orderType === "food" && (
+                {(orderOwnerUsername === user?.username || vendorPhoneNumber === user?.phone_number) &&
+                  (orderType === "food" || orderType === 'laundry') && (
                     <>
                       <DetailLabel lable="Delivery Fee" value={deliveryFee} />
-                      <DetailLabel lable="Food Cost" value={itemCost} />
+                      <DetailLabel lable={`${orderType === 'food' ? "Food Cost" : 'Laundry Cost'}`} value={itemCost} />
                       <DetailLabel lable="Total Cost" value={totalCost} />
                     </>
                   )}

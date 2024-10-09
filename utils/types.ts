@@ -463,6 +463,7 @@ export type CardProps = {
 export type Dispute = {
   subject: string;
   content: string;
+  disputedUser: string;
 };
 
 export type DisputeRespose = {

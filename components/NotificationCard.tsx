@@ -53,7 +53,7 @@ const NotificationCard = ({
                         subject: item.subject,
                         content: item.content,
                         createdAt: item.created_at,
-                        response: JSON.stringify(item.responses)
+                        responses: JSON.stringify(item.responses)
                     },
                 });
                 handlePress;

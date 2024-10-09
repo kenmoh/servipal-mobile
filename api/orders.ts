@@ -1,5 +1,5 @@
 import client from "@/api/client";
-import { CartState, LaundryOrderData, OrderData } from "@/auth/cartContext";
+import { OrderData } from "@/auth/cartContext";
 import { CreateOrderType, Dispute } from "@/utils/types";
 
 const endpoint = "/orders";
@@ -193,6 +193,7 @@ const openDispute = async (orderId: string, order: Dispute) => {
   const data = {
     subject: order.subject,
     content: order.content,
+    disputed_user: order.disputedUser,
   };
 
   const response = await client.post(
@@ -210,6 +211,21 @@ const openDispute = async (orderId: string, order: Dispute) => {
 
 const getUserDisputes = async () => {
   const response = await client.get(`${endpoint}/user-disputes`);
+  if (!response.ok) {
+    response.data?.detail || response?.data?.detail.split(":")[1];
+  }
+
+  return response?.data;
+};
+
+const respondToResponse = async (diputeId: number, content: string) => {
+  const data = {
+    content,
+  };
+  const response = await client.post(
+    `${endpoint}/${diputeId}/respond-to-dispute`,
+    data
+  );
   if (!response.ok) {
     response.data?.detail || response?.data?.detail.split(":")[1];
   }
@@ -269,4 +285,5 @@ export default {
   updateItemStatus,
   openDispute,
   getUserDisputes,
+  respondToResponse,
 };

@@ -15,25 +15,19 @@ import {
 import ordersApi from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
-import CategoryBtn from "@/components/CategoryBtn";
-import RenderBtn from "@/components/RenderBtn";
-import { Link } from "expo-router";
-import { ItemOrderType } from "@/utils/types";
 import Empty from "@/components/Empty";
+import { showMessage } from "react-native-flash-message";
+import { OrderResponseType } from "@/utils/types";
 
 const index = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    // const [isHomeScreen, setIsHomeScreen] = useState(true);
-    const [activeOrderType, setActiveOrderType] = useState<string | null>(null);
-    const [refreshing, setRefreshing] = useState(false);
-    const { user } = useAuth();
 
-    const laundryOrdersQuery = useQuery({
+
+    const { data, isFetching, refetch, error } = useQuery({
         queryKey: ["laundryOrders"],
-        queryFn: ordersApi.getVendorNewLaundryOrder,
+        queryFn: ordersApi.getLaundryNewLaundryOrder,
     });
 
 
@@ -51,15 +45,9 @@ const index = () => {
 
 
 
-    const handleRefretch = () => {
-        setRefreshing(true);
-        laundryOrdersQuery.refetch();
-        setRefreshing(false);
-    };
+    useRefreshOnFocus(refetch!);
 
-    useRefreshOnFocus(laundryOrdersQuery?.refetch!);
-
-    if (laundryOrdersQuery.isFetching) {
+    if (isFetching) {
         return (
             <View
                 style={{
@@ -73,26 +61,12 @@ const index = () => {
             </View>
         );
     }
-    if (laundryOrdersQuery.error) {
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: activeColor.background,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Text
-                style={{
-                    fontFamily: "Poppins-Light",
-                    fontSize: 12,
-                    color: Colors.error,
-                    alignSelf: "center",
-                }}
-            >
-                Something went wrong!
-            </Text>
-        </View>;
+    if (error) {
+        showMessage({
+            message: 'Something went wrong!',
+            type: 'danger',
+
+        })
     }
 
     return (
@@ -103,21 +77,17 @@ const index = () => {
             />
 
             <FlatList
-                data={laundryOrdersQuery?.data?.data}
+                data={data?.data}
                 keyExtractor={(item) => item?.id}
-                renderItem={({ item }: { item: ItemOrderType }) =>
-                    item.order_type === "laundry" &&
-                    item.order_status === "Pending" &&
-                    item.payment_status === "paid" && (
-                        <OrderCard order={item} isHomeScreen={true} />
-                    )
+                renderItem={({ item }: { item: OrderResponseType }) =>
+                    <OrderCard order={item} isHomeScreen={true} />
                 }
                 estimatedItemSize={200}
                 showsVerticalScrollIndicator={false}
                 vertical
-                refreshing={refreshing}
-                onRefresh={handleRefretch}
-                ListEmptyComponent={() => <Empty />}
+                refreshing={isFetching}
+                onRefresh={refetch}
+                ListEmptyComponent={() => <Empty label="No orders yet!" />}
             />
         </View>
     );

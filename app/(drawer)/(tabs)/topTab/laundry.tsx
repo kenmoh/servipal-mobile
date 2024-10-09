@@ -32,6 +32,10 @@ const laundry = () => {
     } = useQuery({
         queryKey: ["laundryOrders"],
         queryFn: ordersApi.getLaundryOrders,
+        select: (data) => data?.data?.filter((order: any) =>
+            (order.order_status === 'pending' && order.payment_status === 'paid' && order.order_type === 'laundry')
+
+        ),
 
     });
 

@@ -25,10 +25,11 @@ interface CustomPickerTextInputProps {
     label: string
     categories: OptionItem[] | unknown;
     onSelect: (item: OptionItem) => void;
+    borderRadius?: number
 
 }
 
-const CustomPickerTextInput = ({ categories, onSelect, label }: CustomPickerTextInputProps) => {
+const CustomPickerTextInput = ({ categories, onSelect, label, borderRadius = 50 }: CustomPickerTextInputProps) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
@@ -54,7 +55,7 @@ const CustomPickerTextInput = ({ categories, onSelect, label }: CustomPickerText
         <View>
             <Text style={[styles.text, { color: activeColor.text }]}>{label}</Text>
             <TouchableOpacity
-                style={[styles.inputContainer, { backgroundColor: activeColor.inputBackground }]}
+                style={[styles.inputContainer, { backgroundColor: activeColor.inputBackground, borderRadius }]}
                 onPress={() => setModalVisible(true)}
             >
                 <TextInput
@@ -111,7 +112,7 @@ const styles = StyleSheet.create<Styles>({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderRadius: 50,
+        // borderRadius: 50,
         paddingHorizontal: SIZES.paddingLarge,
     },
     input: {

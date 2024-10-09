@@ -28,15 +28,14 @@ export const imageUrl =
 const Delivery = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [refreshing, setRefreshing] = useState(false);
-    const { user } = useAuth();
+
 
     const { data, refetch, error, isFetching } = useQuery({
         queryKey: ["newFoodOrders"],
         queryFn: ordersApi.getUserNewFoodOrder,
     });
 
-    const { isPending, mutate } = useMutation({
+    const { isPending } = useMutation({
         mutationFn: (orderId: string) => ordersApi.updateItemStatus(orderId),
         onError: (error: Error) => {
             showMessage({
@@ -71,11 +70,6 @@ const Delivery = () => {
         return () => subscription.remove();
     }, []);
 
-    // const handleRefretch = () => {
-    //     setRefreshing(true);
-    //     refetch();
-    //     setRefreshing(false);
-    // };
 
     useRefreshOnFocus(refetch!);
 
@@ -94,25 +88,10 @@ const Delivery = () => {
         );
     }
     if (error) {
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: activeColor.background,
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Text
-                style={{
-                    fontFamily: "Poppins-Light",
-                    fontSize: 12,
-                    color: Colors.error,
-                    alignSelf: "center",
-                }}
-            >
-                Something went wrong!
-            </Text>
-        </View>;
+        showMessage({
+            message: error.message,
+            type: 'danger'
+        });
     }
 
     return (

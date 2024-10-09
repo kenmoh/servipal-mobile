@@ -87,4 +87,8 @@ export const SetupCompanyValidation = Yup.object().shape({
 export const DisputeValidation = Yup.object().shape({
   subject: Yup.string().required().label("Subject"),
   content: Yup.string().required().label("Content"),
+  disputedUser: Yup.string().required().label("Content"),
+});
+export const ResponseValidation = Yup.object().shape({
+  content: Yup.string().required().label("Content"),
 });

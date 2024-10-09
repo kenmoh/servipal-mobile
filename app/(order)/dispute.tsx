@@ -16,6 +16,18 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import { DisputeValidation } from "@/utils/orderValidation";
 import orderApi from '@/api/orders'
+import CustomPickerTextInput from "@/components/AppModal";
+
+interface RoleType {
+    name: string;
+    id: number;
+}
+const roleData = [
+    { id: 1, name: 'Regular User' },
+    { id: 2, name: 'Restaurant Service Provider' },
+    { id: 3, name: 'Laundry Service Provider' },
+    { id: 4, name: 'Rider' },
+]
 
 const confirmAccount = () => {
     const { theme } = useContext(ThemeContext);
@@ -64,11 +76,11 @@ const confirmAccount = () => {
             >
 
                 <Formik
-                    initialValues={{ subject: "", content: "" }}
+                    initialValues={{ subject: "", content: "", disputedUser: "", }}
                     validationSchema={DisputeValidation}
                     onSubmit={mutate}
                 >
-                    {({ handleChange, handleSubmit, values, errors, touched }) => (
+                    {({ handleChange, handleSubmit, setFieldValue, values, errors, touched }) => (
                         <>
                             <View>
                                 <CustomTextInput
@@ -82,6 +94,17 @@ const confirmAccount = () => {
                                 />
                                 {touched.subject && errors.subject && (
                                     <InputErrorMessage error={errors.subject} />
+                                )}
+                                <CustomPickerTextInput
+                                    label="User Role"
+                                    categories={roleData}
+                                    borderRadius={10}
+                                    onSelect={(role: RoleType) =>
+                                        setFieldValue("disputedUser", role.name)
+                                    }
+                                />
+                                {touched.disputedUser && errors.disputedUser && (
+                                    <InputErrorMessage error={errors.disputedUser} />
                                 )}
                                 <CustomTextInput
                                     label="Content"
