@@ -289,86 +289,86 @@ const LaundryDetails = () => {
                 />
             </TouchableOpacity>
 
-
-            <View
-                style={{
-                    padding: 10,
-                    marginBottom: 10,
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                    borderBottomColor: activeColor.borderColor,
-                }}
-            >
-                <Text
+            {
+                data && <View
                     style={{
-                        fontFamily: "Poppins-SemiBold",
-                        textTransform: "capitalize",
-                        color: activeColor.text,
+                        padding: 10,
+                        marginBottom: 10,
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                        borderBottomColor: activeColor.borderColor,
                     }}
                 >
-                    {data?.company_name}
-                </Text>
-                <View style={{ flexDirection: "row", gap: 5, alignItems: "baseline" }}>
-                    <AntDesign name="clockcircleo" size={16} color={activeColor.icon} />
                     <Text
-                        style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}
+                        style={{
+                            fontFamily: "Poppins-SemiBold",
+                            textTransform: "capitalize",
+                            color: activeColor.text,
+                        }}
                     >
-                        {data?.opening_hour} - {data?.closing_hour}
+                        {data?.company_name}
                     </Text>
-                </View>
-                <Text
-                    style={[{ color: activeColor.icon, fontFamily: "Poppins-Medium" }]}
-                >
-                    {data?.location}
-                </Text>
-
-                {(data?.rating?.number_of_ratings ?? 0) >= 1 && (
-                    <View
-                        style={{ flexDirection: "row", justifyContent: "space-between" }}
-                    >
-                        <View
-                            style={{ flexDirection: "row", alignItems: "center", gap: 2 }}
+                    <View style={{ flexDirection: "row", gap: 5, alignItems: "baseline" }}>
+                        <AntDesign name="clockcircleo" size={16} color={activeColor.icon} />
+                        <Text
+                            style={[{ color: activeColor.icon, fontFamily: "Poppins-Light" }]}
                         >
-                            <Text
-                                style={[
-                                    { color: activeColor.text, fontFamily: "Poppins-Medium" },
-                                ]}
-                            >
-                                {data?.rating.average_rating}
-                            </Text>
-                            <AntDesign
-                                name="staro"
-                                color={"gold"}
-                                size={10}
-                                style={{ marginTop: -3 }}
-                            />
-                            <Text
-                                style={[
-                                    {
-                                        color: activeColor.icon,
-                                        fontFamily: "Poppins-Medium",
-                                        marginLeft: 3,
-                                        fontSize: 12,
-                                    },
-                                ]}
-                            >
-                                ({data?.rating.number_of_ratings} {data?.rating.number_of_ratings! > 1 ? "reviews" : "review"})
-                            </Text>
-                        </View>
-                        <Link href={"sendItem"} asChild>
-                            <Text
-                                style={{
-                                    color: activeColor.icon,
-                                    fontSize: 12,
-                                    fontFamily: "Poppins-Medium",
-                                    textDecorationLine: "underline",
-                                }}
-                            >
-                                Reviews
-                            </Text>
-                        </Link>
+                            {data?.opening_hour} - {data?.closing_hour}
+                        </Text>
                     </View>
-                )}
-            </View>
+                    <Text
+                        style={[{ color: activeColor.icon, fontFamily: "Poppins-Medium" }]}
+                    >
+                        {data?.location}
+                    </Text>
+
+                    {(data?.rating?.number_of_ratings ?? 0) >= 1 && (
+                        <View
+                            style={{ flexDirection: "row", justifyContent: "space-between" }}
+                        >
+                            <View
+                                style={{ flexDirection: "row", alignItems: "center", gap: 2 }}
+                            >
+                                <Text
+                                    style={[
+                                        { color: activeColor.text, fontFamily: "Poppins-Medium" },
+                                    ]}
+                                >
+                                    {data?.rating.average_rating}
+                                </Text>
+                                <AntDesign
+                                    name="staro"
+                                    color={"gold"}
+                                    size={10}
+                                    style={{ marginTop: -3 }}
+                                />
+                                <Text
+                                    style={[
+                                        {
+                                            color: activeColor.icon,
+                                            fontFamily: "Poppins-Medium",
+                                            marginLeft: 3,
+                                            fontSize: 12,
+                                        },
+                                    ]}
+                                >
+                                    ({data?.rating.number_of_ratings} {data?.rating.number_of_ratings! > 1 ? "reviews" : "review"})
+                                </Text>
+                            </View>
+                            <Link href={"sendItem"} asChild>
+                                <Text
+                                    style={{
+                                        color: activeColor.icon,
+                                        fontSize: 12,
+                                        fontFamily: "Poppins-Medium",
+                                        textDecorationLine: "underline",
+                                    }}
+                                >
+                                    Reviews
+                                </Text>
+                            </Link>
+                        </View>
+                    )}
+                </View>}
 
             <View
                 style={[styles.container, { backgroundColor: activeColor.background }]}

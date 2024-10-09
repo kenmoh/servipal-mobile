@@ -1,4 +1,3 @@
-import { ProfileType } from "@/app/setupCompanyProfile";
 import { ThemeModeType } from "@/context/themeContext";
 import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";

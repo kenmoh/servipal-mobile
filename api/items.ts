@@ -101,13 +101,19 @@ export const rateItem = async (
   };
   const response = await client.post(`${endpoint}/${id}/rate-item`, ratingData);
   if (!response.ok) {
-    throw new Error(response.data?.detail);
+    throw new Error(response.data?.detail.split(":")[1]);
   }
 
   return response?.data;
 };
 
-export const getReviews = (id: string) => {};
+export const getItemReviews = async (id: number) => {
+  const response = await client.get(`${endpoint}/${id}/listing-ratings`);
+  if (!response.ok) {
+    throw new Error(response?.data?.detail?.split(":")[1]);
+  }
+  return response?.data;
+};
 
 export const getUserTransactions = async (): Promise<
   TransactionResponseType[]

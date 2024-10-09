@@ -13,7 +13,6 @@ const HomeTab = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 const TopTabLayout = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  const { user } = useAuth()
 
   const handlePress = () => router.push("sendItem")
 

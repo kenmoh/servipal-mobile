@@ -43,7 +43,7 @@ const reviewForm = () => {
         },
         onSuccess: () => {
             showMessage({
-                message: "Meal successfully.",
+                message: "Review added successfully.",
                 type: "success",
                 style: {
                     alignItems: "center",

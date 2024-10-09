@@ -83,3 +83,8 @@ export const SetupCompanyValidation = Yup.object().shape({
   openingHour: Yup.string().required().label("Opening hour"),
   closingHour: Yup.string().required().label("Closing hour"),
 });
+
+export const DisputeValidation = Yup.object().shape({
+  subject: Yup.string().required().label("Subject"),
+  content: Yup.string().required().label("Content"),
+});

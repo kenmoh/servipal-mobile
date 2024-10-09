@@ -42,6 +42,7 @@ const index = () => {
         error,
         isLoading,
         isFetching,
+        refetch
     } = useQuery({
         queryKey: ["usersByMeal", selectedCategory],
         queryFn: () => getUserByMealCategory(selectedCategory),
@@ -136,6 +137,8 @@ const index = () => {
                         <FoodLaundryCard item={item} isLaundry={false} isLastItem={isLastItem} />
                     )
                 }}
+                refreshing={isFetching}
+                onRefresh={refetch}
             />
         </View>
     );

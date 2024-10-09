@@ -16,7 +16,7 @@ const OrderDetailLayout = () => {
   return (
     <Stack
       screenOptions={{
-        headerTitleAlign: "center",
+        // headerTitleAlign: "center",
         headerStyle: {
           backgroundColor: activeColor.background,
         },
@@ -28,6 +28,7 @@ const OrderDetailLayout = () => {
       }}
     >
       <Stack.Screen name="[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="dispute" options={{ title: 'Dispute' }} />
       <Stack.Screen name="orderMap" options={{ title: "Order MAP SCREEN" }} />
       <Stack.Screen
         name="createOrder"
@@ -39,6 +40,12 @@ const OrderDetailLayout = () => {
         name="payment"
         options={{
           title: "Make Payment",
+        }}
+      />
+      <Stack.Screen
+        name="disputesResponse"
+        options={{
+          title: "Disputes",
         }}
       />
       <Stack.Screen

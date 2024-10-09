@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { StyleSheet, ScrollView, View, Text, Platform, KeyboardAvoidingView } from "react-native";
+import React, { useContext, useState } from "react";
+import { StyleSheet, ScrollView, View, Platform, KeyboardAvoidingView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useMutation } from "@tanstack/react-query";
 import { Formik } from "formik";
@@ -14,7 +14,6 @@ import InputErrorMessage from "@/components/InputErrorMessage";
 import { ThemeContext } from "@/context/themeContext";
 import userApi from "@/api/users";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import ImagePickerForm from "@/components/ImageFormPicker";
 import { router } from "expo-router";
 import { SetupCompany } from "@/utils/types";
 import { useAuth } from "@/auth/authContext";

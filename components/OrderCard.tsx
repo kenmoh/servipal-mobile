@@ -10,6 +10,7 @@ import { OrderResponseType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
+import { useAuth } from "@/auth/authContext";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -25,9 +26,11 @@ const OrderCard = ({
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
+  const { user } = useAuth();
 
   return (
     <TouchableOpacity
+
       onPress={() =>
         router.push({
           pathname: `(order)/${order?.id}`,
@@ -50,6 +53,7 @@ const OrderCard = ({
             commissionDispatch: order?.commission_rate_delivery,
             commissionItem: order?.commission_rate_item,
             orderStatus: order?.order_status,
+            orderNumber: order?.order_number,
             paymentUrl: order?.payment_url,
             paymntStatus: order?.payment_status,
             vendorPhoneNumber: order?.vendor_phone_number,

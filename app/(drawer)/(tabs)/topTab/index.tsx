@@ -27,7 +27,7 @@ const index = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   const [isHomeScreen, setIsHomeScreen] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+
 
   const { data, isFetching, refetch, error } = useQuery({
     queryKey: ["packageOrders"],
@@ -54,11 +54,6 @@ const index = () => {
   }, []);
 
 
-  const handleRefretch = () => {
-    setRefreshing(true);
-    refetch();
-    setRefreshing(false);
-  };
 
   useRefreshOnFocus(refetch);
 
@@ -116,7 +111,7 @@ const index = () => {
         estimatedItemSize={300}
         showsVerticalScrollIndicator={false}
         refreshing={isFetching}
-        onRefresh={handleRefretch}
+        onRefresh={refetch}
         ListEmptyComponent={() => <Empty label="No orders yet!" />}
 
       />

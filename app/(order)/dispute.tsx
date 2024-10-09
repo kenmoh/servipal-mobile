@@ -6,25 +6,24 @@ import { useMutation } from "@tanstack/react-query";
 
 import CustomBtn from "@/components/CustomBtn";
 import CustomTextInput from "@/components/CustomTextInput";
-import TitleText from "@/components/TitleText";
-import { ConfirmAccount } from "@/utils/types";
+import { Dispute } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import { accountValidationSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
-import { useAuth } from "@/auth/authContext";
-import userApi from '@/api/users'
+import { DisputeValidation } from "@/utils/orderValidation";
+import orderApi from '@/api/orders'
 
 const confirmAccount = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const { orderNumber, orderId } = useLocalSearchParams()
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
-        mutationFn: ({ emailCode, phoneCode }: ConfirmAccount) => userApi.confirmAccount(emailCode, phoneCode),
+    const { mutate, isPending } = useMutation({
+        mutationFn: (order: Dispute) => orderApi.openDispute(orderId as string, order),
         onError: (error) => {
             showMessage({
                 message: error.message,
@@ -33,19 +32,17 @@ const confirmAccount = () => {
                     alignItems: "center",
                 },
             });
-            router.replace("confirmAccount");
-            return
         },
         onSuccess: () => {
             showMessage({
-                message: "Congratulations! Account created.",
+                message: `Dispute raised on order #${orderNumber}. We'll look into it and get back to you shortly.`,
                 type: "success",
                 style: {
                     alignItems: "center",
                 },
             });
-            router.replace("signin");
-            return;
+            router.back();
+
         }
     });
 
@@ -67,43 +64,45 @@ const confirmAccount = () => {
             >
 
                 <Formik
-                    initialValues={{ emailCode: "", phoneCode: "" }}
-                    validationSchema={accountValidationSchema}
+                    initialValues={{ subject: "", content: "" }}
+                    validationSchema={DisputeValidation}
                     onSubmit={mutate}
                 >
                     {({ handleChange, handleSubmit, values, errors, touched }) => (
                         <>
                             <View>
                                 <CustomTextInput
-                                    label="Email Code"
-                                    keyboardType="number-pad"
-                                    onChangeText={handleChange("emailCode")}
-                                    value={values.emailCode}
+                                    label="Subject"
+                                    onChangeText={handleChange("subject")}
+                                    value={values.subject}
                                     labelColor={activeColor.text}
                                     inputBackgroundColor={activeColor.inputBackground}
                                     inputTextColor={activeColor.text}
+                                    borderRadius={10}
                                 />
-                                {touched.emailCode && errors.emailCode && (
-                                    <InputErrorMessage error={errors.emailCode} />
+                                {touched.subject && errors.subject && (
+                                    <InputErrorMessage error={errors.subject} />
                                 )}
                                 <CustomTextInput
-                                    label="Phone Code"
-                                    keyboardType="number-pad"
-
-                                    onChangeText={handleChange("phoneCode")}
-                                    value={values.phoneCode}
+                                    label="Content"
+                                    onChangeText={handleChange("content")}
+                                    value={values.content}
                                     labelColor={activeColor.text}
                                     inputBackgroundColor={activeColor.inputBackground}
                                     inputTextColor={activeColor.text}
+                                    multiline
+                                    inputHeight={100}
+                                    borderRadius={10}
+
                                 />
-                                {touched.phoneCode && errors.phoneCode && (
-                                    <InputErrorMessage error={errors.phoneCode} />
+                                {touched.content && errors.content && (
+                                    <InputErrorMessage error={errors.content} />
                                 )}
                                 <View style={{ marginVertical: 25 }}>
                                     <CustomBtn
                                         btnColor={Colors.btnPrimaryColor}
                                         label="Send"
-
+                                        btnBorderRadius={10}
                                         onPress={handleSubmit}
                                     />
                                 </View>

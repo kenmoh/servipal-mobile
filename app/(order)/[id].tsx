@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Text,
   StyleSheet,
@@ -7,24 +8,20 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   AntDesign,
   Feather,
-  Ionicons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import Divider from "@/components/Divider";
 import DetailLabel from "@/components/DetailLabel";
-import Status from "@/components/Status";
 import { Colors } from "@/constants/Colors";
 import ordersApi from "@/api/orders";
-import { ItemOrderType, OrderResponseType } from "@/utils/types";
 import CustomBtn from "@/components/CustomBtn";
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import { showMessage } from "react-native-flash-message";
@@ -33,7 +30,6 @@ import { SIZES } from "@/constants/Sizes";
 const IMG_HEIGHT = 300;
 
 export default function HomeScreen() {
-
   const { user } = useAuth();
 
   const { theme } = useContext(ThemeContext);
@@ -47,6 +43,7 @@ export default function HomeScreen() {
     // foods,
     // laundries,
     userId,
+    orderNumber,
     items,
     deliveryFee,
     amountDueVendor,
@@ -70,7 +67,7 @@ export default function HomeScreen() {
     orderType,
     vendorUsername,
     riderName,
-    description
+    description,
   } = useLocalSearchParams();
 
   // Handle order Pickup
@@ -241,7 +238,6 @@ export default function HomeScreen() {
     );
   }
 
-
   return (
     <View
       style={{
@@ -273,7 +269,7 @@ export default function HomeScreen() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                marginTop: 10
+                marginTop: 10,
               }}
             >
               {/* <Status
@@ -289,13 +285,42 @@ export default function HomeScreen() {
                 }
                 /> */}
 
-              <TouchableOpacity onPress={() => router.push({ pathname: 'addReview', params: { orderId } })}>
-                <Text style={[styles.linkText, { color: activeColor.text }]}>Add Review</Text>
-              </TouchableOpacity>
+              {paymntStatus === "paid" &&
+                orderType !== "delivery" &&
+                orderStatus === "received" &&
+                user?.phone_number === orderOwnerPhoneNumber && (
+                  <TouchableOpacity
+                    onPress={() =>
+                      router.push({
+                        pathname: "addReview",
+                        params: { orderId },
+                      })
+                    }
+                  >
+                    <Text
+                      style={[styles.linkText, { color: activeColor.text }]}
+                    >
+                      Add Review
+                    </Text>
+                  </TouchableOpacity>
+                )}
 
-              <TouchableOpacity>
-                <Text style={[styles.linkText, { color: activeColor.text }]}>Open Dispute</Text>
-              </TouchableOpacity>
+              {paymntStatus === "paid" &&
+                (user?.company_name === dispatchCompanyName ||
+                  user?.phone_number === riderPhoneNumber ||
+                  user?.phone_number === orderOwnerPhoneNumber ||
+                  user?.phone_number === vendorPhoneNumber) && (
+                  <TouchableOpacity hitSlop={25} onPress={() => router.push({
+                    pathname: '/(order)/dispute',
+                    params: { orderId, orderNumber }
+                  })}>
+                    <Text
+                      style={[styles.linkText, { color: activeColor.text }]}
+                    >
+                      Open Dispute
+                    </Text>
+                  </TouchableOpacity>
+                )}
 
               <TouchableOpacity
                 hitSlop={25}
@@ -311,30 +336,42 @@ export default function HomeScreen() {
                     },
                   })
                 }
-                style={{
-                  // justifyContent: "center",
-                  // alignItems: "center",
-                  // flexDirection: "row",
-                  // // gap: 5,
-                  // // borderWidth: 1.5,
-                  // borderColor: activeColor.tabIconDefault,
-                  // // borderRadius: 20,
-                  // // paddingVertical: 5,
-                  // paddingHorizontal: SIZES.paddingMedium,
-                }}
+                style={
+                  {
+                    // justifyContent: "center",
+                    // alignItems: "center",
+                    // flexDirection: "row",
+                    // // gap: 5,
+                    // // borderWidth: 1.5,
+                    // borderColor: activeColor.tabIconDefault,
+                    // // borderRadius: 20,
+                    // // paddingVertical: 5,
+                    // paddingHorizontal: SIZES.paddingMedium,
+                  }
+                }
               >
                 {/* <Ionicons
                   name="map-outline"
                   size={24}
                   color={activeColor.tabIconDefault}
                 /> */}
-                <Text style={{ color: activeColor.tabIconDefault, textDecorationLine: 'underline' }}>
+                <Text
+                  style={{
+                    color: activeColor.tabIconDefault,
+                    textDecorationLine: "underline",
+                  }}
+                >
                   View on map
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
-          <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
+          <View
+            style={[
+              styles.container,
+              { backgroundColor: activeColor.profileCard },
+            ]}
+          >
             <View>
               <View style={styles.header}>
                 <AntDesign name="user" size={18} color={activeColor.text} />
@@ -355,8 +392,13 @@ export default function HomeScreen() {
               </View>
             </View>
           </View>
-          <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
-            <View >
+          <View
+            style={[
+              styles.container,
+              { backgroundColor: activeColor.profileCard },
+            ]}
+          >
+            <View>
               <View style={styles.header}>
                 <Feather name="box" size={20} color={activeColor.text} />
                 <Text style={[styles.text, { color: activeColor.text }]}>
@@ -364,34 +406,23 @@ export default function HomeScreen() {
                 </Text>
               </View>
               <View>
-                <DetailLabel
-                  lable="Name"
-                  value={packageName}
-                />
+                <DetailLabel lable="Name" value={packageName} />
                 <DetailLabel lable="Origin" value={origin || ""} />
-                <DetailLabel
-                  lable="Destination"
-                  value={destination || ""}
-                />
+                <DetailLabel lable="Destination" value={destination || ""} />
                 <DetailLabel lable="Distance" value={distance || ""} />
-                {user?.username === orderOwnerUsername && orderType === 'food' && (
-                  <>
-                    <DetailLabel
-                      lable="Delivery Fee"
-                      value={deliveryFee}
-                    />
-                    <DetailLabel lable="Food Cost" value={itemCost} />
-                    <DetailLabel lable="Total Cost" value={totalCost} />
-                  </>
-                )}
+                {(user?.username === orderOwnerUsername || user?.phone_number === vendorPhoneNumber) &&
+                  orderType === "food" && (
+                    <>
+                      <DetailLabel lable="Delivery Fee" value={deliveryFee} />
+                      <DetailLabel lable="Food Cost" value={itemCost} />
+                      <DetailLabel lable="Total Cost" value={totalCost} />
+                    </>
+                  )}
                 {user?.username === vendorUsername && (
-                  <DetailLabel
-                    lable="Delivery Fee"
-                    value={deliveryFee}
-                  />
+                  <DetailLabel lable="Delivery Fee" value={deliveryFee} />
                 )}
                 {user?.phone_number === vendorPhoneNumber &&
-                  orderType === 'food' && (
+                  orderType === "food" && (
                     <DetailLabel lable="Food Cost" value={itemCost} />
                   )}
                 {user?.user_type === "Dispatch Provider" ||
@@ -402,29 +433,17 @@ export default function HomeScreen() {
                     />
                   ))}
                 {user?.user_type === "Restaurant Service Provider" && (
-                  <DetailLabel
-                    lable="Service Charge"
-                    value={commissionItem}
-                  />
+                  <DetailLabel lable="Service Charge" value={commissionItem} />
                 )}
                 {user?.user_type === "Laundry Service Provider" && (
-                  <DetailLabel
-                    lable="Service Charge"
-                    value={commissionItem}
-                  />
+                  <DetailLabel lable="Service Charge" value={commissionItem} />
                 )}
                 {(user?.phone_number === dispatchCompanyPhoneNumber ||
                   user?.phone_number === riderPhoneNumber) && (
-                    <DetailLabel
-                      lable="Amount Due"
-                      value={amountDueDispatch}
-                    />
+                    <DetailLabel lable="Amount Due" value={amountDueDispatch} />
                   )}
                 {user?.phone_number === vendorPhoneNumber && (
-                  <DetailLabel
-                    lable="Amount Due"
-                    value={amountDueVendor}
-                  />
+                  <DetailLabel lable="Amount Due" value={amountDueVendor} />
                 )}
                 {description && (
                   <View style={{ marginVertical: 10 }}>
@@ -453,9 +472,13 @@ export default function HomeScreen() {
             </View>
           </View>
           {orderStatus !== "pending" && (
-            <View style={[styles.container, { backgroundColor: activeColor.profileCard }]}>
-
-              <View >
+            <View
+              style={[
+                styles.container,
+                { backgroundColor: activeColor.profileCard },
+              ]}
+            >
+              <View>
                 <View style={styles.header}>
                   <MaterialCommunityIcons
                     name="bike-fast"
@@ -466,21 +489,12 @@ export default function HomeScreen() {
                     Rider Details
                   </Text>
                 </View>
-                <DetailLabel
-                  lable="Rider Name"
-                  value={riderName || ""}
-                />
-                <DetailLabel
-                  lable="Phone Number"
-                  value={riderPhoneNumber}
-                />
-                <DetailLabel
-                  lable="Bike Plate Numbe"
-                  value={plateNumber}
-                />
+                <DetailLabel lable="Rider Name" value={riderName || ""} />
+                <DetailLabel lable="Phone Number" value={riderPhoneNumber} />
+                <DetailLabel lable="Bike Plate Numbe" value={plateNumber} />
                 <DetailLabel
                   lable="Company Name"
-                  value={dispatchCompanyName || ''}
+                  value={dispatchCompanyName || ""}
                 />
               </View>
             </View>
@@ -500,8 +514,7 @@ export default function HomeScreen() {
               label="Pickup"
               onPress={handlePickup}
             />
-          ) : orderStatus === "in transit" &&
-            user?.user_type === "Rider" ? (
+          ) : orderStatus === "in transit" && user?.user_type === "Rider" ? (
             <CustomBtn
               disabled={orderStatus === "in transit" ? false : true}
               btnBorderRadius={50}
@@ -618,7 +631,7 @@ const styles = StyleSheet.create({
     // flexDirection: "row",
     paddingHorizontal: SIZES.paddingMedium,
     paddingVertical: SIZES.paddingSmall,
-    marginVertical: 5
+    marginVertical: 5,
   },
   mainContainer: {
     flex: 6,
@@ -646,14 +659,14 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 5
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 5,
   },
   linkText: {
     fontSize: 12,
     textTransform: "capitalize",
     fontFamily: "Poppins-Regular",
-    textDecorationLine: 'underline'
-  }
+    textDecorationLine: "underline",
+  },
 });

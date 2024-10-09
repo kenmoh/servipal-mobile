@@ -102,6 +102,7 @@ export type OrderResponseType = {
   id: string;
   package_name: string;
   item_id: string;
+  order_number: string;
   image_url: string;
   amount_due_vendor: string;
   amount_due_dispatch: string;
@@ -457,4 +458,32 @@ export type CardProps = {
   opening_hour: string;
   closing_hour: string;
   rating: RatingType;
+};
+
+export type Dispute = {
+  subject: string;
+  content: string;
+};
+
+export type DisputeRespose = {
+  id: number;
+  dispute_id: number;
+  user_id: string;
+  content: string;
+  username: string;
+  created_at: string;
+};
+
+export type UserDisputes = {
+  id: number | string;
+  order_id: string;
+  user_id: string;
+  disputed_user_id: string;
+  disputed_user: string;
+  subject: string;
+  username: string;
+  content: string;
+  status: string;
+  created_at: string;
+  responses: DisputeRespose[];
 };

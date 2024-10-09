@@ -1,8 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { SIZES } from '@/constants/Sizes';
 import { ThemeContext } from '@/context/themeContext';
-import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useFormikContext } from 'formik';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React, { useState, useEffect, useContext } from 'react';
 import {
     View,

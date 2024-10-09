@@ -1,48 +1,36 @@
 import { Login } from "@/utils/types";
 import client from "./client";
+import { ApiResponse } from "apisauce";
 
-// const loginApi = async (username: string, password: string) => {
-//   const data = new FormData();
-//   data.append("username", username.trim());
-//   data.append("password", password.trim());
+interface LoginSuccessResponse {
+  access_token: string;
+  token_type: string;
+}
 
-//   const response = await client.post("/login", data);
-//   console.log("RESPONSE DATA ", response);
-//   if (!response.ok) {
-//     throw new Error(response.data?.detail || "Login failed");
-//   }
-//   return response.data;
-// };
-
-// const loginUser = async (user: Login) => {
-//   const loginData = {
-//     username: user.username.toLowerCase().trim(),
-//     password: user.password.trim(),
-//   };
-//   console.log(loginData);
-//   const result = await client.post("/login", loginData);
-
-//   console.log("LOGIN DATA: ", result.data);
-
-//   if (!result.ok) throw new Error(result.data.detail);
-//   return result.data;
-// };
-
-const loginApi = async (username: string, password: string) => {
+interface LoginErrorResponse {
+  detail: string;
+}
+const loginApi = async (
+  username: string,
+  password: string
+): Promise<LoginSuccessResponse> => {
   const data = new FormData();
   data.append("username", username.trim());
   data.append("password", password.trim());
 
-  const response = await client.post("/login", data, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response: ApiResponse<LoginSuccessResponse | LoginErrorResponse> =
+    await client.post("/login", data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error(
-      response?.data?.detail || "Something went wrong. Please try again."
-    );
+  if (!response.ok || !response.data || "detail" in response.data) {
+    const errorMessage =
+      response.data && "detail" in response.data
+        ? response.data.detail.split(":")[1]
+        : "Something went wrong. Please try again.";
+    throw new Error(errorMessage);
   }
 
   return response.data;

@@ -18,7 +18,6 @@ const index = () => {
         queryFn: getItemListings
     })
 
-    console.log(data)
 
     return (
         <View style={[styles.container, { backgroundColor: activeColor.background }]}>

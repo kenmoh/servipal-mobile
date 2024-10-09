@@ -35,6 +35,8 @@ export type CardType = {
 const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+
+
     return (
         <TouchableOpacity
             activeOpacity={0.8}
@@ -66,7 +68,7 @@ const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean })
                     </Text>
                     <Text style={[styles.text, { color: activeColor.text }]}>
                         4{item.avgRating}
-                        <AntDesign name="staro" color={Colors.btnPrimaryColor} size={8} />
+                        <AntDesign name="staro" color={Colors.btnPrimaryColor} size={10} />
 
                     </Text>
                 </View>

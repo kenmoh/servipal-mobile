@@ -1,6 +1,6 @@
 import client from "@/api/client";
 import { CartState, LaundryOrderData, OrderData } from "@/auth/cartContext";
-import { CreateOrderType } from "@/utils/types";
+import { CreateOrderType, Dispute } from "@/utils/types";
 
 const endpoint = "/orders";
 
@@ -168,6 +168,7 @@ const orderFood = async (redtaurantId: string, item: OrderData) => {
   }
   return response.data;
 };
+
 const orderLaundry = async (laundryId: string, item: OrderData) => {
   const data = {
     laundries: item.items,
@@ -188,6 +189,34 @@ const orderLaundry = async (laundryId: string, item: OrderData) => {
   return response.data;
 };
 
+const openDispute = async (orderId: string, order: Dispute) => {
+  const data = {
+    subject: order.subject,
+    content: order.content,
+  };
+
+  const response = await client.post(
+    `${endpoint}/${orderId}/open-dispute`,
+    data
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      response.data?.detail || response?.data?.detail.split(":")[1]
+    );
+  }
+  return response.data;
+};
+
+const getUserDisputes = async () => {
+  const response = await client.get(`${endpoint}/user-disputes`);
+  if (!response.ok) {
+    response.data?.detail || response?.data?.detail.split(":")[1];
+  }
+
+  return response?.data;
+};
+
 // create new order
 const createOrder = async (item: CreateOrderType) => {
   const data = new FormData();
@@ -200,7 +229,7 @@ const createOrder = async (item: CreateOrderType) => {
     type: "image/jpeg",
     uri: item.orderPhotoUrl,
     name: item.orderPhotoUrl.split("/").slice(-1)[0],
-  });
+  } as any);
 
   const response = await client.post(`${endpoint}/send-items`, data, {
     headers: {
@@ -238,4 +267,6 @@ export default {
   getUserLaundryOrderItems,
   getUserRestaurantOrderItems,
   updateItemStatus,
+  openDispute,
+  getUserDisputes,
 };

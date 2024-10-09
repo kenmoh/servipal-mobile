@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useEffect } from "react";
+import React, { ReactNode, useContext, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { router, Tabs } from "expo-router";
 import {
@@ -17,9 +17,47 @@ import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import { registerNotification } from "@/api/notification";
 import { DrawerToggleButton } from "@react-navigation/drawer";
-
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useQuery } from "@tanstack/react-query";
+import orderApi from '@/api/orders'
 
 const TAB_BAR_ICON_SIZE = 25;
+
+const NoticationIcon = ({
+  color,
+  onPress,
+  counter
+}: {
+  color: string;
+  counter?: number;
+  onPress: () => void;
+}) => {
+  return (
+    <TouchableOpacity
+      hitSlop={30}
+      onPress={onPress}
+      style={{ marginRight: 25, flexDirection: "row" }}
+    >
+      <AntDesign name="bells" size={20} color={color} />
+      {counter && <View
+        style={{
+          position: "absolute",
+          backgroundColor: Colors.btnPrimaryColor,
+          width: 20,
+          height: 20,
+          alignItems: "center",
+          justifyContent: "center",
+          borderRadius: 10,
+          borderCurve: "continuous",
+          top: -10,
+          right: -10
+        }}
+      >
+        <Text style={{ color: '#eee', fontFamily: 'Poppins-Light', fontSize: 12 }}>{counter}</Text>
+      </View>}
+    </TouchableOpacity>
+  );
+};
 
 const CustomTabBarIcon = ({
   children,
@@ -66,6 +104,12 @@ export default function TabLayout() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   const { user } = useAuth();
+
+  const { data } = useQuery({
+    queryKey: ['notification', user?.id],
+    queryFn: orderApi.getUserDisputes
+  })
+
 
   const registerForPushNotification = async () => {
     if (Device.isDevice) {
@@ -134,6 +178,14 @@ export default function TabLayout() {
             </CustomTabBarIcon>
           ),
           headerTitle: () => <AppHeader />,
+          headerRight: () => (
+            <NoticationIcon
+              onPress={() => router.push('disputeNotification')}
+              color={activeColor.icon}
+              counter={data?.length || []}
+            />
+          ),
+
           headerStyle: {
             backgroundColor: activeColor.background,
             elevation: 0,
@@ -175,6 +227,7 @@ export default function TabLayout() {
         options={{
           title: "Laudry",
           headerTitle: () => <AppHeader />,
+
           headerStyle: {
             backgroundColor: activeColor.background,
             elevation: 0,
@@ -226,10 +279,7 @@ export default function TabLayout() {
         name="wallet"
         options={{
           title: "Wallet",
-          href:
-            user?.user_type === "Rider"
-              ? null
-              : undefined,
+          href: user?.user_type === "Rider" ? null : undefined,
           tabBarIcon: ({ color, focused }) => (
             <CustomTabBarIcon focused={focused} label="Wallet">
               <Entypo name="wallet" size={TAB_BAR_ICON_SIZE} color={color} />
