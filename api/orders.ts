@@ -202,9 +202,7 @@ const openDispute = async (orderId: string, order: Dispute) => {
   );
 
   if (!response.ok) {
-    throw new Error(
-      response.data?.detail || response?.data?.detail.split(":")[1]
-    );
+    throw new Error(response?.data?.detail.split(":")[1]);
   }
   return response.data;
 };

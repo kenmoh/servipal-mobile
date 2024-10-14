@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { useMutation } from "@tanstack/react-query";
 
 import CustomBtn from "@/components/CustomBtn";
@@ -62,7 +61,7 @@ const confirmAccount = () => {
 
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background, }}>
+        <ScrollView style={{ flex: 1, backgroundColor: activeColor.background, }}>
 
             <CustomActivityIndicator visible={isPending} />
             <View
@@ -137,7 +136,7 @@ const confirmAccount = () => {
 
 
             <StatusBar style="light" backgroundColor={activeColor.background} />
-        </SafeAreaView>
+        </ScrollView>
     );
 };
 

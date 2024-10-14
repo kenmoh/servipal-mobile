@@ -15,6 +15,8 @@ import { ThemeContext } from "@/context/themeContext";
 import transfer from "@/api/transfer";
 import client from "@/api/client";
 import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useMutation } from "@tanstack/react-query";
+import { payWithWallet } from "@/api/payment";
 
 const TIME_OUT = 3000
 
@@ -71,6 +73,48 @@ const payment = () => {
         setShowWebView(true);
     };
 
+    const { isPending, mutate } = useMutation({
+        mutationFn: (orderId: string) => payWithWallet(orderId),
+        onError: (error: Error) => {
+
+            showMessage({
+                message: error.message,
+                type: "danger",
+                textStyle: {
+                    alignItems: "center",
+                },
+            });
+            router.push({
+                pathname: 'paymentStatus',
+                params: {
+                    image: '../assets/animations/paymentFailed.json',
+                    status
+                }
+            });
+        },
+        onSuccess: (data) => {
+            showMessage({
+                message: data?.message || 'Payment Successful.',
+                type: "success",
+                textStyle: {
+                    alignItems: "center",
+                },
+            });
+
+
+            router.push({
+                pathname: 'paymentStatus',
+                params: {
+                    image: '../assets/animations/paymentSuccess.json',
+                    status
+
+                }
+            });
+
+        },
+
+    })
+
     const handlePayWithWallet = async (orderId: string) => {
         setIsLoading(true);
         const response = await client.post(`${orderId}/pay-with-wallet`);
@@ -126,33 +170,33 @@ const payment = () => {
         });
     };
 
-    useEffect(() => {
-        if (status?.[0] === "status=successful") {
-            router.push("/paymentSuccess");
-            showMessage({
-                message: "Payment Successful!",
-                type: "success",
-            });
-            setTimeout(() => {
-                router.push("/(drawer)/topTab");
-            }, TIME_OUT);
+    // useEffect(() => {
+    //     if (status?.[0] === "status=successful") {
+    //         router.push("/paymentSuccess");
+    //         showMessage({
+    //             message: "Payment Successful!",
+    //             type: "success",
+    //         });
+    //         setTimeout(() => {
+    //             router.push("/(drawer)/topTab");
+    //         }, TIME_OUT);
 
-        }
-        if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
-            router.push("/paymentFailed");
-            showMessage({
-                message: "Payment failed to complete!",
-                type: "danger",
-            });
-            setTimeout(() => {
-                router.push("/(drawer)/stats");
-            }, TIME_OUT);
-        }
-    }, [status]);
+    //     }
+    //     if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
+    //         router.push("/paymentFailed");
+    //         showMessage({
+    //             message: "Payment failed to complete!",
+    //             type: "danger",
+    //         });
+    //         setTimeout(() => {
+    //             router.push("/(drawer)/stats");
+    //         }, TIME_OUT);
+    //     }
+    // }, [status]);
 
     return (
         <>
-            <CustomActivityIndicator visible={isLoading} />
+            <CustomActivityIndicator visible={isPending} />
             <View
                 style={[styles.wrapper, { backgroundColor: activeColor.background }]}
             >
@@ -186,7 +230,7 @@ const payment = () => {
                             label="WALLET"
                             color={activeColor.text}
                             backgroundColor={activeColor.profileCard}
-                            onPress={() => handlePayWithWallet(id as string)}
+                            onPress={() => mutate(id as string)}
 
                         />
                         <TransferBtn

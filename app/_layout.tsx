@@ -172,6 +172,19 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
+              <Stack.Screen name="paymentStatus" options={{
+                title: "Payment Status",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
               <Stack.Screen name="failed" options={{
                 title: "Payment Failed",
                 headerShadowVisible: false,

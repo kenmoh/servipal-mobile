@@ -253,7 +253,7 @@ const addReview = async (orderId: string, reviewData: RatingType) => {
     comment: reviewData.comment,
   };
 
-  const result = await client.post(`${user}/${orderId}}/add-review`, data);
+  const result = await client.post(`${user}/${orderId}/add-review`, data);
 
   if (!result.ok) throw new Error(result?.data?.detail.split(":")[0]);
   return result.data;

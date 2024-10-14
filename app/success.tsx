@@ -28,6 +28,7 @@ const paymentSuccess = () => {
                         width: 400
                     }}
                 />
+
             </View>
         </SafeAreaView>
     );

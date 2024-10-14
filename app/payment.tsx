@@ -152,33 +152,40 @@ const payment = () => {
 
     const { isPending, mutate: handlePayWithWallet } = useMutation({
         mutationFn: (orderId: string) => payWithWallet(orderId),
-        onSuccess: () => {
-            router.push("/success");
+        onSuccess: (data) => {
             showMessage({
-                message: 'Payment Successful',
+                message: data?.message || 'Payment Successful.',
                 type: "success",
                 textStyle: {
                     alignItems: "center",
                 },
             });
 
-            setTimeout(() => {
-                router.push("/(drawer)/topTab");
-            }, TIME_OUT);
+            router.push({
+                pathname: 'paymentStatus',
+                params: {
+                    image: 'success',
+                    status
+
+                }
+            });
         },
         onError: (error) => {
-            router.push("/failed");
             showMessage({
-                message: error?.message,
+                message: error.message,
                 type: "danger",
                 textStyle: {
                     alignItems: "center",
                 },
             });
-            setTimeout(() => {
-                router.push("/(drawer)/stats");
-            }, TIME_OUT);
-        },
+            router.push({
+                pathname: 'paymentStatus',
+                params: {
+                    image: 'failed',
+                    status
+                }
+            });
+        }
     })
 
 
@@ -210,7 +217,14 @@ const payment = () => {
                 type: "success",
             });
             setTimeout(() => {
-                router.push("/(drawer)/topTab");
+                router.push({
+                    pathname: 'paymentStatus',
+                    params: {
+                        image: '../assets/animations/paymentSuccess.json',
+                        status
+
+                    }
+                });
             }, TIME_OUT);
         }
         if (status?.[0] === "status=failed" || status?.[0] === "status=cancelled") {
@@ -220,31 +234,37 @@ const payment = () => {
                 type: "danger",
             });
             setTimeout(() => {
-                router.push("/(drawer)/stats");
+                router.push({
+                    pathname: 'paymentStatus',
+                    params: {
+                        image: '../assets/animations/paymentFailed.json',
+                        status
+                    }
+                });
             }, TIME_OUT);
         }
     }, [status]);
 
 
 
-    if (isPending) {
-        return (
-            <View
-                style={{
-                    flex: 1,
-                    backgroundColor: activeColor.background,
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
-            </View>
-        );
-    }
+    // if (isPending) {
+    //     return (
+    //         <View
+    //             style={{
+    //                 flex: 1,
+    //                 backgroundColor: activeColor.background,
+    //                 alignItems: "center",
+    //                 justifyContent: "center",
+    //             }}
+    //         >
+    //             <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
+    //         </View>
+    //     );
+    // }
 
     return (
         <>
-            <CustomActivityIndicator visible={isLoading} />
+            <CustomActivityIndicator visible={isPending} />
             <View
                 style={[styles.wrapper, { backgroundColor: activeColor.background }]}
             >

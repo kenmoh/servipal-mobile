@@ -17,7 +17,6 @@ const transferDetail = () => {
     const params = useLocalSearchParams();
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const [copiedText, setCopiedText] = useState('');
     const { transfer_reference, account_number, bank_name, amount, mode } =
         params;
 
@@ -49,7 +48,7 @@ const transferDetail = () => {
     ]
 
     const handleGoBack = () => {
-        router.push("topTab/myOrder");
+        router.push("topTab");
         showMessage({
             message: "Your order will be listed for pickup as soon as your payment is confirmed!",
             type: "info",
@@ -74,27 +73,35 @@ const transferDetail = () => {
                 </Text>{" "}
                 into the account details below
             </Text>
+
             <ProfileContainer>
                 {
                     trasactionArray.map((transaction, index) => (
+
                         <React.Fragment key={transaction.title}>
                             <View style={{ alignItems: 'center', justifyContent: 'center', gap: 5 }}>
                                 <TransferCard
                                     title={transaction.title}
                                     details={transaction?.detail}
+                                    onPress={() => {
+                                        copyToClipboard(transaction?.detail);
+                                        showMessage({
+                                            message: 'Copied to clipboard.',
+                                            type: 'info'
+                                        })
+                                    }}
 
                                 />
-                                <TouchableOpacity hitSlop={25} onPress={() => copyToClipboard(transaction?.detail)}>
-
-                                    <FontAwesome6 name="copy" size={24} color={activeColor.icon} />
-                                </TouchableOpacity>
+                                <HDivider />
                             </View>
-                            {(index < trasactionArray.length - 1) && <HDivider />}
+                            {/* {(index < trasactionArray.length - 1) && <HDivider />} */}
+
 
                         </React.Fragment>
                     ))
                 }
             </ProfileContainer>
+
 
             <TouchableOpacity style={styles.back} onPress={handleGoBack}>
                 <Text style={{ color: '#fff' }}>Go Back</Text>
