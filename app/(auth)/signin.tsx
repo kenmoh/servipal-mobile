@@ -30,7 +30,7 @@ const SignIn = () => {
   let activeColor = Colors[theme.mode];
   const authContext = useAuth();
 
-  const { isSuccess, mutate, isPending, data } = useMutation({
+  const { mutate, isPending, data } = useMutation({
     mutationFn: ({ username, password }: Login) => authApi.loginApi(username, password),
     onError: (error) => {
       showMessage({

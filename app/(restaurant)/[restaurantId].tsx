@@ -85,6 +85,8 @@ const RestaurantDetails = () => {
         staleTime: 60 * 60 * 60,
     });
 
+    console.log(meals)
+
     const { data }: UseQueryResult<CardProps, Error> = useQuery({
         queryKey: ["restaurantUser", id],
         queryFn: () => useApi.getCurrentVendorUser(id as string),

@@ -48,7 +48,7 @@ const TransactionCard = ({
 
                         <View>
                             <Text style={[styles.text, { color: activeColor.text }]}>
-                                {transactions.name}
+                                {transactions.receiver || transactions.name}
                             </Text>
                             <Text
                                 style={{

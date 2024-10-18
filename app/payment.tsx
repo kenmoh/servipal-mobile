@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     Dimensions,
     ScrollView,
-    ActivityIndicator,
+
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { ReactNode, useContext, useEffect, useState } from "react";
@@ -15,13 +15,12 @@ import { WebView } from "react-native-webview";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import transfer from "@/api/transfer";
-import client from "@/api/client";
 import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
 import { SIZES } from "@/constants/Sizes";
 import { useMutation } from "@tanstack/react-query";
 import { payWithWallet } from "@/api/payment";
-import items from "./(drawer)/(tabs)/buySell/items";
+import OrderItem from "@/components/orderItem";
 
 const TIME_OUT = 1500;
 
@@ -35,12 +34,7 @@ type OrderParams = {
     deliveryFee: string;
     paymentType: string
 };
-type OrderItemType = {
-    label: string;
-    textColor: string;
-    quantity?: string;
-    amount: number;
-};
+
 
 type Labeltype = {
     label: string | undefined;
@@ -102,34 +96,6 @@ const TransferBtn = ({
     );
 };
 
-const OrderItem = ({ quantity, label, amount, textColor }: OrderItemType) => {
-    return (
-        <View
-            style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-            }}
-        >
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 5,
-                    marginVertical: 5,
-                }}
-            >
-                {quantity && (
-                    <Text style={[styles.text, { color: textColor }]}>
-                        {quantity} x {' '}
-                    </Text>
-                )}
-                <Text style={[styles.text, { color: textColor }]}>{label}</Text>
-            </View>
-            <Text style={[styles.text, { color: textColor }]}>{amount}</Text>
-        </View>
-    );
-};
 
 const payment = () => {
     const { theme } = useContext(ThemeContext);
@@ -247,20 +213,7 @@ const payment = () => {
 
 
 
-    // if (isPending) {
-    //     return (
-    //         <View
-    //             style={{
-    //                 flex: 1,
-    //                 backgroundColor: activeColor.background,
-    //                 alignItems: "center",
-    //                 justifyContent: "center",
-    //             }}
-    //         >
-    //             <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
-    //         </View>
-    //     );
-    // }
+
 
     return (
         <>

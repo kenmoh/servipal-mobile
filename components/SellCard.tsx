@@ -27,8 +27,8 @@ export type CardType = {
     stock: number;
     image_urls: string[];
     description: string;
-    avgRating?: number;
-    numReviews?: number;
+    average_rating?: number;
+    num_ratings?: number;
     total_sold?: number;
     seller: SellerType
 };
@@ -47,6 +47,8 @@ const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean })
                         id: item.id,
                         imageUrls: JSON.stringify(item.image_urls),
                         name: item.name,
+                        average_rating: item.average_rating,
+                        num_ratings: item.num_ratings,
                         totalSold: item.total_sold,
                         description: item.description,
                         price: item.price,
@@ -66,11 +68,11 @@ const SellCard = ({ item, isLastItem }: { item: CardType, isLastItem: boolean })
                     <Text style={[styles.text, { color: Colors.btnPrimaryColor, fontSize: 15 }]}>
                         ₦ {item?.price}
                     </Text>
-                    <Text style={[styles.text, { color: activeColor.text }]}>
-                        4{item.avgRating}
+                    {item.average_rating && <Text style={[styles.text, { color: activeColor.text }]}>
+                        {item.average_rating}
                         <AntDesign name="staro" color={Colors.btnPrimaryColor} size={10} />
 
-                    </Text>
+                    </Text>}
                 </View>
                 <View>
                     <Text style={[styles.text, { color: activeColor.text }]}>

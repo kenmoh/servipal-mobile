@@ -21,8 +21,6 @@ const paymentStatus = () => {
 
     const IMAGE = images[imageKey]
 
-    console.log(params.status, '=========================')
-
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background }}>
 

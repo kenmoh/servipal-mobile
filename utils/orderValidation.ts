@@ -24,7 +24,7 @@ export const addMealValidation = Yup.object().shape({
   side: Yup.string(),
   ingredients: Yup.string().required().label("Ingredients"),
   image: Yup.string().required().label("Image"),
-  preparationTime: Yup.string(),
+  preparationTime: Yup.number(),
 });
 
 export const addLaundryValidation = Yup.object().shape({

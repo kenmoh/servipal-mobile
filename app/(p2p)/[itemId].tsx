@@ -14,7 +14,7 @@ import Swiper from "react-native-swiper";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import CustomBtn from "@/components/CustomBtn";
-import { StatusBar } from "expo-status-bar";
+
 
 const IMG_HEIGHT = Dimensions.get("screen").height * 0.38;
 const IMG_WIDTH = Dimensions.get("screen").width;
@@ -22,7 +22,7 @@ const IMG_WIDTH = Dimensions.get("screen").width;
 const ItemDetails = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { imageUrls, name, price, description, stock, seller, id, totalSold } =
+    const { imageUrls, name, price, num_ratings, average_rating, description, stock, seller, id, totalSold } =
         useLocalSearchParams();
     const images = imageUrls && typeof imageUrls === 'string' ? JSON.parse(imageUrls) : []
 
@@ -63,7 +63,7 @@ const ItemDetails = () => {
                                 marginVertical: 10,
                             }}
                         >
-                            <View style={{ flexDirection: "row", gap: 5 }}>
+                            {average_rating && <View style={{ flexDirection: "row", gap: 5 }}>
                                 <AntDesign
                                     name="staro"
                                     color={"gold"}
@@ -71,12 +71,12 @@ const ItemDetails = () => {
                                     style={{ marginTop: 2 }}
                                 />
                                 <Text style={[styles.lightText, { color: activeColor.icon }]}>
-                                    4.5
+                                    {average_rating}
                                 </Text>
-                            </View>
-                            <Text style={[styles.lightText, { color: activeColor.icon }]}>
-                                22 reviews
-                            </Text>
+                            </View>}
+                            {num_ratings && <Text style={[styles.lightText, { color: activeColor.icon }]}>
+                                {num_ratings} {Number(num_ratings) > 1 ? 'reviews' : 'review'}
+                            </Text>}
                             <Text style={[styles.lightText, { color: activeColor.icon }]}>
                                 {totalSold || 0} Sold
                             </Text>
@@ -84,28 +84,7 @@ const ItemDetails = () => {
                                 {stock} In Stock
                             </Text>
                         </View>
-                        {/* <View >
-                            <View style={{ flexDirection: 'row', gap: 10 }}>
-                                <Text>Colors: </Text>
-                                <TouchableOpacity onPress={() => console.log('Pressed!')} style={{
-                                    height: 25, width: 25, borderWidth: StyleSheet.hairlineWidth,
-                                    borderColor: activeColor.icon,
-                                    borderRadius: 12.5,
-                                    backgroundColor: 'red'
-                                }} />
 
-
-                            </View>
-                            <View style={{ flexDirection: 'row', gap: 10 }}>
-                                <Text>Sizes: </Text>
-                                <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
-                                    <Text>45</Text>
-                                    <Text>45</Text>
-                                    <Text>45</Text>
-                                    <Text>45</Text>
-                                </View>
-                            </View>
-                        </View> */}
                         <View style={{ marginTop: 15 }}>
                             <View
                                 style={{

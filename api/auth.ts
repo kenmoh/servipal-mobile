@@ -25,12 +25,16 @@ const loginApi = async (
       },
     });
 
-  if (!response.ok || !response.data || "detail" in response.data) {
-    const errorMessage =
-      response.data && "detail" in response.data
-        ? response.data.detail.split(":")[1]
-        : "Something went wrong. Please try again.";
-    throw new Error(errorMessage);
+  // if (!response.ok || !response.data || "detail" in response.data) {
+  //   const errorMessage =
+  //     response.data && "detail" in response.data
+  //       ? response.data.detail.split(":")[1]
+  //       : "Something went wrong. Please try again.";
+  //   console.log(errorMessage, "=====================");
+  //   throw new Error(errorMessage);
+  // }
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
   }
 
   return response.data;

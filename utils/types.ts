@@ -410,6 +410,7 @@ export type TransactionData = {
   payment_url: string;
   id: string;
   name: string;
+  receiver: string;
   transaction_type: "paid with wallet" | "fund wallet" | "credit" | "debit";
   amount: string;
   status: PaymentStatus;
@@ -420,6 +421,7 @@ export interface WalletTransaction {
   amount: string;
   created_at: string;
   name: string;
+  receiver: string;
   status: string;
   transaction_type: "credit" | "debit";
   user_id: string;

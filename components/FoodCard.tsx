@@ -23,6 +23,7 @@ export type MealType = {
     name: string;
     price: number;
     quantity: number;
+    preparation_time: string;
     side?: string;
     ingredients?: string;
     image_url?: string;
@@ -92,7 +93,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
                             ₦ {meal.price}
                         </Text>
 
-                        <View
+                        {meal.preparation_time && <View
                             style={[
                                 styles.timeWrapper,
                                 {
@@ -110,9 +111,9 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
                                     { color: activeColor.text, marginTop: 5 },
                                 ]}
                             >
-                                45 mins
+                                {meal.preparation_time} mins
                             </Text>
-                        </View>
+                        </View>}
 
                     </View>
                 </View>

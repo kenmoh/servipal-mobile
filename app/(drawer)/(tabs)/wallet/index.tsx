@@ -1,8 +1,6 @@
 import {
-  ActivityIndicator,
   AppState,
   AppStateStatus,
-  Dimensions,
   FlatList,
   Platform,
   StyleSheet,
@@ -13,7 +11,6 @@ import React, { useContext, useEffect } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import WalletCard from "@/components/WalletCard";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { focusManager, useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/auth/authContext";
@@ -24,13 +21,14 @@ import { SIZES } from "@/constants/Sizes";
 import { showMessage } from "react-native-flash-message";
 import { router } from "expo-router";
 import { TransactionData } from "@/utils/types";
+import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 
 const wallet = () => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
   const { user } = useAuth();
 
-  const { data, error, isFetching, isLoading, refetch } = useQuery({
+  const { data, error, isFetching, refetch } = useQuery({
     queryKey: ["userWallet", user?.id],
     queryFn: walletApi.getUserWallet,
     enabled: !!user?.id,
@@ -63,7 +61,6 @@ const wallet = () => {
   });
 
 
-
   function onAppStateChange(status: AppStateStatus) {
     if (Platform.OS !== "web") {
       focusManager.setFocused(status === "active");
@@ -77,39 +74,8 @@ const wallet = () => {
   }, []);
 
 
-
-  const handleRefresch = () => refetch();
-
   useRefreshOnFocus(refetch);
 
-  if (isPending || isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: activeColor.background,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
-      </View>
-    );
-  }
-  if (isLoading || isFetching) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: activeColor.background,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size={30} color={activeColor.tabIconDefault} />
-      </View>
-    );
-  }
   if (error) {
     <View
       style={{
@@ -125,6 +91,7 @@ const wallet = () => {
 
   return (
     <>
+      <CustomActivityIndicator visible={isPending} />
       <StatusBar style={theme.mode === "dark" ? "light" : "dark"} />
 
       <WalletCard onPress={mutate} wallet={data} user={user!} />
@@ -176,7 +143,7 @@ const wallet = () => {
           }}
           showsVerticalScrollIndicator={false}
           refreshing={isFetching}
-          onRefresh={handleRefresch}
+          onRefresh={refetch}
         />
       </View>
     </>

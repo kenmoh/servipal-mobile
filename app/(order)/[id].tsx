@@ -40,8 +40,8 @@ export default function HomeScreen() {
     imageUrl,
     orderStatus,
     packageName,
-    // foods,
-    // laundries,
+    foods,
+    laundries,
     userId,
     orderNumber,
     items,
@@ -262,6 +262,21 @@ export default function HomeScreen() {
             style={styles.image}
           />
 
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: SIZES.marginSmall, gap: 10, paddingHorizontal: SIZES.paddingMedium }}>
+            <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Medium', fontSize: 14 }}># {orderNumber}</Text>
+            {
+              orderType !== 'delivery' && user?.user_type !== 'Dispatch Provider' && user?.user_type !== 'Rider' && <Text
+                style={[styles.linkText, { color: activeColor.text }]}
+                onPress={() => router.push({
+                  pathname: '(order)/orderItems',
+                  params: { orderType, foods, laundries, userId }
+                })}
+              >
+                View Order
+              </Text>
+            }
+          </View>
+
           <View style={{ paddingHorizontal: 15 }}>
             <View
               style={{
@@ -382,7 +397,7 @@ export default function HomeScreen() {
                 <DetailLabel lable="Origin" value={origin || ""} />
                 <DetailLabel lable="Destination" value={destination || ""} />
                 <DetailLabel lable="Distance" value={distance || ""} />
-                {(orderOwnerUsername === user?.username || vendorPhoneNumber === user?.phone_number) &&
+                {orderStatus !== 'pending' && (orderOwnerUsername === user?.username || vendorPhoneNumber === user?.phone_number) &&
                   (orderType === "food" || orderType === 'laundry') && (
                     <>
                       <DetailLabel lable="Delivery Fee" value={deliveryFee} />
