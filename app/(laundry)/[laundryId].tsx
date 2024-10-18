@@ -9,12 +9,11 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { Image } from "expo-image";
-import { useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
-import { Link, router, useLocalSearchParams, usePathname } from "expo-router";
+import { useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as ImagePicker from "expo-image-picker";
 
-import { getRestaurantMeals } from "@/api/foods";
 import useApi from "@/api/users";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
@@ -22,8 +21,8 @@ import ViewCartBtn from "@/components/ViewCartBtn";
 import { useCart } from "@/components/CartProvider";
 import { AntDesign } from "@expo/vector-icons";
 import HDivider from "@/components/HDivider";
-import restaurant from "@/assets/images/restaurant.jpg";
-import { CardProps, companyImage } from "@/utils/types";
+import restaurant from "@/assets/images/restaurant.png";
+import { CardProps } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
 import client from "@/api/client";
 import { useAuth } from "@/auth/authContext";

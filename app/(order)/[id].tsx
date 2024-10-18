@@ -72,7 +72,7 @@ export default function HomeScreen() {
 
   // Handle order Pickup
   const {
-    data,
+
     error: pickupError,
     mutate: handlePickup,
     isPending,
@@ -269,7 +269,7 @@ export default function HomeScreen() {
                 style={[styles.linkText, { color: activeColor.text }]}
                 onPress={() => router.push({
                   pathname: '(order)/orderItems',
-                  params: { orderType, foods, laundries, userId }
+                  params: { orderType, orderId }
                 })}
               >
                 View Order

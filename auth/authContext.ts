@@ -24,22 +24,20 @@ export function useAuth() {
 
 // This hook will protect the route access based on user authentication.
 export function useProtectedRoute(user: {} | null) {
-  const [isFirstLaunch, setIsFirstLuanch] = useState(null);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
   const segments = useSegments();
 
-  // Retrieving a value
-  // const getValue = async () => {
-  //   const value = await SecureStore.getItemAsync("alreadyLaunch");
-  //   if (value === "" || null || undefined) {
-  //     storeValue("alreadyLaunch", "true");
-  //     setIsFirstLuanch(true);
-  //   } else {
-  //     setIsFirstLuanch(false);
-  //   }
-  // };
-
+  const checkFirstLaunch = async () => {
+    const hasLaunched = await SecureStore.getItemAsync("hasLaunched");
+    if (!hasLaunched) {
+      setIsFirstLaunch(true);
+      await SecureStore.setItemAsync("hasLaunched", "true");
+    } else {
+      setIsFirstLaunch(false);
+    }
+  };
   useEffect(() => {
-    // getValue();
+    checkFirstLaunch();
 
     const inAuthGroup = segments[0] === "(auth)";
 

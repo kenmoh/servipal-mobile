@@ -1,4 +1,4 @@
-import { StyleSheet, Text, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import React, { useContext } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import ReviewCard from '@/components/ReviewCard'
@@ -18,7 +18,7 @@ const reviews = () => {
     return (
         <ScrollView style={{ flex: 1, backgroundColor: activeColor.background }}>
 
-            {reviewData?.reviews.map(review => <ReviewCard review={review} />)}
+            {reviewData?.reviews.map(review => <ReviewCard key={review.comment} review={review} />)}
         </ScrollView>
     )
 }

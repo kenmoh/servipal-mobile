@@ -1,17 +1,33 @@
+import { Image, StyleSheet, Text, View } from "react-native";
+import { useContext, useEffect, useRef, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as SecureStore from 'expo-secure-store';
+import Swiper from "react-native-swiper";
 import { Colors } from "@/constants/Colors";
 import { onboardingSlides } from "@/constants/onboarding";
 import { SIZES } from "@/constants/Sizes";
 import { ThemeContext } from "@/context/themeContext";
-import { useContext, useRef, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Swiper from "react-native-swiper";
 
 const Onboarding = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const swiperRef = useRef<Swiper>(null);
     const [activeIndex, setActiveIndex] = useState(0)
+    const [isFirstLaunch, setIsFirstLaunch] = useState(true)
+
+    useEffect(() => {
+        const checkFirstLaunch = async () => {
+            const hasLaunched = await SecureStore.getItemAsync('hasLaunched');
+            if (hasLaunched) {
+                setIsFirstLaunch(false);
+            } else {
+                await SecureStore.setItemAsync('hasLaunched', 'true'); // Set it to true after first launch
+            }
+        };
+        checkFirstLaunch();
+    }, []);
+
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background }}>
             <Swiper

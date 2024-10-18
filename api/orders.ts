@@ -89,13 +89,8 @@ const getFoodDetails = async (orderId: string) =>
   await client.get(`${endpoint}/${orderId}/food-order-details`);
 
 // Laundry details
-const getLaundryDetails = async (
-  orderId: string,
-  orderType: string = "laundry"
-) =>
-  await client.get(
-    `${endpoint}/${orderId}/item-laundry?order_type=${orderType}`
-  );
+const getLaundryDetails = async (orderId: string) =>
+  await client.get(`${endpoint}/${orderId}/laundry-order-details`);
 
 // Pickup order by dispatch/rider
 const pickUpOrder = async (order_id: string) => {

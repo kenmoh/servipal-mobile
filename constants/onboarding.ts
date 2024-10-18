@@ -1,14 +1,14 @@
-import rider from "@/assets/images/rider1.jpg";
-import foodOrdering from "@/assets/images/restaurant.jpg";
-import p2p from "@/assets/images/mkt.jpg";
-import laundry from "@/assets/images/laundry1.jpg";
+import rider from "@/assets/images/rider.png";
+import foodOrdering from "@/assets/images/restaurant.png";
+import p2p from "@/assets/images/mkt.png";
+import laundry from "@/assets/images/laundry.png";
 
 export const onboardingSlides = [
   {
     id: 1,
     name: "Welcome to ServiPal",
     description:
-      "Your one-stop app for item delivery, food ordering, laundry services, and secure online shopping.",
+      "Your one-stop app for item delivery, food ordering, laundry services, and secure online peer-to-peer shopping.",
     image: rider,
   },
   {

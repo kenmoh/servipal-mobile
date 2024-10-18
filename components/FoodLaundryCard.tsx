@@ -12,7 +12,7 @@ import { Image } from "expo-image";
 
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
-import restaurant from "@/assets/images/restaurant.jpg";
+import restaurant from "@/assets/images/restaurant.png";
 import { CardProps } from "@/utils/types";
 
 

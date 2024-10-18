@@ -19,7 +19,6 @@ import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
 import Empty from "@/components/Empty";
 import { OrderResponseType } from "@/utils/types";
-import AppSwipeable from "@/components/AppSwipeable";
 import { showMessage } from "react-native-flash-message";
 
 export const imageUrl =

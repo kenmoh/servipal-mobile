@@ -6,6 +6,8 @@ import { useLocalSearchParams } from 'expo-router'
 import OrderItem from '@/components/orderItem'
 import { ThemeContext } from '@/context/themeContext'
 import { Colors } from '@/constants/Colors'
+import orderApi from '@/api/orders'
+import { useQuery } from '@tanstack/react-query'
 
 type OrderItemType = {
     foods: FoodType,
@@ -24,15 +26,32 @@ type ItemType = {
 const orderItems = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { foods, laundries, orderType, userId } = useLocalSearchParams()
-    const items: ItemType[] = orderType === 'food' ? foods : laundries
+    const { orderType, orderId } = useLocalSearchParams()
+
+    const { data } = useQuery({
+        queryKey: ['orderDetails', orderId],
+        queryFn: () => {
+            if (orderType === 'food') {
+                return orderApi.getFoodDetails(orderId as string)
+            } else if (orderType === 'laundry') {
+                return orderApi.getLaundryDetails(orderId as string)
+            }
+        },
+        enabled: !!orderId
+    })
+    console.log(data?.data)
+    // Assign items based on orderType
+    const items = orderType === 'food' ? data?.data?.foods : data?.data?.laundries;
+
+    console.log(items, '=============')
+
     return (
         <View style={[styles.container, { backgroundColor: activeColor.background }]}>
-            {
+            {/* {
                 items.map(item => (
                     <OrderItem key={item.name} amount={item.amount} label={item.name} quantity={item.quantity} textColor={activeColor.text} />
                 ))
-            }
+            } */}
         </View>
     )
 }

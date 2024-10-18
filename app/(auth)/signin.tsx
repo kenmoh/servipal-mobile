@@ -149,7 +149,6 @@ const SignIn = () => {
 
 
       <StatusBar style="light" backgroundColor={activeColor.background} />
-      <Link href={'(auth)/welcome'} style={{ color: 'red' }}>Onboarding</Link>
     </SafeAreaView>
   );
 };
