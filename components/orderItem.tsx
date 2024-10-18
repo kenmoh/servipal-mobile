@@ -40,6 +40,7 @@ export default OrderItem
 const styles = StyleSheet.create({
     text: {
         fontFamily: 'Poppins-Medium',
-        fontSize: 12
+        fontSize: 12,
+        textTransform: 'capitalize'
     },
 })

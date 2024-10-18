@@ -16,7 +16,6 @@ const OrderDetailLayout = () => {
   return (
     <Stack
       screenOptions={{
-        // headerTitleAlign: "center",
         headerStyle: {
           backgroundColor: activeColor.background,
         },
@@ -52,6 +51,12 @@ const OrderDetailLayout = () => {
         name="transferDetail"
         options={{
           title: "Bank Transfer",
+        }}
+      />
+      <Stack.Screen
+        name="orderItems"
+        options={{
+          title: "Order Items",
         }}
       />
       <Stack.Screen

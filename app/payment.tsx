@@ -61,7 +61,7 @@ interface TransferDetailResponse {
     };
 }
 
-const Label = ({ label, amount, textColor }: Labeltype) => {
+export const Label = ({ label, amount, textColor }: Labeltype) => {
     return (
         <View
             style={{
