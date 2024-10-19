@@ -42,7 +42,7 @@ export function useProtectedRoute(user: {} | null) {
     const inAuthGroup = segments[0] === "(auth)";
 
     // If isFirstLaunch, display onboarding
-    if (isFirstLaunch && !user && !inAuthGroup) {
+    if (isFirstLaunch) {
       router.replace("(auth)/welcome");
     } else if (
       // If the user is not signed in and the initial segment is not anything in the auth group.

@@ -262,18 +262,24 @@ export default function HomeScreen() {
             style={styles.image}
           />
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: SIZES.marginSmall, gap: 10, paddingHorizontal: SIZES.paddingMedium }}>
-            <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Medium', fontSize: 14 }}># {orderNumber}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: SIZES.marginSmall, justifyContent: 'space-between', paddingHorizontal: SIZES.paddingMedium }}>
+            <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Medium', fontSize: 14 }}>Order # {orderNumber}</Text>
             {
-              orderType !== 'delivery' && user?.user_type !== 'Dispatch Provider' && user?.user_type !== 'Rider' && <Text
-                style={[styles.linkText, { color: activeColor.text }]}
+              orderType !== 'delivery' && paymntStatus !== 'pending' && user?.user_type !== 'Dispatch Provider' && user?.user_type !== 'Rider' && <TouchableOpacity
                 onPress={() => router.push({
                   pathname: '(order)/orderItems',
                   params: { orderType, orderId }
                 })}
+                style={{ paddingVertical: 2.5, paddingHorizontal: 5, backgroundColor: 'teal', borderRadius: 10 }}
+
               >
-                View Order
-              </Text>
+                <Text
+                  style={[styles.linkText, { color: '#fff', textDecorationLine: 'none' }]}
+
+                >
+                  Receipt
+                </Text>
+              </TouchableOpacity>
             }
           </View>
 

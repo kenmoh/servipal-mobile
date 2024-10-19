@@ -6,4 +6,5 @@ div {
     color: #333;
     text-transform: capitalize;
     font-weight: bold;
+    border-top: #333;
 }

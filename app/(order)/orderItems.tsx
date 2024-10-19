@@ -51,86 +51,61 @@ const orderItems = () => {
     const items =
         orderType === "food" ? data?.data?.foods : data?.data?.laundries;
 
-    const htmlContent = `
-        <html>
-            <head>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        margin: auto;
-                        padding-horizontal: 10px;
-                        width: 80%;
-                        
 
-                    }
-                    h1 {
-                        color:${activeColor.text};
-                        text-align: center;
-                        text-transform: capitalize;
-                        font-weight: bold;
-                    }
-                    p {
-                        font-size: 14px;
-                        line-height: 1.5;
-                    }
-                    ul {
-                        list-style-type: none;
-                        padding: 1px;
-                    }
-                    li {
-                        color: #aaa
-                        margin: 5px 0;
-                        padding: 10px;
-                        border-radius: 5px;
-                        font-size: 14;
-                    }
-                    hr {
-                        width: 100%;
-                        height: 1px;
-                        background-color: gold
-                        }
-                    div{
-                        display: flex;
-                        flex-direction: row;
-                        align-items: center;
-                        justify-content: space-between;
-                        margin-top: 2.5px;
-                    }
-                </style>
-            </head>
-            <body>
-                <h1>Order Details</h1>
-                <p>Order #: ${data?.data?.order_number}</p>
-                <small>Date: ${data?.data?.created_at.split('T')[0]}</small>
-                <div>
-                <p>Rider Name: ${data?.data?.rider_name}</p>
-                <p>Rider Phone: ${data?.data?.rider_phone_number}</p>
-                <p>Bike Plate Number: ${data?.data?.rider_bike_plate_number}</p>
-                </div>
-                <div>
-                <p>Dispatch Company: ${data?.data?.dispatch_company_name}</p>
-                <p>Dispatch Company Phone: ${data?.data?.dispatch_company_phone_number}</p>
-                </div>
-                <div>
-                <p>Vendour: ${data?.data?.vendor_username}</p>
-                <p>Vendour Phone: ${data?.data?.vendor_phone_number}</p>
-                </div>
-               
-                <hr />
-                <hr />
-                <ul>
-                    ${items?.map(item => `<li style="display: flex; color:#aaa; justify-content: space-between; align-items: center;">
-                        
-                        <div>${item.quantity} x ${item.name}</div>
-                        <div> $${item.price}</div>
-                        </li>`).join('')}
-                </ul>
-            </body>
-        </html>
-    `;
+    const html = `
+    <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Receipt</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
+        <div style="background-color: ${Colors.btnPrimaryColor}; color: white; padding: 20px; text-align: center;">
+            <h1 style="margin: 0; font-size: 24px; font-weight: 600;">Payment Receipt</h1>
+        </div>
+        <div style="padding: 20px;">
+            <div style="border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;">
+                <h2 style="margin: 0 0 10px; font-size: 18px; color: ${Colors.btnPrimaryColor};">Thank You for Your Payment!</h2>
+                <p style="margin: 0; color: #666; font-size: 14px;">Your transaction was successful.</p>
+            </div>
+            <div style="margin-bottom: 20px; border-bottom: 1px solid #e0e0e0">
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Date: <span style="float: right; color: #333;">${data?.data?.created_at.split('T')[0]}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Order ID: <span style="float: right; color: #333;">#${data?.data?.order_number}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Rider Name: <span style="float: right; color: #333;">${data?.data?.rider_name}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Rider Phone Number: <span style="float: right; color: #333;">#${data?.data?.rider_phone_number}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Bike Number: <span style="float: right; color: #333;">#${data?.data?.rider_bike_plate_number}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Dispatch Company Name: <span style="float: right; color: #333;">#${data?.data?.dispatch_company_name}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Dispatch Company Phone: <span style="float: right; color: #333;">#${data?.data?.dispatch_company_phone_number}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Vendour: <span style="float: right; color: #333;">#${data?.data?.vendor_username}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Vendour Phone: <span style="float: right; color: #333;">#${data?.data?.vendor_phone_number}</span></p>
+            </div>
+            <div style="background-color: #f9f9f9; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 10px; font-size: 16px; color: #333;">Item Details</h3>
+                ${items?.map(item => `<p style="margin: 0 0 5px; font-size: 14px; color: #666; border-bottom: 1px solid #e0e0e0">${item.quantity} x ${item.name}: <span style="float: right; color: #333;">${item.price}</span></p>`).join('')}
+                
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Delivery Fee: <span style="float: right; color: #333;">${data?.data?.delivery_fee}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">${data?.data?.order_type === 'food' ? 'Food Cost' : 'Laundry Cost'}: <span style="float: right; color: #333;">${data?.data?.item_cost}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; border-top: 1px solid #e0e0e0; color: #666;">Total: <span style="float: right; color: #333; font-weight: 600;">${data?.data?.total_cost}</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    `
+
 
     const shareReceipt = async () => {
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
+        const { uri } = await Print.printToFileAsync({ html });
         await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
     };
 
