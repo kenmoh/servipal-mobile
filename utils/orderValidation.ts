@@ -92,3 +92,9 @@ export const DisputeValidation = Yup.object().shape({
 export const ResponseValidation = Yup.object().shape({
   content: Yup.string().required().label("Content"),
 });
+
+export const SearchValidation = Yup.object().shape({
+  startDate: Yup.string().required().label("Start Date"),
+  endDate: Yup.string().required().label("End Date"),
+  orderType: Yup.string().required().label("Order Type"),
+});
