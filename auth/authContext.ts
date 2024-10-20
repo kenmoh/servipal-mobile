@@ -24,7 +24,7 @@ export function useAuth() {
 
 // This hook will protect the route access based on user authentication.
 export function useProtectedRoute(user: {} | null) {
-  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+  const [isFirstLaunch, setIsFirstLaunch] = useState<boolean | null>(null);
   const segments = useSegments();
 
   const checkFirstLaunch = async () => {
@@ -54,7 +54,6 @@ export function useProtectedRoute(user: {} | null) {
     } else if (user && inAuthGroup) {
       // Redirect away from the sign-in screen.
       router.replace("/topTab");
-      // setIsFirstLunch(true)
     }
   }, [user, segments, isFirstLaunch]);
 }

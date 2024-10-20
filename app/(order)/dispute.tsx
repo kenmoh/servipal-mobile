@@ -95,7 +95,7 @@ const confirmAccount = () => {
                                     <InputErrorMessage error={errors.subject} />
                                 )}
                                 <CustomPickerTextInput
-                                    label="User Role"
+                                    label="Disputed User Role"
                                     categories={roleData}
                                     borderRadius={10}
                                     onSelect={(role: RoleType) =>

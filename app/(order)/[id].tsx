@@ -263,14 +263,15 @@ export default function HomeScreen() {
           />
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: SIZES.marginSmall, justifyContent: 'space-between', paddingHorizontal: SIZES.paddingMedium }}>
-            <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Medium', fontSize: 14 }}>Order # {orderNumber}</Text>
+            <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Medium', fontSize: 14 }}>#{orderNumber}</Text>
             {
               orderType !== 'delivery' && paymntStatus !== 'pending' && user?.user_type !== 'Dispatch Provider' && user?.user_type !== 'Rider' && <TouchableOpacity
                 onPress={() => router.push({
                   pathname: '(order)/orderItems',
                   params: { orderType, orderId }
                 })}
-                style={{ paddingVertical: 2.5, paddingHorizontal: 5, backgroundColor: 'teal', borderRadius: 10 }}
+                hitSlop={25}
+                style={{ paddingVertical: 5, paddingHorizontal: 15, backgroundColor: 'teal', borderRadius: 20 }}
 
               >
                 <Text
@@ -333,7 +334,7 @@ export default function HomeScreen() {
                 )}
 
               <TouchableOpacity
-                hitSlop={25}
+                hitSlop={15}
                 onPress={() =>
                   router.push({
                     pathname: "/orderMap",
