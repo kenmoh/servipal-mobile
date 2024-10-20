@@ -145,9 +145,6 @@ const SignIn = () => {
           )}
         </Formik>
       </View>
-
-      <Link href={'/(auth)/welcome'}>Welcome</Link>
-
       <StatusBar style="light" backgroundColor={activeColor.background} />
     </SafeAreaView>
   );
