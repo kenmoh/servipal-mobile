@@ -153,8 +153,8 @@ const StatLayout = () => {
                                         setShowStartDate(Platform.OS === "ios");
                                         if (selectedDate) {
                                             const formattedTime = selectedDate
-                                                .toTimeString()
-                                                .split(" ")[0];
+                                                .toLocaleDateString()
+
                                             setFieldValue("startDate", formattedTime);
                                         }
                                     }}
@@ -174,8 +174,7 @@ const StatLayout = () => {
                                         setShowEndDate(Platform.OS === "ios");
                                         if (selectedDate) {
                                             const formattedTime = selectedDate
-                                                .toTimeString()
-                                                .split(" ")[0];
+                                                .toLocaleDateString()
                                             setFieldValue("endDate", formattedTime);
                                         }
                                     }}

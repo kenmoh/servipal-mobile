@@ -1,36 +1,31 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import { useContext, useEffect, useRef, useState } from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as SecureStore from 'expo-secure-store';
 import Swiper from "react-native-swiper";
 import { Colors } from "@/constants/Colors";
 import { onboardingSlides } from "@/constants/onboarding";
 import { SIZES } from "@/constants/Sizes";
 import { ThemeContext } from "@/context/themeContext";
+import { router } from "expo-router";
+import { AntDesign } from "@expo/vector-icons";
 
 const Onboarding = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const swiperRef = useRef<Swiper>(null);
     const [activeIndex, setActiveIndex] = useState(0)
-    const [isFirstLaunch, setIsFirstLaunch] = useState(true)
-
-    useEffect(() => {
-        const checkFirstLaunch = async () => {
-            const hasLaunched = await SecureStore.getItemAsync('hasLaunched');
-            if (hasLaunched) {
-                setIsFirstLaunch(false);
-            } else {
-                await SecureStore.setItemAsync('hasLaunched', 'true'); // Set it to true after first launch
-            }
-        };
-        checkFirstLaunch();
-    }, []);
 
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background }}>
+            <TouchableOpacity activeOpacity={0.6} onPress={() => router.replace('/(auth)/signin')} style={{ width: 75, alignItems: 'center', position: 'absolute', top: 50, right: 25, zIndex: 999, backgroundColor: Colors.btnPrimaryColor, paddingVertical: 5, paddingHorizontal: 15, borderRadius: 20 }}>
+                <Text style={{ color: activeColor.text, fontFamily: 'Poppins-Medium', fontSize: 14 }}>Skip</Text>
+
+            </TouchableOpacity>
+
             <Swiper
+                showsButtons
+                buttonWrapperStyle={{ alignItems: 'flex-end' }}
                 ref={swiperRef}
                 loop={false}
                 dot={
@@ -58,6 +53,11 @@ const Onboarding = () => {
                     </View>
                 ))}
             </Swiper>
+            {activeIndex === onboardingSlides.length - 1 && (
+                <TouchableOpacity activeOpacity={0.6} onPress={() => router.replace('/(auth)/signin')} style={{ position: 'absolute', bottom: 10, right: 15, zIndex: 999, backgroundColor: Colors.btnPrimaryColor, paddingVertical: 5, paddingHorizontal: 20, borderRadius: 20 }}>
+                    <AntDesign name="check" size={20} />
+                </TouchableOpacity>
+            )}
         </SafeAreaView>
     );
 };
