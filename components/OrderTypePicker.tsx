@@ -22,20 +22,21 @@ interface OptionItem {
 }
 
 interface CustomPickerTextInputProps {
-    label: string
-    categories: OptionItem[] | unknown;
+    placeholder: string
+    orderType: OptionItem[] | unknown;
     onSelect: (item: OptionItem) => void;
     borderRadius?: number
 
 }
 
-const CustomPickerTextInput = ({ categories, onSelect, label, borderRadius = 50 }: CustomPickerTextInputProps) => {
+const OrderTypePicker = ({ orderType, onSelect, placeholder, ...props }: CustomPickerTextInputProps) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<OptionItem | null>(null);
     const [modalHeight, setModalHeight] = useState<number>(0);
+    const [isFocused, setIsFocused] = useState<boolean>(false);
 
 
     const handleSelect = (item: OptionItem) => {
@@ -47,22 +48,36 @@ const CustomPickerTextInput = ({ categories, onSelect, label, borderRadius = 50 
     useEffect(() => {
         const itemHeight = 50;
         const maxItems = 5;
-        const calculatedHeight = Math.min(categories?.length, maxItems) * itemHeight + 100;
+        const calculatedHeight = Math.min(orderType?.length, maxItems) * itemHeight + 100;
         setModalHeight(calculatedHeight);
-    }, [categories]);
+    }, [orderType]);
 
     return (
         <View>
-            <Text style={[styles.text, { color: activeColor.text }]}>{label}</Text>
+
             <TouchableOpacity
-                style={[styles.inputContainer, { backgroundColor: activeColor.inputBackground, borderRadius }]}
+                style={[styles.inputContainer]}
                 onPress={() => setModalVisible(true)}
             >
+
                 <TextInput
-                    style={[styles.input, { color: activeColor.text, fontFamily: 'Poppins-Light' }]}
+                    style={[
+                        styles.textInput,
+                        {
+                            borderBottomWidth: isFocused ? 1.5 : StyleSheet.hairlineWidth,
+                            color: activeColor.text,
+                            borderBottomColor: isFocused ? Colors.btnPrimaryColor : activeColor.icon
+                        },
+                    ]}
+                    placeholder={placeholder || 'Order Type'}
+                    placeholderTextColor={"#aaa"}
+                    cursorColor={activeColor.text}
+                    onBlur={() => setIsFocused(false)}
+                    onFocus={() => setIsFocused(true)}
+                    {...props}
                     value={selectedItem ? selectedItem.name : ''}
-                    editable={false}
                 />
+
                 <MaterialCommunityIcons name="chevron-down" size={20} color={activeColor.icon} />
             </TouchableOpacity>
 
@@ -79,7 +94,7 @@ const CustomPickerTextInput = ({ categories, onSelect, label, borderRadius = 50 
                 >
                     <View style={[styles.modalContent, { height: modalHeight, backgroundColor: activeColor.profileCard }]}>
                         <FlatList
-                            data={categories}
+                            data={orderType}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
@@ -101,7 +116,7 @@ const CustomPickerTextInput = ({ categories, onSelect, label, borderRadius = 50 
 interface Styles {
     text: TextStyle
     inputContainer: ViewStyle;
-    input: ViewStyle;
+    textInput: TextStyle;
     modalOverlay: ViewStyle;
     modalContent: ViewStyle;
     optionItem: ViewStyle;
@@ -112,13 +127,8 @@ const styles = StyleSheet.create<Styles>({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: SIZES.paddingLarge,
     },
-    input: {
-        flex: 1,
-        height: 50,
 
-    },
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',
@@ -136,13 +146,21 @@ const styles = StyleSheet.create<Styles>({
         borderBottomWidth: StyleSheet.hairlineWidth,
 
     },
+    textInput: {
+        fontSize: 14,
+        width: '75%',
+        alignSelf: "center",
+        fontFamily: "Poppins-Regular",
+        paddingHorizontal: 5
+    },
+
     text: {
         fontSize: 14,
         fontFamily: "Poppins-Medium",
-        marginTop: 10
-    },
+        marginTop: 10,
 
+    },
 
 });
 
-export default CustomPickerTextInput;
+export default OrderTypePicker;

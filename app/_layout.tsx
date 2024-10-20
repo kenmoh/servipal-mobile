@@ -159,6 +159,19 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
+              <Stack.Screen name="searchResult" options={{
+                title: "Search Result",
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: activeColor.background,
+                },
+
+                headerTintColor: activeColor.text,
+
+                contentStyle: {
+                  backgroundColor: activeColor.background,
+                },
+              }} />
               <Stack.Screen name="success" options={{
                 title: "Payment Successful",
                 headerShadowVisible: false,

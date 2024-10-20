@@ -1,25 +1,25 @@
 import {
-    ActivityIndicator,
+
     AppState,
     AppStateStatus,
     FlatList,
     Platform,
     StyleSheet,
-    Text,
+
     View,
 } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { focusManager, useQuery } from "@tanstack/react-query";
+import { StatusBar } from "expo-status-bar";
+import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
+import { usePathname } from "expo-router";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { useAuth } from "@/auth/authContext";
 import { SIZES } from "@/constants/Sizes";
 import ordersApi from "@/api/orders";
-import { StatusBar } from "expo-status-bar";
 import OrderCard from "@/components/OrderCard";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { OrderResponseType } from "@/utils/types";
-import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 
 
 
@@ -27,19 +27,15 @@ const index = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth();
-
-    const [refreshing, setRefreshing] = useState(false);
+    const pathname = usePathname();
+    const orderType = pathname === "/stats" ? "delivery" : pathname === "/stats/food" ? "food" : 'laundry';
 
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ["package", user?.id],
-        queryFn: ordersApi.getUserOrderItems,
+        queryKey: ["orders", user?.id, orderType],
+        queryFn: ordersApi.getUserOrderItems
+
     });
 
-
-    const { data: stat } = useQuery({
-        queryKey: ["stats", user?.id],
-        queryFn: ordersApi.getUserOrderStats,
-    });
 
     function onAppStateChange(status: AppStateStatus) {
         if (Platform.OS !== "web") {
@@ -54,12 +50,6 @@ const index = () => {
         return () => subscription.remove();
     }, []);
 
-
-    const handleRefretch = () => {
-        setRefreshing(true);
-        refetch();
-        setRefreshing(false);
-    };
 
     useRefreshOnFocus(refetch);
 
@@ -84,7 +74,7 @@ const index = () => {
                     showsVerticalScrollIndicator={false}
                     vertical
                     refreshing={isFetching}
-                    onRefresh={handleRefretch}
+                    onRefresh={refetch}
                 />
             </View>
         </>

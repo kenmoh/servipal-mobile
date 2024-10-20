@@ -251,6 +251,27 @@ const createOrder = async (item: CreateOrderType) => {
   return response.data;
 };
 
+// Filter order by date range
+const filterOrderByDateRange = async (
+  start_date: string,
+  end_date: string,
+  order_type: string
+) => {
+  const queryParams = new URLSearchParams({
+    start_date,
+    end_date,
+    order_type,
+  });
+  const response = await client.get(
+    `${endpoint}/filter-user-orders-by-date-range?${queryParams.toString()}`
+  );
+
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  return response.data;
+};
+
 export default {
   getItemOrders,
   getFoodOrders,
@@ -279,4 +300,5 @@ export default {
   openDispute,
   getUserDisputes,
   respondToResponse,
+  filterOrderByDateRange,
 };

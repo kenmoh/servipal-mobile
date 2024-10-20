@@ -1,12 +1,13 @@
 import {
+    ActivityIndicator,
     Platform,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
 } from "react-native";
-import React, { useContext, useState } from "react";
-import { withLayoutContext } from "expo-router";
+import React, { useContext, useEffect, useState } from "react";
+import { router, usePathname, withLayoutContext } from "expo-router";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
@@ -20,6 +21,8 @@ import { SIZES } from "@/constants/Sizes";
 import AppDateInputPicker from "@/components/AppDateInputPicker";
 import { SearchValidation } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
+import CustomPickerTextInput from "@/components/AppModal";
+import OrderTypePicker from "@/components/OrderTypePicker";
 
 const StatTabBar = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 
@@ -27,17 +30,40 @@ interface StatType {
     total_orders: number;
     total_pending_orders: number;
 }
+interface OrderType {
+    name: string;
+    id: number;
+}
+const orderData = [
+    { id: 1, name: 'delivery' },
+    { id: 2, name: 'food' },
+    { id: 3, name: 'laundry' },
+]
 const StatLayout = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { user } = useAuth();
     const [showStartDate, setShowStartDate] = useState(false);
     const [showEndDate, setShowEndDate] = useState(false);
+    const pathname = usePathname()
+
+    const determineOrderType = (path: string) => {
+        if (path === '/stats') return 'delivery';
+        if (path === '/stats/food') return 'food';
+        return 'laundry';
+    };
+
+    const [orderType, setOrderType] = useState(() => determineOrderType(pathname));
 
     const { data: stat }: UseQueryResult<StatType, Error> = useQuery({
         queryKey: ["stats", user?.id],
         queryFn: ordersApi.getUserOrderStats,
     });
+
+
+    useEffect(() => {
+        setOrderType(determineOrderType(pathname));
+    }, [pathname]);
 
     return (
         <>
@@ -75,116 +101,144 @@ const StatLayout = () => {
                     initialValues={{
                         startDate: "",
                         endDate: "",
-                        orderType: "",
+                        orderType: orderType,
                     }}
                     onSubmit={(values) => console.log(values)}
                     validationSchema={SearchValidation}
                 >
                     {({
                         handleChange,
-                        handleSubmit,
                         values,
                         errors,
                         touched,
                         setFieldValue,
-                    }) => (
-                        <>
-                            <View style={[styles.inputContainer, { gap: 10 }]}>
-                                <View style={{ flex: 1 }}>
-                                    <AppDateInputPicker
-                                        onChangeText={handleChange("startDate")}
-                                        value={values.startDate}
-                                        placeholder="Start Date"
-                                        onPress={() => setShowStartDate(true)}
-                                    />
-                                    {touched.startDate && errors.startDate && (
-                                        <InputErrorMessage error={errors.startDate} />
-                                    )}
-                                </View>
-                                <View style={{ flex: 1 }}>
-                                    <AppDateInputPicker
-                                        onChangeText={handleChange("endDate")}
-                                        value={values.endDate}
-                                        placeholder="End Date"
-                                        onPress={() => setShowEndDate(true)}
-                                    />
-                                    {touched.endDate && errors.endDate && (
-                                        <InputErrorMessage error={errors.endDate} />
-                                    )}
-                                </View>
-                            </View>
-                            <View style={[styles.inputContainer, { gap: 10 }]}>
-                                <View style={{ width: "70%" }}>
-                                    <AppDateInputPicker
-                                        placeholder="Order Type"
-                                        onChangeText={handleChange("orderType")}
-                                        value={values.orderType}
-                                    />
-                                    {touched.orderType && errors.orderType && (
-                                        <InputErrorMessage error={errors.orderType} />
-                                    )}
-                                </View>
-                                <TouchableOpacity
-                                    style={{
-                                        flex: 1,
-                                        backgroundColor: activeColor.profileCard,
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        borderRadius: 20,
-                                        borderCurve: "continuous",
-                                    }}
-                                    onPress={handleSubmit}
-                                >
-                                    <Text style={{ color: activeColor.text }}>Search</Text>
-                                </TouchableOpacity>
-                            </View>
-                            {showStartDate && (
-                                <DateTimePicker
-                                    testID="startDatePicker"
-                                    value={
-                                        values.startDate
-                                            ? new Date(values.startDate)
-                                            : new Date()
-                                    }
-                                    mode="date"
+                    }) => {
 
-                                    display="default"
-                                    onChange={(event, selectedDate) => {
-                                        setShowStartDate(Platform.OS === "ios");
-                                        if (selectedDate) {
-                                            const formattedTime = selectedDate
-                                                .toLocaleDateString()
+                        useEffect(() => {
+                            setFieldValue("orderType", determineOrderType(pathname));
+                        }, [pathname]);
 
-                                            setFieldValue("startDate", formattedTime);
+                        const { refetch, isFetching } = useQuery({
+                            queryKey: ["filteredOrder", orderType, values.startDate, values.endDate],
+                            queryFn: () => ordersApi.filterOrderByDateRange(values.startDate, values.endDate, orderType),
+                            enabled: false
+                        });
+
+                        const handleFetchData = async () => {
+                            const result = await refetch();
+                            if (result.data) {
+                                router.push({
+                                    pathname: 'searchResult',
+                                    params: { searchResult: JSON.stringify(result?.data) }
+                                })
+                            }
+                        };
+                        return (
+                            <>
+                                {/* {isFetching && <ActivityIndicator size={30} color={activeColor.icon} />} */}
+                                <View style={[styles.inputContainer, { gap: 10 }]}>
+                                    <View style={{ flex: 1 }}>
+                                        <AppDateInputPicker
+                                            onChangeText={handleChange("startDate")}
+                                            value={values.startDate}
+                                            placeholder="Start Date"
+                                            onPress={() => setShowStartDate(true)}
+                                        />
+                                        {touched.startDate && errors.startDate && (
+                                            <InputErrorMessage error={errors.startDate} />
+                                        )}
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <AppDateInputPicker
+                                            onChangeText={handleChange("endDate")}
+                                            value={values.endDate}
+                                            placeholder="End Date"
+                                            onPress={() => setShowEndDate(true)}
+                                        />
+                                        {touched.endDate && errors.endDate && (
+                                            <InputErrorMessage error={errors.endDate} />
+                                        )}
+                                    </View>
+                                </View>
+                                <View style={[styles.inputContainer, { gap: 10 }]}>
+                                    <View style={{ width: "70%" }}>
+
+                                        <AppDateInputPicker
+                                            onChangeText={handleChange("orderType")}
+                                            value={values.orderType}
+                                            placeholder="Order Type"
+                                            editable={false}
+
+                                        />
+                                        {touched.orderType && errors.orderType && (
+                                            <InputErrorMessage error={errors.orderType} />
+                                        )}
+                                    </View>
+
+                                    <TouchableOpacity
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: activeColor.profileCard,
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            borderRadius: 20,
+                                            borderCurve: "continuous",
+                                            maxHeight: 35
+                                        }}
+                                        onPress={handleFetchData}
+                                    >
+                                        {isFetching ? <ActivityIndicator color={activeColor.icon} /> : <Text style={{ color: activeColor.text }}>Search</Text>}
+                                    </TouchableOpacity>
+                                </View>
+                                {showStartDate && (
+                                    <DateTimePicker
+                                        testID="startDatePicker"
+                                        value={
+                                            values.startDate ? new Date(values.startDate) : new Date()
                                         }
-                                    }}
-                                />
-                            )}
-                            {showEndDate && (
-                                <DateTimePicker
-                                    testID="endDatePicker"
-                                    value={
-                                        values.endDate
-                                            ? new Date(values.endDate)
-                                            : new Date()
-                                    }
-                                    mode="date"
-                                    display="default"
-                                    onChange={(event, selectedDate) => {
-                                        setShowEndDate(Platform.OS === "ios");
-                                        if (selectedDate) {
-                                            const formattedTime = selectedDate
-                                                .toLocaleDateString()
-                                            setFieldValue("endDate", formattedTime);
-                                        }
-                                    }}
-                                />
-                            )}
-                        </>
-                    )}
+                                        mode="date"
+                                        display="default"
+                                        onChange={(event, selectedDate) => {
+                                            setShowStartDate(Platform.OS === "ios");
+                                            if (selectedDate) {
+                                                const formattedDate = `${selectedDate.getFullYear()}-${String(
+                                                    selectedDate.getMonth() + 1
+                                                ).padStart(2, "0")}-${String(
+                                                    selectedDate.getDate()
+                                                ).padStart(2, "0")}`;
+
+                                                setFieldValue("startDate", formattedDate);
+                                            }
+                                        }}
+                                    />
+                                )}
+                                {showEndDate && (
+                                    <DateTimePicker
+                                        testID="endDatePicker"
+                                        value={values.endDate ? new Date(values.endDate) : new Date()}
+                                        mode="date"
+                                        display="default"
+                                        onChange={(event, selectedDate) => {
+                                            setShowEndDate(Platform.OS === "ios");
+                                            if (selectedDate) {
+                                                const formattedDate = `${selectedDate.getFullYear()}-${String(
+                                                    selectedDate.getMonth() + 1
+                                                ).padStart(2, "0")}-${String(
+                                                    selectedDate.getDate()
+                                                ).padStart(2, "0")}`;
+                                                setFieldValue("endDate", formattedDate);
+                                            }
+                                        }}
+                                    />
+                                )}
+                            </>
+                        )
+                    }
+                    }
                 </Formik>
             </View>
             <StatTabBar
+
                 screenOptions={{
                     tabBarLabelStyle: {
                         color: activeColor.tabIconDefault,
