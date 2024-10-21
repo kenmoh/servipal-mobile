@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import * as Print from 'expo-print';
 import { shareAsync } from 'expo-sharing';
 
@@ -114,6 +114,11 @@ const orderItems = () => {
         <ScrollView
             style={[styles.container, { backgroundColor: activeColor.background }]}
         >
+            <Stack.Screen options={{
+                headerRight: () => (<TouchableOpacity hitSlop={25} onPress={shareReceipt} style={{ marginVertical: SIZES.marginLarge, alignSelf: 'center', gap: 20, flexDirection: 'row' }}>
+                    <AntDesign name="sharealt" color={activeColor.icon} size={22} />
+                </TouchableOpacity>)
+            }} />
             <View style={{ marginVertical: SIZES.marginLarge }} />
 
             {items?.map(item => (
@@ -134,11 +139,6 @@ const orderItems = () => {
             <View style={[styles.separator, { backgroundColor: activeColor.profileCard }]} />
             <Label textColor={activeColor.text} label="Total" amount={data?.data?.total_cost} />
             <View style={[styles.separator, { backgroundColor: activeColor.profileCard }]} />
-
-            {
-                data?.data?.order_status !== 'pending' && <TouchableOpacity hitSlop={25} onPress={shareReceipt} style={{ marginVertical: SIZES.marginLarge, alignSelf: 'center', gap: 20, flexDirection: 'row' }}>
-                    <AntDesign name="sharealt" color={activeColor.icon} size={25} />
-                </TouchableOpacity>}
 
             {isFetching && <ActivityIndicator size={25} color={activeColor.icon} style={{ alignSelf: 'center', justifyContent: 'center' }} />}
         </ScrollView>

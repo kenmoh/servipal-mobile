@@ -35,7 +35,9 @@ const wallet = () => {
 
   });
 
-
+  const sortedTransactions = data?.wallet_transactions?.sort((a, b) =>
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
 
   const {
     mutate,
@@ -133,10 +135,10 @@ const wallet = () => {
           </Text>}
         </View>
         <FlatList
-          data={data?.wallet_transactions}
+          data={sortedTransactions}
           keyExtractor={(item, index) => `${item?.id?.toString()}-${index}`}
           renderItem={({ item, index }: { item: TransactionData, index: number }) => {
-            const isLastTranx = index === data?.data?.wallet_transactions.length - 1;
+            const isLastTranx = index === sortedTransactions.length - 1;
             return (
               <TransactionCard transactions={item} isLastTranx={isLastTranx} />
             );
