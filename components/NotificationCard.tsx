@@ -51,6 +51,7 @@ const NotificationCard = ({
                         id: item.id,
                         username: item.username,
                         subject: item.subject,
+                        status: item.status,
                         content: item.content,
                         createdAt: item.created_at,
                         responses: JSON.stringify(item.responses)

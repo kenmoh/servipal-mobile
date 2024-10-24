@@ -30,7 +30,10 @@ const index = () => {
                 contentContainerStyle={{
                     alignSelf: 'center',
 
+
                 }}
+                numColumns={2}
+                columnWrapperStyle={{ gap: 10 }}
                 ListEmptyComponent={<Empty label='No item yet!' />}
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.data.length - 1

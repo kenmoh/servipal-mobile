@@ -25,7 +25,7 @@ const disputeNotification = () => {
             keyExtractor={(item, index) => `${item?.id?.toString()}-${index}`}
             showsVerticalScrollIndicator={false}
             data={data ?? []}
-            ListEmptyComponent={<Empty label="No Disoute! Keeping it clean." />}
+            ListEmptyComponent={<Empty label="No Disoute. Keeping it clean!" />}
             onRefresh={refetch}
             refreshing={isFetching}
             renderItem={({ item }: { item: UserDisputes }) => <NotificationCard item={item} notificationId={item?.id} />}

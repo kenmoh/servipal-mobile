@@ -226,6 +226,10 @@ const respondToResponse = async (diputeId: number, content: string) => {
   return response?.data;
 };
 
+// Mark order as received [vendor users only]
+const closeDispute = (disputeId: number) =>
+  client.put(`${endpoint}/${disputeId}/close-dispute`);
+
 // create new order
 const createOrder = async (item: CreateOrderType) => {
   const data = new FormData();
@@ -301,4 +305,5 @@ export default {
   getUserDisputes,
   respondToResponse,
   filterOrderByDateRange,
+  closeDispute,
 };

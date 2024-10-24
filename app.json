@@ -30,7 +30,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+        [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoia2VubW9oIiwiYSI6ImNseGYzdGFhNzBrbXQya3F6YnZ3dmM0MWMifQ.YIJSWQGu3jYAb_U0QRk4yw",
+          "RNMapboxMapsVersion": "11.0.0"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

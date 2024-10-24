@@ -39,7 +39,7 @@ const NoticationIcon = ({
       style={{ marginRight: 25, flexDirection: "row" }}
     >
       <AntDesign name="bells" size={20} color={color} />
-      {counter && <View
+      {counter >= 1 && <View
         style={{
           position: "absolute",
           backgroundColor: Colors.btnPrimaryColor,
@@ -107,7 +107,8 @@ export default function TabLayout() {
 
   const { data } = useQuery({
     queryKey: ['notification', user?.id],
-    queryFn: orderApi.getUserDisputes
+    queryFn: orderApi.getUserDisputes,
+    select: (data) => data?.filter(dispute => dispute.status === 'open')
   })
 
 

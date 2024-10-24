@@ -1,10 +1,13 @@
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView from "react-native-maps";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Colors, themeMode } from "@/constants/Colors";
-import { Entypo } from "@expo/vector-icons";
+// import Mapbox, { MapView as MBMapView, LocationPuck, Camera } from "@rnmapbox/maps";
+import { Colors } from "@/constants/Colors";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+
+// Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY as string || '')
 
 const orderMap = () => {
   const params = useLocalSearchParams();
@@ -16,6 +19,7 @@ const orderMap = () => {
     <>
       <Stack.Screen options={{ headerTransparent: true, title: "" }} />
       <View style={styles.mapContainer}>
+
         <MapView
           style={styles.map}
           mapType="mutedStandard"
@@ -27,6 +31,7 @@ const orderMap = () => {
             longitudeDelta: 10,
           }}
         />
+        {/* <MapView style={{ flex: 1 }} /> */}
       </View>
       <View
         style={[
