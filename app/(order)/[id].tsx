@@ -278,7 +278,7 @@ export default function HomeScreen() {
                   style={[styles.linkText, { color: '#fff', textDecorationLine: 'none' }]}
 
                 >
-                  Receipt
+                  Invoice
                 </Text>
               </TouchableOpacity>
             }

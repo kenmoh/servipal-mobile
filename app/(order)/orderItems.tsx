@@ -35,8 +35,8 @@ const orderItems = () => {
     let activeColor = Colors[theme.mode];
     const { orderType, orderId } = useLocalSearchParams();
 
-    const { data, isFetching, refetch } = useQuery({
-        queryKey: ["orderDetails", orderId],
+    const { data, isFetching } = useQuery({
+        queryKey: ["orderDetails", orderId, orderType],
         queryFn: () => {
             if (orderType === "food") {
                 return orderApi.getFoodDetails(orderId as string);
@@ -46,6 +46,7 @@ const orderItems = () => {
         },
         enabled: !!orderId,
     });
+
 
     // Assign items based on orderType
     const items =
@@ -57,7 +58,7 @@ const orderItems = () => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Receipt</title>
+    <title>Payment Invoice</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -71,7 +72,7 @@ const orderItems = () => {
 <body>
     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); overflow: hidden;">
         <div style="background-color: ${Colors.btnPrimaryColor}; color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0; font-size: 24px; font-weight: 600;">Payment Receipt</h1>
+            <h1 style="margin: 0; font-size: 24px; font-weight: 600;">Payment Invoice</h1>
         </div>
         <div style="padding: 20px;">
             <div style="border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 15px;">
@@ -81,11 +82,11 @@ const orderItems = () => {
             <div style="margin-bottom: 20px; border-bottom: 1px solid #e0e0e0">
                 <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Date: <span style="float: right; color: #333;">${data?.data?.created_at.split('T')[0]}</span></p>
                 <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Order ID: <span style="float: right; color: #333;">#${data?.data?.order_number}</span></p>
-                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Rider Name: <span style="float: right; color: #333;">${data?.data?.rider_name}</span></p>
-                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Rider Phone Number: <span style="float: right; color: #333;">#${data?.data?.rider_phone_number}</span></p>
-                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Bike Number: <span style="float: right; color: #333;">#${data?.data?.rider_bike_plate_number}</span></p>
-                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Dispatch Company Name: <span style="float: right; color: #333;">#${data?.data?.dispatch_company_name}</span></p>
-                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Dispatch Company Phone: <span style="float: right; color: #333;">#${data?.data?.dispatch_company_phone_number}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Rider Name: <span style="float: right; color: #333;">${data?.data?.rider_name || ''}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Rider Phone Number: <span style="float: right; color: #333;">#${data?.data?.rider_phone_number || ''}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Bike Number: <span style="float: right; color: #333;">#${data?.data?.rider_bike_plate_number || ''}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Dispatch Company Name: <span style="float: right; color: #333;">#${data?.data?.dispatch_company_name || ''}</span></p>
+                <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Dispatch Company Phone: <span style="float: right; color: #333;">#${data?.data?.dispatch_company_phone_number || ''}</span></p>
                 <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Vendour: <span style="float: right; color: #333;">#${data?.data?.vendor_username}</span></p>
                 <p style="margin: 0 0 5px; font-size: 14px; color: #666;">Vendour Phone: <span style="float: right; color: #333;">#${data?.data?.vendor_phone_number}</span></p>
             </div>
