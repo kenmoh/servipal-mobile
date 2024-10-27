@@ -104,7 +104,7 @@ const resetPasswordLink = () => {
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
                                             label="Send"
-                                            btnBorderRadius={5}
+                                            btnBorderRadius={50}
                                             onPress={handleSubmit}
                                         />
                                     </View>
