@@ -396,7 +396,7 @@ const RestaurantDetails = () => {
                     ListHeaderComponent={<Menu />}
                     showsVerticalScrollIndicator={false}
                     data={meals?.data ?? []}
-                    keyExtractor={(item) => item?.id?.toString() + item?.name}
+                    keyExtractor={(index, item) => `${item?.id?.toString()}-${index}`  }
                     renderItem={({ item }) => <FoodCard meal={item} />}
                     ListEmptyComponent={isFetching ? <Empty label="Loading Menu..." /> : <Empty label="No Meals Yet!" />}
                     refreshing={isFetching}
