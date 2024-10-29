@@ -104,7 +104,7 @@ const index = () => {
 
       <FlatList
         data={data}
-        keyExtractor={(item,) => item?.id?.toString()}
+        keyExtractor={(item) => item?.id?.toString()}
         renderItem={({ item }) =>
           <OrderCard order={item} isHomeScreen={isHomeScreen} />
         }

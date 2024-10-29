@@ -30,7 +30,7 @@ export type MealType = {
 
 };
 
-const FoodCard = ({ meal }: { meal: MealType }) => {
+const FoodCard = ({ meal, style }: { meal: MealType, style?: object }) => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
@@ -53,7 +53,7 @@ const FoodCard = ({ meal }: { meal: MealType }) => {
         <>
             <TouchableOpacity
                 activeOpacity={0.6}
-                style={[styles.container, { backgroundColor: activeColor.profileCard }]}
+                style={[styles.container, { backgroundColor: activeColor.profileCard, ...style }]}
                 onPress={handleCheckboxChange}
             >
                 <View style={[styles.topWrapper]}>

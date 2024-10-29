@@ -18,7 +18,7 @@ import { getRestaurantMeals } from "@/api/foods";
 import useApi from "@/api/users";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
-import FoodCard from "@/components/FoodCard";
+import FoodCard, { MealType } from "@/components/FoodCard";
 import ViewCartBtn from "@/components/ViewCartBtn";
 import { useCart } from "@/components/CartProvider";
 import { AntDesign } from "@expo/vector-icons";
@@ -85,7 +85,6 @@ const RestaurantDetails = () => {
         staleTime: 60 * 60 * 60,
     });
 
-    console.log(meals)
 
     const { data }: UseQueryResult<CardProps, Error> = useQuery({
         queryKey: ["restaurantUser", id],
@@ -392,12 +391,12 @@ const RestaurantDetails = () => {
                 >
                     <Text>Something went wrong!</Text>
                 </View>}
-                <FlatList
+                <FlatList<MealType>
                     ListHeaderComponent={<Menu />}
                     showsVerticalScrollIndicator={false}
-                    data={meals?.data ?? []}
-                    keyExtractor={(index, item) => `${item?.id?.toString()}-${index}`  }
-                    renderItem={({ item }) => <FoodCard meal={item} />}
+                    data={Array.isArray(meals?.data) ? meals.data : []}
+                    keyExtractor={(item: MealType, index: number) => `${item?.id?.toString()}-${index}`}
+                    renderItem={({ item, index }: { item: MealType, index: number }) => <FoodCard meal={item} style={{ marginBottom: index === meals?.data.length - 1 ? 10 : 3 }} />}
                     ListEmptyComponent={isFetching ? <Empty label="Loading Menu..." /> : <Empty label="No Meals Yet!" />}
                     refreshing={isFetching}
                     onRefresh={refetch}

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useEffect } from "react";
 import Animated, {
     useSharedValue,
@@ -81,13 +81,14 @@ export default ViewCartBtn;
 
 const styles = StyleSheet.create({
     container: {
-        width: "100%",
-        bottom: 0,
+        width: "90%",
+        bottom: 25,
         flexDirection: 'row',
         borderRadius: 7.5,
         zIndex: 999,
         justifyContent: 'space-between',
-        paddingVertical: 5
+        paddingVertical: 5,
+        alignSelf: 'center'
 
     },
 
