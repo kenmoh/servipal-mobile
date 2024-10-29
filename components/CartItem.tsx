@@ -13,13 +13,13 @@ const CartItem = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const { incrementItem, decrementItem, removeFromCart, cart } = useCart();
-    const truncateText = (text: string, maxWords = 10) => {
-        const words = text.split(' ');
-        if (words.length <= maxWords) {
-            return text;
-        }
-        return words.slice(0, maxWords).join(' ') + '...';
-    };
+    // const truncateText = (text: string, maxWords = 10) => {
+    //     const words = text.split(' ');
+    //     if (words.length <= maxWords) {
+    //         return text;
+    //     }
+    //     return words.slice(0, maxWords).join(' ') + '...';
+    // };
     return (
         <>
             {cart.items.map((cartItem) => (
@@ -33,9 +33,9 @@ const CartItem = () => {
                     <View key={cartItem.image_url} style={styles.wrapper}>
                         <View style={styles.foodContainer}>
                             <Image src={cartItem.image_url} style={styles.image} />
-                            <View>
-                                <Text style={[styles.mealText, { color: activeColor.text }]}>
-                                    {truncateText(cartItem.name, 1)}
+                            <View style={{ marginBottom: 15 }}>
+                                <Text numberOfLines={1} ellipsizeMode="tail" style={[styles.mealText, { color: activeColor.text }]}>
+                                    {cartItem.name}
                                 </Text>
                                 <Text
                                     style={[
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     mealText: {
         fontFamily: "Poppins-Medium",
         fontSize: 12,
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     btn: {
         alignItems: "center",
@@ -178,13 +178,14 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         gap: 10,
         alignItems: "center",
+        width: '70%'
     },
     btnContainer: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
         alignSelf: "flex-end",
-        width: 90
+        width: '25%',
     },
 
     image: {

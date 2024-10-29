@@ -82,7 +82,7 @@ const RestaurantDetails = () => {
     } = useQuery({
         queryKey: ["restaurant", id],
         queryFn: () => getRestaurantMeals(id as string),
-        staleTime: 60 * 60 * 60,
+        // staleTime: 60 * 60 * 60,
     });
 
 
