@@ -101,13 +101,15 @@ const payment = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [showWebView, setShowWebView] = useState(false);
-    const [redirectedUrl, setRedirectedUrl] = useState(null);
+    const [redirectedUrl, setRedirectedUrl] = useState<{ url?: string } | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const params = useLocalSearchParams<OrderParams>()
 
+    const status = redirectedUrl?.url ? redirectedUrl?.url?.split("?")[1]?.split("&") : null;
 
-    const status = redirectedUrl?.url?.split("?")[1]?.split("&");
+    console.log(status)
+    console.log(redirectedUrl)
 
     const handleOpenWebView = () => {
         if (!params.paymentUrl) {
@@ -118,9 +120,9 @@ const payment = () => {
 
     const { isPending, mutate: handlePayWithWallet } = useMutation({
         mutationFn: (orderId: string) => payWithWallet(orderId),
-        onSuccess: (data) => {
+        onSuccess: () => {
             showMessage({
-                message: data?.message || 'Payment Successful.',
+                message: 'Payment Successful.',
                 type: "success",
                 textStyle: {
                     alignItems: "center",
@@ -159,18 +161,17 @@ const payment = () => {
 
     const handleGetTransferDetails = async () => {
         setIsLoading(true);
-        const result = (await transfer.transferPaymentDetail(
-            params.id as string
+        const result = (await transfer.transferPaymentDetail(params.id as string
         )) as TransferDetailResponse;
         setIsLoading(false);
         router.push({
             pathname: "/transferDetail",
             params: {
-                transfer_reference: result.data.transfer_reference,
-                account_number: result.data.account_number,
-                bank_name: result.data.bank_name,
-                amount: result.data.amount,
-                mode: result.data.mode,
+                transfer_reference: result?.data?.transfer_reference,
+                account_number: result?.data?.account_number,
+                bank_name: result?.data?.bank_name,
+                amount: result?.data?.amount,
+                mode: result?.data?.mode,
             },
         });
     };
@@ -186,8 +187,8 @@ const payment = () => {
                 router.push({
                     pathname: 'paymentStatus',
                     params: {
-                        image: '../assets/animations/paymentSuccess.json',
-                        status
+                        // image: '../assets/animations/paymentSuccess.json',
+                        status: status?.[0]
 
                     }
                 });
@@ -217,7 +218,7 @@ const payment = () => {
 
     return (
         <>
-            <CustomActivityIndicator visible={isPending} />
+            <CustomActivityIndicator visible={isPending || isLoading} />
             <View
                 style={[styles.wrapper, { backgroundColor: activeColor.background }]}
             >

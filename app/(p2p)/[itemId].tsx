@@ -81,7 +81,7 @@ const ItemDetails = () => {
                                 {totalSold || 0} Sold
                             </Text>
                             <Text style={[styles.lightText, { color: activeColor.icon }]}>
-                                {stock} In Stock
+                                {Number(stock) <= 0 ? 0 : stock} In Stock
                             </Text>
                         </View>
 
@@ -154,9 +154,10 @@ const ItemDetails = () => {
                 </Text>
                 <View>
                     <CustomBtn
+                        disabled={Number(stock) <= 0}
                         btnBorderRadius={50}
-                        btnColor={Colors.btnPrimaryColor}
-                        label="View Cart"
+                        btnColor={Number(stock) <= 0 ? activeColor.profileCard : Colors.btnPrimaryColor}
+                        label={Number(stock) <= 0 ? 'Out of stock' : "View Cart"}
                         onPress={() =>
                             router.push({
                                 pathname: "/(p2p)/buyItem",

@@ -15,6 +15,7 @@ import InputErrorMessage from '@/components/InputErrorMessage';
 import CustomBtn from '@/components/CustomBtn';
 import { ItemInfo, makePayment } from '@/api/items';
 import { Entypo } from '@expo/vector-icons';
+import { number } from 'yup';
 
 const buyItem = () => {
     const { theme } = useContext(ThemeContext);
@@ -23,7 +24,7 @@ const buyItem = () => {
 
     // const image = JSON.parse(image)
 
-    const { mutate, isPending, data } =
+    const { mutate, isPending } =
         useMutation({
             mutationFn: (info: ItemInfo) => makePayment(id, info),
             onError: (error: Error) => {
@@ -36,10 +37,12 @@ const buyItem = () => {
                 });
                 router.back();
             },
-            onSuccess: () => {
+            onSuccess: (data) => {
+                console.log(data, 'vvvvvvvvvvvvvvvvvv')
+
                 showMessage({
-                    message: "Purchase successful.",
-                    type: "success",
+                    message: "Transaction Initialized.",
+                    type: "default",
                     style: {
                         alignItems: "center",
                     },
@@ -89,7 +92,7 @@ const buyItem = () => {
 
                     <Formik
                         initialValues={{
-                            quantity: 1,
+                            quantity: Number(""),
                             deliveryInfo: "",
 
 
@@ -145,6 +148,7 @@ const buyItem = () => {
                                         label="Buy"
                                         btnColor="orange"
                                         onPress={handleSubmit}
+
                                     />
                                 </View>
 

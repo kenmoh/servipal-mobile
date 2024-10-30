@@ -1,12 +1,6 @@
 import { ApiResponse } from "apisauce";
 import client from "./client";
 
-export const registerNotification1 = (pushToken: string) => {
-  client.patch("/users/notification-token", {
-    user_notification_token: pushToken,
-  });
-};
-
 interface NotificationTokenResponse {
   notification_token: string;
 }

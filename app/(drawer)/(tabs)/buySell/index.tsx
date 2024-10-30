@@ -34,7 +34,7 @@ const index = () => {
                 }}
                 numColumns={2}
                 columnWrapperStyle={{ gap: 10 }}
-                ListEmptyComponent={<Empty label='No item yet!' />}
+                ListEmptyComponent={!isFetching && <Empty label='No item yet!' />}
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.data.length - 1
                     return (

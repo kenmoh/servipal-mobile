@@ -135,7 +135,7 @@ export default function TabLayout() {
             Constants?.easConfig?.projectId,
         });
 
-        if (!user?.notification_token) {
+        if (!user?.notification_token && token.data) {
           registerNotification(token.data);
         }
       } catch (error) {
@@ -149,7 +149,7 @@ export default function TabLayout() {
     Notifications.addNotificationResponseReceivedListener((notification) =>
       router.replace("/(tabs)")
     );
-  }, []);
+  }, [user]);
 
   return (
     <Tabs
