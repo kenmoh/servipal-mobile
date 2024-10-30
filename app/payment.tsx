@@ -187,7 +187,6 @@ const payment = () => {
                 router.push({
                     pathname: 'paymentStatus',
                     params: {
-                        // image: '../assets/animations/paymentSuccess.json',
                         status: status?.[0]
 
                     }
@@ -204,8 +203,7 @@ const payment = () => {
                 router.push({
                     pathname: 'paymentStatus',
                     params: {
-                        image: '../assets/animations/paymentFailed.json',
-                        status
+                        status: status?.[0]
                     }
                 });
             }, TIME_OUT);

@@ -172,19 +172,7 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
-              <Stack.Screen name="success" options={{
-                title: "Payment Successful",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
 
-                headerTintColor: activeColor.text,
-
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
               <Stack.Screen name="paymentStatus" options={{
                 title: "Payment Status",
                 headerShadowVisible: false,
@@ -198,18 +186,7 @@ export default function RootLayout() {
                   backgroundColor: activeColor.background,
                 },
               }} />
-              <Stack.Screen name="failed" options={{
-                title: "Payment Failed",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
 
-                headerTintColor: activeColor.text,
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
               <Stack.Screen name="setupCompanyProfile" options={{
                 title: "Profile",
                 headerShadowVisible: false,
