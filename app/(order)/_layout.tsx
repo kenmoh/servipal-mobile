@@ -59,18 +59,7 @@ const OrderDetailLayout = () => {
           title: "Order Items",
         }}
       />
-      <Stack.Screen
-        name="paymentFailed"
-        options={{
-          headerShown: false
-        }}
-      />
-      <Stack.Screen
-        name="paymentSuccess"
-        options={{
-          headerShown: false
-        }}
-      />
+
     </Stack>
   );
 };
