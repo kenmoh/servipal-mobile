@@ -1,27 +1,32 @@
-# Welcome to QuickPickup 👋
+# Multi-Vendor Delivery and Marketplace Application
 
-### A multi vendor item delivery application
+## Overview
 
-This is a multi-vendor products/items delivery application where users(customer) can list
-Products/Items for delivery and users(dispatch riders) will deliver it to the specified destination.
-The order(product/items) has pending, delivered and release fund status.Upon delivery of order, the dispatch
-mark order as delivered, when the delivery is confirmed by the owner, the owner can release fund by the click of a button.
-After a successful order delivery and service charge deduction, fund is released to the vendor wallet. Vendor can request/withdraw funds from their
-wallet.
+This application serves as a comprehensive platform for multi-vendor item delivery, laundry services, food ordering, and peer-to-peer (P2P) marketplace transactions. It connects customers with various service providers, enabling seamless transactions and efficient service delivery.
 
-### User Types
+## Features
 
-        1. Customer(List order(s))
-        2. Vendors(Dispatch companies with verified company reg.)
-        3. Admin/Staff Users
+- **Multi-Vendor Support**: Allows multiple vendors to list their products and services, providing customers with a wide range of options.
+- **Item Delivery**: Users can order items for delivery, ensuring convenience and timely service.
+- **Laundry Services**: Customers can schedule laundry pickups and deliveries, making laundry management hassle-free.
+- **Food Ordering**: Users can browse menus from local restaurants and place orders for delivery or pickup.
+- **P2P Marketplace**: Facilitates direct transactions between users, allowing them to buy and sell items within the community.
 
-### Tech Stack
+## Benefits
 
-    1. React Native(Expo)
-    2. FastAPI(Python web framework)
-    3. SQLAlchemy
-    4. Alembic(database migration)
-    5. PostgreSQL
-    6. Docker
-    7. Flutterwave(payment gateway)
-    8. AWS S3
+- **Convenience**: Users can access various services from a single platform.
+- **Efficiency**: Streamlined processes for ordering, delivery, and payment.
+- **Community Engagement**: Encourages local commerce and supports small businesses.
+
+This application aims to enhance the user experience by providing a reliable and user-friendly interface for all delivery and marketplace needs.
+
+## Tech stack
+
+1. React Native(Expo)
+2. FastAPI(Python web framework)
+3. SQLAlchemy
+4. Alembic(database migration)
+5. PostgreSQL
+6. Docker
+7. Flutterwave(payment gateway)
+8. AWS S3
