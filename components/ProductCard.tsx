@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import { SIZES } from '@/constants/Sizes';
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 const IMAGE_HEIGHT = Dimensions.get("screen").height * 0.25;
@@ -27,18 +27,26 @@ const ProductCard = ({ item, isLastItem }: ProductCardType) => {
     let activeColor = Colors[theme.mode];
     const router = useRouter()
     return (
-        <View style={[styles.container, { backgroundColor: activeColor.profileCard, marginBottom: isLastItem ? 10 : 5 }]}>
+        <View style={[styles.container, { backgroundColor: activeColor.profileCard, marginBottom: isLastItem ? 20 : 10 }]}>
 
             <Image style={styles.image} source={{ uri: item?.image_urls[0] || imageUrl }} />
 
             <View style={styles.wrapper}>
                 <Text style={[styles.text, { color: activeColor.text }]}>{item?.name}</Text>
-                <Text style={[styles.text, { color: activeColor.text }]}>{item?.price}</Text>
-                <Text style={[styles.text, { color: activeColor.text }]}>{item?.stock}</Text>
+                <View style={{ gap: 5 }}>
+                    <Text style={[styles.text, { color: activeColor.text }]}>₦ {item?.price}</Text>
+                    <Text style={[styles.text, { color: activeColor.text }]}> Stock: {item?.stock}</Text>
+                </View>
             </View>
-            <TouchableOpacity activeOpacity={0.6} style={styles.btn} onPress={() => router.push('/')}>
-                <AntDesign name='edit' size={24} color={activeColor.icon} />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'column-reverse', gap: 10, alignSelf: 'flex-end' }}>
+
+                <TouchableOpacity activeOpacity={0.6} onPress={() => router.push('/')}>
+                    <Ionicons name='pencil' size={24} color={activeColor.icon} />
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.6} onPress={() => router.push('/')}>
+                    <Ionicons name='trash' size={24} color={activeColor.icon} />
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
