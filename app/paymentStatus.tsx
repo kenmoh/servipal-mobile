@@ -11,14 +11,11 @@ import { SIZES } from "@/constants/Sizes";
 const paymentStatus = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const params = useLocalSearchParams()
+    const params = useLocalSearchParams();
 
-
-    console.log(params.status)
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background }}>
-
             <View
                 style={{
                     flex: 1,
@@ -27,24 +24,68 @@ const paymentStatus = () => {
                     backgroundColor: activeColor.background,
                 }}
             >
-                <Feather name={params.status === 'status=successful' ? "check-circle" : "alert-circle"} size={70} color={params.status === 'status=successful' ? Colors.success : Colors.error} />
-                <Text style={{ marginTop: SIZES.marginSmall, color: params.status === 'status=successful' ? 'teal' : Colors.error, fontSize: 16, fontFamily: 'Poppins-Regular' }}>{params.status === 'status=successful' ? "Payment Successful" : "Payment Failed"}</Text>
+                <Feather
+                    name={
+                        params.status === "status=successful" ||
+                            params?.status === "success"
+                            ? "check-circle"
+                            : "alert-circle"
+                    }
+                    size={70}
+                    color={
+                        params.status === "status=successful" ||
+                            params?.status === "success"
+                            ? Colors.success
+                            : Colors.error
+                    }
+                />
+                <Text
+                    style={{
+                        marginTop: SIZES.marginSmall,
+                        color:
+                            params.status === "status=successful" ||
+                                params?.status === "success"
+                                ? "teal"
+                                : Colors.error,
+                        fontSize: 16,
+                        fontFamily: "Poppins-Regular",
+                    }}
+                >
+                    {params.status === "status=successful" || params?.status === "success"
+                        ? "Payment Successful"
+                        : "Payment Failed"}
+                </Text>
+                {params?.message && <Text style={{ color: Colors.error, fontFamily: 'Poppins-Light' }}>{params.message}</Text>}
             </View>
-            <View style={{ flex: 1, alignItems: 'center', gap: 10, flexDirection: 'row', marginTop: SIZES.marginLarge }}>
-
-                <TouchableOpacity onPress={() => router.push('(drawer)/(tabs)/stats')} style={[styles.btn, { backgroundColor: activeColor.profileCard }]}>
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginVertical: SIZES.marginSmall,
+                    gap: 10,
+                    flexDirection: "row",
+                    marginTop: SIZES.marginLarge,
+                }}
+            >
+                <TouchableOpacity
+                    onPress={() => router.push("(drawer)/(tabs)/stats")}
+                    style={[styles.btn, { backgroundColor: activeColor.profileCard }]}
+                >
                     <AntDesign name="barchart" color={activeColor.icon} size={18} />
-                    <Text style={[styles.text, { color: activeColor.text }]}>History</Text>
+                    <Text style={[styles.text, { color: activeColor.text }]}>
+                        History
+                    </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => router.push('(drawer)/(tabs)/topTab')} style={[styles.btn, { backgroundColor: activeColor.profileCard }]}>
+                <TouchableOpacity
+                    onPress={() => router.push("(drawer)/(tabs)/topTab")}
+                    style={[styles.btn, { backgroundColor: activeColor.profileCard }]}
+                >
                     <AntDesign name="home" color={activeColor.icon} size={18} />
                     <Text style={[styles.text, { color: activeColor.text }]}>Home</Text>
                 </TouchableOpacity>
-
-
             </View>
-
         </SafeAreaView>
     );
 };
@@ -52,14 +93,13 @@ const paymentStatus = () => {
 export default paymentStatus;
 
 const styles = StyleSheet.create({
-    text: { fontFamily: 'Poppins-Regular', fontSize: 14 },
+    text: { fontFamily: "Poppins-Regular", fontSize: 14 },
     btn: {
-        gap: 10, justifyContent: 'center',
-        alignItems: 'center',
+        gap: 10,
+        justifyContent: "center",
+        alignItems: "center",
         height: 100,
         width: 80,
-        borderRadius: SIZES.paddingSmall
-    }
-
-
+        borderRadius: SIZES.paddingSmall,
+    },
 });

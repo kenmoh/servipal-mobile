@@ -5,11 +5,11 @@ import { Colors } from '@/constants/Colors';
 import SellCard from '@/components/SellCard';
 import Empty from '@/components/Empty';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
-import { getUserTransactions } from '@/api/items';
+import { getSelletListings } from '@/api/items';
 import { useAuth } from '@/auth/authContext';
 import { useQuery } from '@tanstack/react-query';
-import TransactionCard from '@/components/TransactionCard';
 import TransactionDetail from '@/components/TransactionDetail';
+import ProductCard from '@/components/ProductCard';
 
 const items = () => {
     const { theme } = useContext(ThemeContext);
@@ -18,11 +18,11 @@ const items = () => {
 
 
     const { data, refetch, isFetching, isLoading, isPending, error } = useQuery({
-        queryKey: ['transactions', user?.id],
-        queryFn: getUserTransactions
+        queryKey: ['userListins', user?.id],
+        queryFn: getSelletListings
     })
 
-    console.log(data)
+    console.log('=============================xxxx', data, '===============xxxxxxxxxxxxxxxxxxxx==============')
 
     const handleRefresch = () => refetch();
 
@@ -80,13 +80,13 @@ const items = () => {
                 renderItem={({ item, index }) => {
                     const isLastItem = index === data?.length! - 1;
                     return (
-                        <TransactionDetail isLastItem={isLastItem} transaction={item} isNew={false} />
+                        <ProductCard isLastItem={isLastItem} item={item} />
                     );
                 }}
                 showsVerticalScrollIndicator={false}
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
-                ListEmptyComponent={<Empty label='No order yet' />}
+                ListEmptyComponent={<Empty label='You have not created any product.' />}
             />
         </View>
 

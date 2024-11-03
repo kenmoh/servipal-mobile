@@ -38,8 +38,8 @@ const ItemTabLayout = () => {
                 }}
             >
                 <ItemTopTabBar.Screen name="index" options={{ title: "Buy" }} />
-                <ItemTopTabBar.Screen name="items" options={{ title: "Items" }} />
-                <ItemTopTabBar.Screen name="orders" options={{ title: "New Order(s)" }} />
+                <ItemTopTabBar.Screen name="orders" options={{ title: "Order(s)" }} />
+                <ItemTopTabBar.Screen name="product" options={{ title: "Products" }} />
 
             </ItemTopTabBar>
         </ScreenWithFAB>

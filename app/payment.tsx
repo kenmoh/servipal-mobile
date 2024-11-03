@@ -108,9 +108,6 @@ const payment = () => {
 
     const status = redirectedUrl?.url ? redirectedUrl?.url?.split("?")[1]?.split("&") : null;
 
-    console.log(status)
-    console.log(redirectedUrl)
-
     const handleOpenWebView = () => {
         if (!params.paymentUrl) {
             return;
@@ -118,45 +115,45 @@ const payment = () => {
         setShowWebView(true);
     };
 
-    const { isPending, mutate: handlePayWithWallet } = useMutation({
+    const { isPending, mutate: handlePayWithWallet, data } = useMutation({
         mutationFn: (orderId: string) => payWithWallet(orderId),
-        onSuccess: () => {
+        onSuccess: (data) => {
             showMessage({
                 message: 'Payment Successful.',
                 type: "success",
                 textStyle: {
                     alignItems: "center",
+                    textAlign: 'center'
                 },
             });
 
             router.push({
                 pathname: 'paymentStatus',
                 params: {
-                    image: 'success',
-                    status
+                    status: data?.status,
+                    // message: data?.message
 
                 }
             });
         },
-        onError: (error) => {
+        onError: (error: Error) => {
             showMessage({
                 message: error.message,
                 type: "danger",
                 textStyle: {
                     alignItems: "center",
+                    textAlign: 'center'
                 },
             });
             router.push({
                 pathname: 'paymentStatus',
                 params: {
-                    image: 'failed',
-                    status
+                    status: error.message,
+                    // message: error.message
                 }
             });
         }
     })
-
-
 
 
     const handleGetTransferDetails = async () => {

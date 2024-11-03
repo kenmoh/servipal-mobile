@@ -22,7 +22,6 @@ const orders = () => {
         queryFn: getUserTransactions
     })
 
-    console.log(data)
 
     const handleRefresch = () => refetch();
 

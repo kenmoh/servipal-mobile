@@ -32,7 +32,7 @@ const index = () => {
   const { data, isFetching, refetch, error } = useQuery({
     queryKey: ["packageOrders"],
     queryFn: ordersApi.getItemOrders,
-    enabled: false,
+    enabled: true,
     select: (data) => data?.data?.filter((order: OrderResponseType) =>
       (order.order_status === 'pending' && order.order_type === 'delivery' && order.payment_status === 'paid')
 
@@ -72,25 +72,27 @@ const index = () => {
     );
   }
   if (error) {
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: activeColor.background,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text
+    return (
+      <View
         style={{
-          fontFamily: "Poppins-Light",
-          fontSize: 12,
-          color: Colors.error,
-          alignSelf: 'center'
+          flex: 1,
+          backgroundColor: activeColor.background,
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        Something went wrong!
-      </Text>
-    </View>;
+        <Text
+          style={{
+            fontFamily: "Poppins-Light",
+            fontSize: 12,
+            color: Colors.error,
+            alignSelf: 'center'
+          }}
+        >
+          Something went wrong!
+        </Text>
+      </View>
+    )
   }
 
 
@@ -103,7 +105,7 @@ const index = () => {
       />
 
       <FlatList
-        data={data}
+        data={data || []}
         keyExtractor={(item) => item?.id?.toString()}
         renderItem={({ item }) =>
           <OrderCard order={item} isHomeScreen={isHomeScreen} />

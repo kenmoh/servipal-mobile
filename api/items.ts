@@ -24,6 +24,14 @@ interface TransactionResponseType {
 
 // Get all item listings
 export const getItemListings = async () => await client.get(`${endpoint}`);
+export const getSelletListings = async () => {
+  const response = await client.get(`${endpoint}/seller-listings`);
+
+  if (!response.ok) {
+    throw new Error(response?.data?.detail);
+  }
+  return response?.data;
+};
 
 // Add Item
 export const addListing = async (
@@ -60,6 +68,57 @@ export const addListing = async (
     });
   }
   const response: ApiResponse<ListingResponseType> = await client.post(
+    `${endpoint}`,
+    data,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error(response.data?.detail);
+  }
+  if (!response.data) {
+    throw new Error("Response data is undefined");
+  }
+  return response?.data;
+};
+// Add Item
+export const updateListing = async (
+  item: CreateListingType
+): Promise<ListingResponseType> => {
+  const data = new FormData();
+  data.append("name", item.name);
+  data.append("price", item.price);
+  data.append("stock", item.stock);
+  data.append("description", item.description);
+
+  // Handle multiple images
+  if (Array.isArray(item.images)) {
+    item.images.forEach((imagePath) => {
+      data.append("images", {
+        type: "image/jpeg",
+        uri: imagePath,
+        name: imagePath?.split("/").slice(-1)[0],
+      });
+    });
+  }
+
+  // Handle multiple colors
+  if (Array.isArray(item.colors)) {
+    item.colors.forEach((color) => {
+      data.append("colors", color);
+    });
+  }
+
+  // Handle multiple sizes
+  if (Array.isArray(item.sizes)) {
+    item.sizes.forEach((size) => {
+      data.append("sizes", size);
+    });
+  }
+  const response: ApiResponse<ListingResponseType> = await client.put(
     `${endpoint}`,
     data,
     {
