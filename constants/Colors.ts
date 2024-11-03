@@ -34,7 +34,7 @@ export const Colors: ColorProps = {
   blackBtnColor: tintColorDark,
   whiteText: "#fff",
   pickUpColor: "#f1dca7",
-  error: "#ff5e5b",
+  error: "#ff8282",
   pendingColor: "#fae1dd",
   success: "#b9fbc0",
   delivered: "#81b0ff",

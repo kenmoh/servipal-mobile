@@ -8,15 +8,15 @@ import CustomBtn from "@/components/CustomBtn";
 import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { StatusBar } from "expo-status-bar";
-import { router } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
 import { addItemValidationSchema } from "@/utils/orderValidation";
-import { CreateListingType } from "@/utils/types";
+import { CreateListingType, ItemType } from "@/utils/types";
 
 import { SIZES } from "@/constants/Sizes";
 import ImageListForm from "@/components/ImageListForm";
-import { addListing } from "@/api/items";
+import { addListing, updateListing } from "@/api/items";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import ColorInput from "@/components/ColorInput";
 
@@ -32,6 +32,8 @@ const AddItem = () => {
         null
     );
 
+    const { id, imageUrls, colors: itemColors, description, name, price, sizes: itemSizes, stock } = useLocalSearchParams()
+
     const handleRemoveColor = (index: number) => {
         const newColors = colors.filter(
             (_, i) => i !== index
@@ -45,36 +47,62 @@ const AddItem = () => {
         setColors(newColors);
     }
 
-    const { error, isSuccess, mutate, isPending } =
+    const { mutate, isPending } =
         useMutation<CreateListingType>({
             mutationFn: (listing: CreateListingType) => addListing(listing),
+            onError: (error) => {
+                showMessage({
+                    message: error.message || "Something went wrong!",
+                    type: "danger",
+                    style: {
+                        alignItems: "center",
+                    },
+                });
+                router.push("(p2p)/addItem");
+            },
+            onSuccess: () => {
+                showMessage({
+                    message: "Item updated successfully.",
+                    type: "success",
+                    style: {
+                        alignItems: "center",
+                    },
+                });
+                router.push("(p2p)/addItem");
+            }
+
+        });
+    const { mutate: update, isPending: pending } =
+        useMutation<CreateListingType>({
+            mutationFn: (listing: CreateListingType) => updateListing(id, listing),
+            onError: (error: Error) => {
+                showMessage({
+                    message: error.message || "Something went wrong!",
+                    type: "danger",
+                    style: {
+                        alignItems: "center",
+                    },
+                });
+                router.push("(p2p)/addItem");
+            },
+            onSuccess: () => {
+                showMessage({
+                    message: "Item updated successfully.",
+                    type: "success",
+                    style: {
+                        alignItems: "center",
+                    },
+                });
+                router.push("(tabs)/buySell/product");
+            }
+
         });
 
-    useEffect(() => {
-        if (error) {
-            showMessage({
-                message: error.message || "Something went wrong!",
-                type: "danger",
-                style: {
-                    alignItems: "center",
-                },
-            });
-            router.push("(p2p)/addItem");
-        }
-        if (isSuccess) {
-            showMessage({
-                message: "Item successfully.",
-                type: "success",
-                style: {
-                    alignItems: "center",
-                },
-            });
-            router.push("(p2p)/addItem");
-        }
-    }, [error, isSuccess]);
+
     return (
         <>
-            <CustomActivityIndicator visible={isPending} />
+            <CustomActivityIndicator visible={isPending || pending} />
+            <Stack.Screen options={{ title: id ? 'Update Item' : 'Add Item' }} />
             <View
                 style={{
                     backgroundColor: activeColor.background,
@@ -87,16 +115,24 @@ const AddItem = () => {
 
                     <Formik
                         initialValues={{
-                            name: "",
-                            price: "",
-                            images: [],
-                            colors: [],
-                            sizes: [],
-                            stock: "",
-                            description: "",
+                            name: name || "",
+                            price: price || "",
+                            images: imageUrls ? JSON.parse(imageUrls) : [],
+                            colors: itemColors || [],
+                            sizes: itemSizes || [],
+                            stock: stock || "",
+                            description: description || "",
                         }}
-                        onSubmit={(values, { resetForm }) =>
-                            mutate(values, { onSuccess: () => resetForm() })
+                        // onSubmit={(values, { resetForm }) =>
+                        //     mutate(values, { onSuccess: () => resetForm() })
+                        onSubmit={(values, { resetForm }) => {
+
+                            if (id) {
+                                update(values, { onSuccess: () => resetForm() }); // Update if id exists
+                            } else {
+                                mutate(values, { onSuccess: () => resetForm() }); // Create if no id
+                            }
+                        }
                         }
                         validationSchema={addItemValidationSchema}
                     >
@@ -217,7 +253,7 @@ const AddItem = () => {
 
                                 <View style={{ marginVertical: 30 }}>
                                     <CustomBtn
-                                        label="submit"
+                                        label={id ? "update" : "submit"}
                                         btnColor="orange"
                                         onPress={handleSubmit}
                                     />
@@ -226,7 +262,7 @@ const AddItem = () => {
                         )}
                     </Formik>
                 </ScrollView>
-            </View>
+            </View >
         </>
     );
 };

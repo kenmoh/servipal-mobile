@@ -490,3 +490,14 @@ export type UserDisputes = {
   created_at: string;
   responses: DisputeRespose[];
 };
+
+export type ItemType = {
+  id: number;
+  name: string;
+  price: string;
+  stock: number;
+  image_urls: string[];
+  colors: string[];
+  sizes: string[];
+  description: string;
+};

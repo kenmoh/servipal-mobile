@@ -86,6 +86,7 @@ export const addListing = async (
 };
 // Add Item
 export const updateListing = async (
+  itemId: string,
   item: CreateListingType
 ): Promise<ListingResponseType> => {
   const data = new FormData();
@@ -119,7 +120,7 @@ export const updateListing = async (
     });
   }
   const response: ApiResponse<ListingResponseType> = await client.put(
-    `${endpoint}`,
+    `${endpoint}/${itemId}/update-item`,
     data,
     {
       headers: {

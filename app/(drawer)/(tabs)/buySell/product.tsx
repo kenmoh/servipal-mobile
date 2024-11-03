@@ -2,13 +2,11 @@ import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-nativ
 import React, { useContext } from 'react'
 import { ThemeContext } from '@/context/themeContext';
 import { Colors } from '@/constants/Colors';
-import SellCard from '@/components/SellCard';
 import Empty from '@/components/Empty';
 import { useRefreshOnFocus } from '@/hooks/useRefreshOnFocus';
 import { getSelletListings } from '@/api/items';
 import { useAuth } from '@/auth/authContext';
 import { useQuery } from '@tanstack/react-query';
-import TransactionDetail from '@/components/TransactionDetail';
 import ProductCard from '@/components/ProductCard';
 
 const items = () => {
@@ -22,11 +20,7 @@ const items = () => {
         queryFn: getSelletListings
     })
 
-    console.log('=============================xxxx', data, '===============xxxxxxxxxxxxxxxxxxxx==============')
 
-    const handleRefresch = () => refetch();
-
-    useRefreshOnFocus(refetch);
 
     if (isPending) {
         return (
@@ -69,11 +63,11 @@ const items = () => {
         </View>;
     }
 
-
     return (
 
         <View style={{ flex: 1, backgroundColor: activeColor.background }}>
-            <View style={{ marginTop: 5 }} />
+
+            <View style={{ marginVertical: 5 }} />
             <FlatList
                 data={data}
                 keyExtractor={(item) => item?.id?.toString()}
@@ -85,7 +79,7 @@ const items = () => {
                 }}
                 showsVerticalScrollIndicator={false}
                 refreshing={isFetching}
-                onRefresh={handleRefresch}
+                onRefresh={refetch}
                 ListEmptyComponent={<Empty label='You have not created any product.' />}
             />
         </View>
