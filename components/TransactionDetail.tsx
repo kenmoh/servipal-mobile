@@ -1,14 +1,15 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext } from "react";
 import { SIZES } from "@/constants/Sizes";
 import { ThemeContext } from "@/context/themeContext";
 import { Colors } from "@/constants/Colors";
-import CustomBtn from "./CustomBtn";
 import { router } from "expo-router";
-import { string } from "yup";
 import { useAuth } from "@/auth/authContext";
+import { useMutation } from "@tanstack/react-query";
+import { acceptItem, rejectItem } from "@/api/items";
+import { showMessage } from "react-native-flash-message";
 
-type StatusType = 'pending' | 'received' | 'completed' | 'rejected' | 'received-rejected-item';
+type StatusType = 'pending' | 'received' | 'delivered' | 'rejected' | 'received-rejected-item';
 
 type Transaction = {
     id: string;
@@ -51,9 +52,11 @@ const Label = ({ label, value, color }: LabelType) => {
 
 const TrasactionBtn = ({
     label,
+    color,
     onPress,
 }: {
     label: string;
+    color: string;
     onPress: (id?: string) => void;
 }) => {
     const { theme } = useContext(ThemeContext);
@@ -62,7 +65,7 @@ const TrasactionBtn = ({
         <TouchableOpacity
             style={{
                 marginVertical: 5,
-                backgroundColor: "teal",
+                backgroundColor: color,
                 width: "60%",
                 alignItems: "center",
                 justifyContent: "center",
@@ -99,6 +102,41 @@ const TransactionDetail = ({
     let activeColor = Colors[theme.mode];
     const { user } = useAuth();
 
+
+    const { isPending, mutate: acceptOrder } = useMutation({
+        mutationFn: () => acceptItem(transaction?.id),
+        onError: (error: Error) => {
+            showMessage({
+                type: 'danger',
+                message: error.message
+            })
+        },
+        onSuccess: () => {
+            showMessage({
+                type: 'success',
+                message: 'Item accpeted'
+            })
+            router.back()
+        }
+    })
+
+    const { isPending: pending, mutate: rejectOrder } = useMutation({
+        mutationFn: () => rejectItem(transaction?.id),
+        onError: (error: Error) => {
+            showMessage({
+                type: 'danger',
+                message: error.message
+            })
+        },
+        onSuccess: () => {
+            showMessage({
+                type: 'success',
+                message: 'Item Rejected!'
+            })
+            router.back()
+        }
+    })
+
     return (
         <View
             style={[
@@ -109,6 +147,7 @@ const TransactionDetail = ({
                 },
             ]}
         >
+            {isPending || pending && <ActivityIndicator size={25} />}
             <View style={{ flexDirection: "row", gap: 10 }}>
                 <Text
                     style={{
@@ -172,6 +211,7 @@ const TransactionDetail = ({
                     {transaction.payment_status !== "paid" && (
                         <TrasactionBtn
                             label="Pay"
+                            color="teal"
                             onPress={() =>
                                 router.push({
                                     pathname: "payment",
@@ -185,36 +225,39 @@ const TransactionDetail = ({
                             }
                         />
                     )}
-                    {(transaction.payment_status === "paid" && transaction.status === 'completed' && user?.id === transaction.buyer_id) && (
+                    {(transaction.payment_status === "paid" && transaction.status === 'delivered' && user?.id === transaction.buyer_id) && (
                         <TrasactionBtn
                             label="Received"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "payment",
-                                    params: {
-                                        paymentUrl: transaction?.payment_url,
-                                        orderType: "delivery",
-                                        id: transaction?.id,
-                                        totalCost: transaction?.total_cost,
-                                    },
-                                })
-                            }
+                            color="teal"
+                            onPress={acceptOrder}
                         />
                     )}
-                    {(transaction.payment_status === "paid" && user?.id === transaction.seller_id) && (
+                    {(transaction.payment_status === "paid" && transaction.status === 'pending' && user?.id === transaction.seller_id) && (
                         <TrasactionBtn
-                            label="Completed"
-                            onPress={() =>
-                                router.push({
-                                    pathname: "payment",
-                                    params: {
-                                        paymentUrl: transaction?.payment_url,
-                                        orderType: "delivery",
-                                        id: transaction?.id,
-                                        totalCost: transaction?.total_cost,
-                                    },
-                                })
-                            }
+                            color={Colors.delivered}
+                            label="Delivered"
+                            onPress={() => console.log('Delivered')}
+                        />
+                    )}
+                    {(transaction.payment_status === "paid" && transaction.status === 'delivered' && user?.id === transaction.buyer_id) && (
+                        <TrasactionBtn
+                            color={Colors.error}
+                            label="Reject"
+                            onPress={rejectOrder}
+                        />
+                    )}
+                    {(transaction.payment_status === "paid" && transaction.status === 'pending' && user?.id === transaction.buyer_id) && (
+                        <TrasactionBtn
+                            color={Colors.error}
+                            label="Cancel"
+                            onPress={() => console.log('Cancel')}
+                        />
+                    )}
+                    {(transaction.payment_status === "paid" && transaction.status === 'rejected' && user?.id === transaction.seller_id) && (
+                        <TrasactionBtn
+                            color={Colors.error}
+                            label="Item Returned"
+                            onPress={() => console.log('Item Returned')}
                         />
                     )}
                 </View>

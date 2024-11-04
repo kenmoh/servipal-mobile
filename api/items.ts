@@ -185,3 +185,29 @@ export const getUserTransactions = async (): Promise<
 
   return response?.data;
 };
+
+export const acceptItem = async (id: string) => {
+  const response = await client.put(`${endpoint}/${id}/accept-item`);
+
+  if (!response.ok) {
+    throw new Error(response?.data?.detail);
+  }
+  return response?.data;
+};
+
+export const rejectItem = async (id: string) => {
+  const response = await client.put(`${endpoint}/${id}/reject-item`);
+
+  if (!response.ok) {
+    throw new Error(response?.data?.detail);
+  }
+  return response?.data;
+};
+export const receiveRejectedtItem = async (id: string) => {
+  const response = await client.put(`${endpoint}/${id}/received-rejected-item`);
+
+  if (!response.ok) {
+    throw new Error(response?.data?.detail);
+  }
+  return response?.data;
+};

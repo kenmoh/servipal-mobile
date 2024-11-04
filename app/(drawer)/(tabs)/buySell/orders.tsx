@@ -22,7 +22,6 @@ const orders = () => {
         queryFn: getUserTransactions
     })
 
-    console.log(data, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     const handleRefresch = () => refetch();
 
     useRefreshOnFocus(refetch);
