@@ -33,9 +33,29 @@ const AuthLayout = () => {
       />
 
 
-      <Stack.Screen name="confirmAccount" options={{ title: 'Confirm Account' }} />
-      <Stack.Screen name="resetPassword" />
-      <Stack.Screen name="welcome" options={{ headerShown: false }} />
+      <Stack.Screen name="confirmAccount"
+        options={{
+          title: "Confirm Account",
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTintColor: activeColor.text,
+          headerStyle: {
+            backgroundColor: activeColor.background,
+          },
+        }}
+      />
+      <Stack.Screen name="recoverPassword" />
+      <Stack.Screen name="welcome"
+        options={{
+          title: "New Password",
+          headerShown: true,
+          headerShadowVisible: false,
+          headerTintColor: activeColor.text,
+          headerStyle: {
+            backgroundColor: activeColor.background,
+          },
+        }}
+      />
       <Stack.Screen
         name="resetPasswordLink"
         options={{

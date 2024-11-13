@@ -501,3 +501,9 @@ export type ItemType = {
   sizes: string[];
   description: string;
 };
+
+export type ChangePasswordType = {
+  oldPassword: string
+  newPassword: string
+  confirmNewPassword: string
+}

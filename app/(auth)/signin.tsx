@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+// noinspection JSUnusedGlobalSymbols
+
+import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 
-import AccountLinkText from "@/components/AcountLink";
 import CustomBtn from "@/components/CustomBtn";
 import CustomTextInput from "@/components/CustomTextInput";
-import TitleText from "@/components/TitleText";
 import authApi from "@/api/auth";
 import { Login, UserReturn } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
@@ -22,7 +22,6 @@ import { ThemeContext } from "@/context/themeContext";
 import { useAuth } from "@/auth/authContext";
 import authStorage from '@/auth/storage'
 import { SIZES } from "@/constants/Sizes";
-import userApi from '@/api/users'
 
 
 const SignIn = () => {
@@ -30,7 +29,7 @@ const SignIn = () => {
   let activeColor = Colors[theme.mode];
   const authContext = useAuth();
 
-  const { mutate, isPending, data } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: ({ username, password }: Login) => authApi.loginApi(username, password),
     onError: (error) => {
       showMessage({
@@ -43,12 +42,12 @@ const SignIn = () => {
       router.replace("signin");
 
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const user = jwtDecode(data?.access_token) as UserReturn;
 
       if (user?.account_status === 'confirmed') {
         authContext.setUser(user);
-        authStorage.storeToken(data?.access_token);
+        await authStorage.storeToken(data?.access_token);
       }
       if (user?.account_status === 'pending') {
         showMessage({
@@ -75,9 +74,6 @@ const SignIn = () => {
 
 
 
-  // useEffect(() => {
-  //   if 
-  // }, [isSuccess, data])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: activeColor.background, }}>
@@ -136,7 +132,7 @@ const SignIn = () => {
                   />
                 </View>
                 <View style={{ marginTop: 5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-                  <Text style={[styles.text, { color: activeColor.text }]}>Dont't have an account?</Text>
+                  <Text style={[styles.text, { color: activeColor.text }]}>Don't have an account?</Text>
                   <Link href={'(auth)/signup'} style={[styles.text, { color: 'skyblue' }]}>Register</Link>
 
                 </View>

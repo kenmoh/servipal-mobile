@@ -71,9 +71,11 @@ export const changePasswordSchema = Yup.object().shape({
     .required()
     .label("Confirm New Password"),
 });
+
 export const emailValidationSchema = Yup.object().shape({
   email: Yup.string().email().trim().required().label("Email"),
 });
+
 export const walletValidationSchema = Yup.object().shape({
   amount: Yup.number().required().min(1000).label("Amount"),
 });

@@ -1,13 +1,11 @@
-import { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { showMessage } from "react-native-flash-message";
 import { Formik } from "formik";
-import * as Linking from 'expo-linking'
-import * as WebBrowser from 'expo-web-browser'
 
 import CustomBtn from "@/components/CustomBtn";
 import CustomTextInput from "@/components/CustomTextInput";
@@ -16,26 +14,37 @@ import { changePasswordSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
+import { ChangePasswordType } from "@/utils/types";
+import userApi from '@/api/users'
 
 
-type ChangePasswordType = {
-    oldPassword: string
-    newPassword: string
-    confirmNewPassword: string
-}
-
-const resetPassword = () => {
+const recoverPassword = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+    const { token } = useLocalSearchParams();
 
-    Linking.useURL()
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
-        mutationFn: ({ oldPassword, newPassword, confirmNewPassword }: ChangePasswordType) => { },
+    const { mutate, isPending } = useMutation({
+        mutationFn: (passwordData: ChangePasswordType) => userApi.resetPassword(passwordData, token),
+        onError: (error: Error) => {
+            showMessage({
+                message: error.message,
+                type: 'danger',
+                style: {
+                    alignContent: 'center'
+                }
+            })
+        },
+        onSuccess: () => {
+            showMessage({
+                message: "Password changes successfully.",
+                type: 'success',
+                style: {
+                    alignContent: 'center'
+                }
+            })
+            router.back()
+        }
     });
-
-
-
-
 
 
     return (
@@ -66,24 +75,8 @@ const resetPassword = () => {
                         {({ handleChange, handleSubmit, values, errors, touched }) => (
                             <>
                                 <View>
-
-                                    <CustomTextInput
-                                        label="Old Password"
-                                        hasBorder={theme.mode !== "dark"}
-                                        autoCapitalize="none"
-                                        secureTextEntry={true}
-                                        onChangeText={handleChange("oldPassword")}
-                                        value={values.oldPassword}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
-                                    />
-                                    {touched.oldPassword && errors.oldPassword && (
-                                        <InputErrorMessage error={errors.oldPassword} />
-                                    )}
                                     <CustomTextInput
                                         label="New Password"
-                                        hasBorder={theme.mode !== "dark"}
                                         autoCapitalize="none"
                                         secureTextEntry={true}
                                         onChangeText={handleChange("newPassword")}
@@ -97,7 +90,6 @@ const resetPassword = () => {
                                     )}
                                     <CustomTextInput
                                         label="Confirm New Password"
-                                        hasBorder={theme.mode !== "dark"}
                                         autoCapitalize="none"
                                         secureTextEntry={true}
                                         onChangeText={handleChange("confirmNewPassword")}
@@ -114,8 +106,7 @@ const resetPassword = () => {
                                         <CustomBtn
                                             btnColor={Colors.btnPrimaryColor}
                                             label="Submit"
-                                            btnBorderRadius={5}
-
+                                            btnBorderRadius={50}
                                             onPress={handleSubmit}
                                         />
                                     </View>
@@ -124,15 +115,13 @@ const resetPassword = () => {
                         )}
                     </Formik>
                 </View>
-
             </View>
             <StatusBar style="light" backgroundColor={activeColor.background} />
         </SafeAreaView>
     );
 };
 
-export default resetPassword;
+export default recoverPassword;
 
-const styles = StyleSheet.create({});
 
 

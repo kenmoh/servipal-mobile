@@ -1,28 +1,41 @@
 import client from "@/api/client";
 import { ProfileReturnType, ProfileType } from "@/app/setupCompanyProfile";
 import {
+  ChangePasswordType,
   companyImage,
   CreateDispatch,
   CreateRider,
   CreateUser,
-  ReviewType,
   SetupCompany,
   UpdateProfileImage,
   UpdateUser,
   UserProfile,
 } from "@/utils/types";
+import { string } from "yup";
 
 const dispatchEndpoint = "/users/register-dispatch";
 const riderEndpoint = "/users/register-rider";
 const userEndpoint = "/users/register";
 const user = "/users";
 
+type RiderType = {
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  plateNumber: string;
+};
+
+type RiderReturn = {
+  data: RiderType;
+  detail: string;
+};
+
 // Dispatch get all riders
 const getDispatchRiders = async () =>
   await client.get(`${user}/dispatcher-riders`);
 
 // Dispatch user Suspend own rider
-const dispatchSuspenRider = async (id: string) =>
+const dispatchSuspendRider = async (id: string) =>
   await client.put(`${user}/${id}/suspend-rider`);
 
 // Get company profile
@@ -73,7 +86,7 @@ const createDispatch = async (user: CreateDispatch) => {
 };
 
 // Vendor add new rider
-const vendorAddRider = async (rider: CreateRider) => {
+const vendorAddRider = async (rider: CreateRider): Promise<RiderReturn> => {
   const riderData = {
     email: rider.email.toLowerCase().trim(),
     phone_number: rider.phoneNumber,
@@ -82,10 +95,10 @@ const vendorAddRider = async (rider: CreateRider) => {
     password: rider.password,
   };
 
-  const result = await client.post(riderEndpoint, riderData);
+  const result = await client.post<RiderReturn>(riderEndpoint, riderData);
 
-  if (!result.ok) throw new Error(result?.data.detail);
-  return result.data;
+  if (!result.ok) throw new Error(result?.data?.detail);
+  return result?.data?.data;
 };
 
 // create user profile
@@ -195,12 +208,49 @@ const updateCompanyProfile = async (profile: SetupCompany) => {
 };
 
 // Recover Password
-const recoverPassword = async (email: string) => {
+const recoverPasswordLink = async (email: string) => {
   const data = {
     email: email,
   };
 
-  const result = await client.post("/password/recover", data);
+  const result = await client.post("/password/recover-password-link", data);
+
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  console.log(result.data);
+  console.log(data);
+  return result.data;
+};
+
+// Update Password
+const updatePassword = async (passwordData: ChangePasswordType) => {
+  const data = {
+    old_password: passwordData.oldPassword,
+    new_password: passwordData.newPassword,
+    confirm_new_password: passwordData.confirmNewPassword,
+  };
+
+  const result = await client.put("/password/change-password", data);
+
+  if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
+  return result.data;
+};
+
+// Reset Password
+const resetPassword = async (
+  passwordData: ChangePasswordType,
+  token: string
+) => {
+  const data = {
+    new_password: passwordData.newPassword,
+    confirm_new_password: passwordData.confirmNewPassword,
+  };
+
+  const queryParams = new URLSearchParams({ token });
+
+  const result = await client.post(
+    `/password/reset-password?${queryParams.toString()}`,
+    data
+  );
 
   if (!result.ok) throw new Error(result?.data.detail.split(":")[1]);
   return result.data;
@@ -264,8 +314,10 @@ export default {
   createUser,
   createDispatch,
   confirmAccount,
-  recoverPassword,
-  dispatchSuspenRider,
+  recoverPasswordLink,
+  updatePassword,
+  resetPassword,
+  dispatchSuspendRider,
   fundWallet,
   vendorAddRider,
   updateProfileImage,

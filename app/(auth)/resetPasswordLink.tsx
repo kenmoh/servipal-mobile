@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,18 +18,15 @@ import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
 import userApi from '@/api/users'
 
+
+
 const resetPasswordLink = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
 
-    const { error, isSuccess, mutate, isPending } = useMutation({
-        mutationFn: (email: string) => userApi.recoverPassword(email),
-    });
-
-
-
-    useEffect(() => {
-        if (error) {
+    const { mutate, isPending, data } = useMutation({
+        mutationFn: (email: string) => userApi.recoverPasswordLink(email),
+        onError: (error: Error) => {
             showMessage({
                 message: error.message,
                 type: "danger",
@@ -39,14 +36,11 @@ const resetPasswordLink = () => {
             });
             router.replace("signin");
             return
-        }
-    }, [error])
-
-    useEffect(() => {
-        if (isSuccess) {
+        },
+        onSuccess: (data) => {
 
             showMessage({
-                message: "Link sent to email@email.com !",
+                message: `Reset password link sent to ${data?.email}`,
                 type: "success",
                 style: {
                     alignItems: "center",
@@ -55,68 +49,70 @@ const resetPasswordLink = () => {
             router.replace("signin");
             return;
         }
-    }, [isSuccess])
+    });
+
+    console.log(data)
+
 
     return (
-        < >
+
+        <View
+            style={{
+                backgroundColor: activeColor.background,
+                flex: 1,
+                alignItems: "center",
+            }}
+        >
+            <CustomActivityIndicator visible={isPending} />
             <View
                 style={{
-                    backgroundColor: activeColor.background,
                     flex: 1,
-                    alignItems: "center",
+                    width: "100%",
+                    borderRadius: 10,
+                    padding: 20,
+                    backgroundColor: activeColor.background,
                 }}
             >
-                <CustomActivityIndicator visible={isPending} />
-                <View
-                    style={{
-                        flex: 1,
-                        width: "100%",
-                        borderRadius: 10,
-                        padding: 20,
-                        backgroundColor: activeColor.background,
-                    }}
+
+                <Formik
+                    initialValues={{ email: "" }}
+                    validationSchema={emailValidationSchema}
+                    onSubmit={values => mutate(values.email)}
                 >
+                    {({ handleChange, handleSubmit, values, errors, touched }) => (
+                        <>
+                            <View>
+                                <CustomTextInput
+                                    label="Email Code"
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    onChangeText={handleChange("email")}
+                                    value={values.email}
+                                    labelColor={activeColor.text}
+                                    inputBackgroundColor={activeColor.inputBackground}
+                                    inputTextColor={activeColor.text}
+                                />
+                                {touched.email && errors.email && (
+                                    <InputErrorMessage error={errors.email} />
+                                )}
 
-                    <Formik
-                        initialValues={{ email: "" }}
-                        validationSchema={emailValidationSchema}
-                        onSubmit={mutate}
-                    >
-                        {({ handleChange, handleSubmit, values, errors, touched }) => (
-                            <>
-                                <View>
-                                    <CustomTextInput
-                                        label="Email Code"
-                                        hasBorder={theme.mode !== "dark"}
-                                        autoCapitalize="none"
-                                        keyboardType="email-address"
-                                        onChangeText={handleChange("email")}
-                                        value={values.email}
-                                        labelColor={activeColor.text}
-                                        inputBackgroundColor={activeColor.inputBackground}
-                                        inputTextColor={activeColor.text}
+                                <View style={{ marginVertical: 25 }}>
+                                    <CustomBtn
+                                        btnColor={Colors.btnPrimaryColor}
+                                        label="Send"
+                                        btnBorderRadius={50}
+                                        onPress={handleSubmit}
                                     />
-                                    {touched.email && errors.email && (
-                                        <InputErrorMessage error={errors.email} />
-                                    )}
-
-                                    <View style={{ marginVertical: 25 }}>
-                                        <CustomBtn
-                                            btnColor={Colors.btnPrimaryColor}
-                                            label="Send"
-                                            btnBorderRadius={50}
-                                            onPress={handleSubmit}
-                                        />
-                                    </View>
                                 </View>
-                            </>
-                        )}
-                    </Formik>
-                </View>
-
+                            </View>
+                        </>
+                    )}
+                </Formik>
             </View>
+
             <StatusBar style="light" backgroundColor={activeColor.background} />
-        </>
+        </View>
+
     );
 };
 

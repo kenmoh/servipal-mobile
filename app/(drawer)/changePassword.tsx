@@ -1,88 +1,49 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMutation } from "@tanstack/react-query";
-import { jwtDecode } from "jwt-decode";
+import { router } from "expo-router";
+import { showMessage } from "react-native-flash-message";
+import { Formik } from "formik";
 
-import AccountLinkText from "@/components/AcountLink";
 import CustomBtn from "@/components/CustomBtn";
 import CustomTextInput from "@/components/CustomTextInput";
-import TitleText from "@/components/TitleText";
-import authApi from "@/api/auth";
-import { Login, UserReturn } from "@/utils/types";
-import { showMessage } from "react-native-flash-message";
-import { router } from "expo-router";
-import { Formik } from "formik";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
-import { changePasswordSchema, loginValidationSchema } from "@/utils/validations";
+import { changePasswordSchema } from "@/utils/validations";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { Colors } from "@/constants/Colors";
 import { ThemeContext } from "@/context/themeContext";
-import { useAuth } from "@/auth/authContext";
-import authStorage from '@/auth/storage'
-import { SIZES } from "@/constants/Sizes";
+import { ChangePasswordType } from "@/utils/types";
+import userApi from '@/api/users'
 
-type ChangePasswordType = {
-    oldPassword: string
-    newPassword: string
-    confirmNewPassword: string
-}
 
-const ChangePassword = () => {
+const changePassword = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const authContext = useAuth();
 
-    const { error, isSuccess, mutate, isPending, data } = useMutation({
-        mutationFn: ({ oldPassword, newPassword, confirmNewPassword }: ChangePasswordType) => { },
-    });
-
-
-    useEffect(() => {
-        if (error) {
+    const { mutate, isPending, data } = useMutation({
+        mutationFn: (passwordData: ChangePasswordType) => userApi.updatePassword(passwordData),
+        onError: (error: Error) => {
             showMessage({
                 message: error.message,
-                type: "danger",
+                type: 'danger',
                 style: {
-                    alignItems: "center",
-                },
-            });
-            router.replace("signin");
-
-        }
-    }, [error])
-
-    useEffect(() => {
-        if (isSuccess) {
-            const user = jwtDecode(data?.access_token) as UserReturn;
-
-            if (user?.account_status === 'confirmed') {
-                authContext.setUser(user);
-                authStorage.storeToken(data.access_token);
-            }
-            if (user?.account_status === 'pending') {
-                showMessage({
-                    message: "Please verify your email and phone number.",
-                    type: "danger",
-                    style: {
-                        alignItems: "center",
-                    },
-                });
-                router.replace("confirmAccount");
-                return;
-            }
+                    alignContent: 'center'
+                }
+            })
+        },
+        onSuccess: () => {
             showMessage({
-                message: "Login Successful.",
-                type: "success",
+                message: "Password changes successfully.",
+                type: 'success',
                 style: {
-                    alignItems: "center",
-                },
-            });
-            router.replace("(tabs)/topTab");
-            return;
+                    alignContent: 'center'
+                }
+            })
+            router.back()
         }
-    }, [isSuccess, data])
+    });
 
 
     return (
@@ -99,7 +60,8 @@ const ChangePassword = () => {
                 style={{
                     flex: 1,
                     width: "100%",
-                    padding: SIZES.paddingMedium,
+                    borderRadius: 10,
+                    padding: 20,
                     backgroundColor: activeColor.background,
                 }}
             >
@@ -115,7 +77,6 @@ const ChangePassword = () => {
 
                                 <CustomTextInput
                                     label="Old Password"
-                                    hasBorder={theme.mode !== "dark"}
                                     autoCapitalize="none"
                                     secureTextEntry={true}
                                     onChangeText={handleChange("oldPassword")}
@@ -129,7 +90,6 @@ const ChangePassword = () => {
                                 )}
                                 <CustomTextInput
                                     label="New Password"
-
                                     autoCapitalize="none"
                                     secureTextEntry={true}
                                     onChangeText={handleChange("newPassword")}
@@ -143,7 +103,6 @@ const ChangePassword = () => {
                                 )}
                                 <CustomTextInput
                                     label="Confirm New Password"
-
                                     autoCapitalize="none"
                                     secureTextEntry={true}
                                     onChangeText={handleChange("confirmNewPassword")}
@@ -161,7 +120,6 @@ const ChangePassword = () => {
                                         btnColor={Colors.btnPrimaryColor}
                                         label="Submit"
                                         btnBorderRadius={50}
-
                                         onPress={handleSubmit}
                                     />
                                 </View>
@@ -170,15 +128,13 @@ const ChangePassword = () => {
                     )}
                 </Formik>
             </View>
-
-            <StatusBar style={theme.mode === 'dark' ? "light" : 'dark'} backgroundColor={activeColor.background} />
+            <StatusBar style="light" backgroundColor={activeColor.background} />
         </View>
 
     );
 };
 
-export default ChangePassword;
+export default changePassword;
 
-const styles = StyleSheet.create({});
 
 

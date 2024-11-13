@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "qp_mobile",
-    "slug": "qp_mobile",
+    "name": "ServiPal",
+    "slug": "servi-pal",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "com.onrender.quickpickup",
+    "icon": "./assets/images/icon-iphone.png",
+    "scheme": "servipal",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0D1117"
+      "image": "./assets/images/splash-dark.png",
+      "resizeMode": "cover"
+      
     },
     "ios": {
       "supportsTablet": true,
@@ -18,10 +18,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#0D1117"
+        "foregroundImage": "./assets/images/android-icon.png"
+        
       },
-      "package": "com.swiftmart"
+      "package": "com.servipal"
     },
     "web": {
       "bundler": "metro",
@@ -30,14 +30,7 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store",
-        [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoia2VubW9oIiwiYSI6ImNseGYzdGFhNzBrbXQya3F6YnZ3dmM0MWMifQ.YIJSWQGu3jYAb_U0QRk4yw",
-          "RNMapboxMapsVersion": "11.0.0"
-        }
-      ]
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
