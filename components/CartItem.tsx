@@ -124,7 +124,7 @@ const CartItem = () => {
                             ]}
                         >
                             Distance: <Text style={[styles.text, { color: activeColor.text }]}>
-                                {cart.distance}
+                                {cart.distance} km
                             </Text>
                         </Text>
                         <Text

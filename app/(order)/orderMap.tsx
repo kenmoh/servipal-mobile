@@ -6,6 +6,7 @@ import { Stack, useLocalSearchParams } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
+import Map from "@/components/Map";
 
 // Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY as string || '')
 
@@ -20,7 +21,7 @@ const orderMap = () => {
       <Stack.Screen options={{ headerTransparent: true, title: "" }} />
       <View style={styles.mapContainer}>
 
-        <MapView
+        {/* <MapView
           style={styles.map}
           mapType="mutedStandard"
           pitchEnabled
@@ -30,8 +31,9 @@ const orderMap = () => {
             latitudeDelta: 10,
             longitudeDelta: 10,
           }}
-        />
+        /> */}
         {/* <MapView style={{ flex: 1 }} /> */}
+        <Map />
       </View>
       <View
         style={[

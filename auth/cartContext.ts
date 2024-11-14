@@ -27,6 +27,7 @@ export interface CartState {
   destination: string;
   distance: number;
   additional_info: string;
+  duration: string;
   orderType: "food" | "laundry" | null;
 }
 
@@ -36,6 +37,7 @@ export const initialState: CartState = {
   destination: "",
   distance: 0,
   additional_info: "",
+  duration: "",
   orderType: null,
 };
 

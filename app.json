@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ServiPal",
-    "slug": "servi-pal",
+    "slug": "qp_mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon-iphone.png",
@@ -9,16 +9,18 @@
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash-dark.png",
-      "resizeMode": "cover"
+      "resizeMode": "cover",
+      "backgroundColor": "#18191c"
       
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.swiftmart"
+      "bundleIdentifier": "com.servipal"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/android-icon.png"
+        "foregroundImage": "./assets/images/android-icon.png",
+        "backgroundColor": "#18191c"
         
       },
       "package": "com.servipal"
@@ -30,7 +32,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+       [
+       "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoia2VubW9oIiwiYSI6ImNtM2ZsNHRjMDA0MG4ya3NjM3p2ZXFoNnUifQ.N4lJo-GrsP4tvIYWH7cPHw",
+          "RNMapboxMapsVersion": "11.0.0"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

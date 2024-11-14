@@ -10,7 +10,7 @@ import { OrderResponseType } from "@/utils/types";
 import { memo, useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Status from "./Status";
-import { useAuth } from "@/auth/authContext";
+import { useCart } from "./CartProvider";
 
 const blurhash =
   "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
@@ -26,7 +26,7 @@ const OrderCard = ({
 }) => {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  const { user } = useAuth();
+  const { cart } = useCart()
 
   return (
     <TouchableOpacity
@@ -150,7 +150,7 @@ const OrderCard = ({
           <Fontisto name="motorcycle" size={16} color={activeColor.icon} />
 
           <Text style={[styles.textStyle, { color: activeColor.icon }]}>
-            45 mins
+            {cart.duration} mins
           </Text>
         </View>
         {!isHomeScreen ? (
