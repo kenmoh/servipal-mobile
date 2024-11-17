@@ -1,14 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import MapView from "react-native-maps";
 import { Stack, useLocalSearchParams } from "expo-router";
-// import Mapbox, { MapView as MBMapView, LocationPuck, Camera } from "@rnmapbox/maps";
+
 import { Colors } from "@/constants/Colors";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/themeContext";
 import Map from "@/components/Map";
 
-// Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY as string || '')
+
 
 const orderMap = () => {
   const params = useLocalSearchParams();
@@ -18,27 +17,21 @@ const orderMap = () => {
 
   return (
     <>
-      <Stack.Screen options={{ headerTransparent: true, title: "" }} />
-      <View style={styles.mapContainer}>
+      <Stack.Screen options={{
+        headerTransparent: true,
+        title: '',
+        headerStyle: {
+          backgroundColor: 'transparent'
+        }
+      }}
 
-        {/* <MapView
-          style={styles.map}
-          mapType="mutedStandard"
-          pitchEnabled
-          initialRegion={{
-            latitude: 9.082,
-            longitude: 8.6753,
-            latitudeDelta: 10,
-            longitudeDelta: 10,
-          }}
-        /> */}
-        {/* <MapView style={{ flex: 1 }} /> */}
+      />
+      <View style={styles.mapContainer}>
         <Map />
       </View>
       <View
         style={[
-          styles.infoContainer,
-          { backgroundColor: activeColor.background },
+          styles.infoContainer
         ]}
       >
         <View
@@ -93,9 +86,17 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1,
-    width: "100%",
-    paddingHorizontal: 20,
+    width: "95%",
+    padding: 20,
     justifyContent: "center",
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 25,
+    borderRadius: 10,
+    backgroundColor: '#303339',
+    opacity: 0.7
+
+
   },
   textCard: {
     fontSize: 16,
@@ -107,8 +108,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 14,
-    fontFamily: "Poppins-Thin",
+    fontSize: 12,
+    fontFamily: "Poppins-Regular",
   },
   map: {
     flex: 1,

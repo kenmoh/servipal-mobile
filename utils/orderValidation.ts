@@ -4,6 +4,27 @@ export const orderValidationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   origin: Yup.string().required().label("Origin"),
   destination: Yup.string().required().label("Destination"),
+  duration: Yup.string().required().label("Duration"),
+  // originPoints: Yup.string()
+  //   .required()
+  //   .label("Origin Coordinate") // Change to accept a structured format
+  //   .matches(
+  //     /^\d+(\.\d+)?\,\s*\d+(\.\d+)?$/,
+  //     "Enter valid coordinates (latitude,longitude)"
+  //   ),
+  // destinationPoints: Yup.string()
+  //   .required()
+  //   .label("Destination Coordinate") // Change to accept a structured format
+  //   .matches(
+  //     /^\d+(\.\d+)?\,\s*\d+(\.\d+)?$/,
+  //     "Enter valid coordinates (latitude,longitude)"
+  //   ),
+  originPoints: Yup.array()
+    .of(Yup.number().required("Origin point must be a number"))
+    .length(2, "Origin points must have exactly 2 values"),
+  destinationPoints: Yup.array()
+    .of(Yup.number().required("Destination point must be a number"))
+    .length(2, "Destination points must have exactly 2 values"),
   description: Yup.string().required().label("Description"),
   distance: Yup.number()
     .positive()

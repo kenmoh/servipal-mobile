@@ -177,6 +177,9 @@ export type CreateOrderType = {
   destination: string;
   distance?: string;
   description: string;
+  duration: string;
+  destinationPoints: [number, number];
+  originPoints: [number, number];
   orderPhotoUrl: string;
 };
 
@@ -503,7 +506,7 @@ export type ItemType = {
 };
 
 export type ChangePasswordType = {
-  oldPassword: string
-  newPassword: string
-  confirmNewPassword: string
-}
+  oldPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};

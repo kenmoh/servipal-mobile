@@ -7,9 +7,17 @@ const apiClient = create({
   // baseURL: "https://mohdelivery.onrender.com/api",
 });
 
-export const mapboxClient1 = create({
-  baseURL: "https://api.mapbox.com/search/geocode/v6",
+export const hereMapClient = create({
+  baseURL: "https://discover.search.hereapi.com/v1",
 });
+
+export const hereMapRouteClient = create({
+  baseURL: "https://router.hereapi.com/v8",
+});
+export const hereMapGeocodeClient = create({
+  baseURL: "https://geocode.search.hereapi.com/v1",
+});
+
 export const mapboxClient = create({
   baseURL: "https://api.mapbox.com",
 });

@@ -237,6 +237,9 @@ const createOrder = async (item: CreateOrderType) => {
   data.append("description", item.description);
   data.append("origin", item.origin);
   data.append("destination", item.destination);
+  data.append("duration", item.duration);
+  data.append("origin_coords", item.originPoints);
+  data.append("destination_coords", item.destinationPoints);
   data.append("distance", item.distance!);
   data.append("image", {
     type: "image/jpeg",

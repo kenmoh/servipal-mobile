@@ -25,7 +25,6 @@ const services = [
 const welcome = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
-    const { user } = useAuth()
 
     return (
         <SafeAreaView

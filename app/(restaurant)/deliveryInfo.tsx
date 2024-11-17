@@ -19,7 +19,7 @@ import { DeliverySchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { ThemeContext } from "@/context/themeContext";
 import { useCart } from "@/components/CartProvider";
-import { fetchSuggestions, fetchTravelTime } from "@/api/maps";
+import { fetchCoordinatesFromHere, fetchSuggestions, fetchTravelTime } from "@/api/maps";
 
 const DliveryInfo = () => {
     const { theme } = useContext(ThemeContext);
@@ -71,24 +71,37 @@ const DliveryInfo = () => {
                         }) => {
                             const { data: originSuggestions } = useQuery({
                                 queryKey: ["origin", values.origin],
-                                queryFn: () => fetchSuggestions(values.origin),
+                                queryFn: () => fetchCoordinatesFromHere(values.origin),
                                 enabled: values.origin.length > 2 && showOriginSuggestions,
                                 staleTime: 5000,
                             });
+                            // const { data: originSuggestions } = useQuery({
+                            //     queryKey: ["origin", values.origin],
+                            //     queryFn: () => fetchSuggestions(values.origin),
+                            //     enabled: values.origin.length > 2 && showOriginSuggestions,
+                            //     staleTime: 5000,
+                            // });
+                            // const { data: destinationSuggestions } = useQuery({
+                            //     queryKey: ["destination", values.destination],
+                            //     queryFn: () => fetchSuggestions(values.destination),
+                            //     enabled:
+                            //         values.destination.length > 2 && showDestinationSuggestions,
+                            //     staleTime: 5000,
+                            // });
                             const { data: destinationSuggestions } = useQuery({
                                 queryKey: ["destination", values.destination],
-                                queryFn: () => fetchSuggestions(values.destination),
+                                queryFn: () => fetchCoordinatesFromHere(values.destination),
                                 enabled:
                                     values.destination.length > 2 && showDestinationSuggestions,
                                 staleTime: 5000,
                             });
+
 
                             return (
                                 <>
                                     <View style={styles.container}>
                                         <View style={{ flex: 1, paddingHorizontal: 5 }}>
                                             <CustomTextInput
-                                                // onChangeText={handleChange("origin")}
                                                 onChangeText={(text) => {
                                                     handleChange("origin")(text);
                                                     setShowOriginSuggestions(true);
@@ -99,7 +112,7 @@ const DliveryInfo = () => {
                                                 inputBackgroundColor={activeColor.inputBackground}
                                                 inputTextColor={activeColor.text}
                                             />
-                                            {setShowOriginSuggestions &&
+                                            {showOriginSuggestions &&
                                                 originSuggestions &&
                                                 originSuggestions.length > 0 && (
                                                     <ScrollView style={styles.suggestionContainer}>
@@ -166,7 +179,7 @@ const DliveryInfo = () => {
 
                                                                         fetchTravelTime(originCoords, item.geometry.coordinates as [number, number])
                                                                             .then((duration) => {
-                                                                                console.log(duration, (Number(duration[0].duration) / 60).toFixed(0))
+
                                                                                 handleChange('duration')(Number(duration[0].duration / 60).toFixed(0));
                                                                                 handleChange('distance')(Number(duration[0].distance / 1000).toFixed(2));
                                                                             });
