@@ -1,9 +1,6 @@
-import {
-  mapboxClient,
-  hereMapClient,
-  hereMapGeocodeClient,
-  hereMapRouteClient,
-} from "./client";
+import * as Location from "expo-location";
+import { mapboxClient, hereMapClient, hereMapRouteClient } from "./client";
+import { Alert } from "react-native";
 
 type RouteType = {
   routes: Array<{
@@ -148,11 +145,39 @@ export const getDistanceAndDuration = async (
     const distance = response?.data?.routes[0].sections[0].summary.length;
     const duration = response?.data?.routes[0].sections[0].summary.duration;
     const polyline = response?.data?.routes[0].sections[0].polyline;
-    console.log("PLOYLINE", polyline);
-    console.log(response.data?.routes[0].sections[0], "DATA");
 
     return { distance, duration, polyline };
   } catch (error) {
     console.error("Error fetching distance:", error);
+  }
+};
+
+const getCurrentLocation = async (item) => {
+  // Request permission to access location
+  let { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== "granted") {
+    console.error("Permission to access location was denied");
+    return;
+  }
+
+  // Get the current location
+  let location = await Location.getCurrentPositionAsync({});
+  const { latitude, longitude } = location.coords;
+
+  // Update originPoints with current location
+  item.originPoints = [latitude, longitude];
+  console.log("Current location set to:", item.originPoints);
+
+  // Reverse geocode to get the location name
+  let reverseGeocode = await Location.reverseGeocodeAsync({
+    latitude,
+    longitude,
+  });
+  if (reverseGeocode.length > 0) {
+    const locationName = `${reverseGeocode[0].city}, ${reverseGeocode[0].region}, ${reverseGeocode[0].country}`;
+    console.log("Location name:", locationName);
+    Alert.alert("Current Location", locationName); // Show location name in an alert
+  } else {
+    console.log("No location name found.");
   }
 };

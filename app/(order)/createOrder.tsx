@@ -1,47 +1,58 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, ScrollView, View, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Formik } from "formik";
-import ImagePickerForm from "@/components/ImageFormPicker";
+import * as Location from "expo-location";
 
+import ImagePickerForm from "@/components/ImageFormPicker";
 import CustomBtn from "@/components/CustomBtn";
 import { Colors } from "@/constants/Colors";
 import CustomTextInput from "@/components/CustomTextInput";
 import { orderValidationSchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import orderApi from "@/api/orders";
-
 import { ThemeContext } from "@/context/themeContext";
 import { CreateOrderType } from "@/utils/types";
 import { showMessage } from "react-native-flash-message";
-import { router } from "expo-router";
 import CustomActivityIndicator from "@/components/CustomActivityIndicator";
 import { fetchCoordinatesFromHere, getDistanceAndDuration } from "@/api/maps";
-
+import { MaterialIcons } from "@expo/vector-icons";
 
 type OrderItemType = {
   payment_url: string;
   order_type: string;
   id: string;
-  total_cost: number,
-  delivery_fee: number,
-}
+  total_cost: number;
+  delivery_fee: number;
+};
 
 type Data = {
-  item_order: OrderItemType
-}
+  item_order: OrderItemType;
+};
 
 export default function HomeScreen() {
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
 
   const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false)
   const [showDestinationSuggestions, setShowDestinationSuggestions] =
     useState(false);
-  const [originCoords, setOriginCoords] = useState<[number, number] | null>(null);
-  const [destinationCoords, setDestinationCoords] = useState<[number, number] | null>(null);
-
+  const [originCoords, setOriginCoords] = useState<[number, number] | null>(
+    null
+  );
+  const [destinationCoords, setDestinationCoords] = useState<
+    [number, number] | null
+  >(null);
 
   const { mutate, isPending } = useMutation({
     mutationFn: (order: CreateOrderType) => orderApi.createOrder(order),
@@ -61,7 +72,7 @@ export default function HomeScreen() {
         type: "success",
         style: {
           alignItems: "center",
-        }
+        },
       });
       router.push({
         pathname: "payment",
@@ -71,11 +82,9 @@ export default function HomeScreen() {
           id: data?.item_order.id,
           totalCost: data?.item_order.total_cost,
           deliveryFee: data?.item_order.delivery_fee,
-
         },
       });
-    }
-
+    },
   });
 
   return (
@@ -84,14 +93,12 @@ export default function HomeScreen() {
         backgroundColor: activeColor.background,
         flex: 1,
         justifyContent: "center",
-
       }}
     >
       <CustomActivityIndicator visible={isPending} />
       <StatusBar style="inverted" />
       <View style={styles.mainContainer}>
         <ScrollView showsVerticalScrollIndicator={false}>
-
           <Formik
             initialValues={{
               name: "",
@@ -100,15 +107,27 @@ export default function HomeScreen() {
               destination: "",
               duration: "",
               distance: "",
-              originPoints: originCoords ? [originCoords[0], originCoords[1]] : [0, 0],
-              destinationPoints: destinationCoords ? [destinationCoords[0], destinationCoords[1]] : [0, 0],
+              originPoints: originCoords
+                ? [originCoords[0], originCoords[1]]
+                : [0, 0],
+              destinationPoints: destinationCoords
+                ? [destinationCoords[0], destinationCoords[1]]
+                : [0, 0],
               orderPhotoUrl: "",
             }}
-            // onSubmit={(values, { resetForm }) => mutate(values, { onSuccess: () => resetForm() })}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values, { resetForm }) =>
+              mutate(values, { onSuccess: () => resetForm() })
+            }
             validationSchema={orderValidationSchema}
           >
-            {({ handleChange, handleSubmit, values, errors, touched }) => {
+            {({
+              handleChange,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              setFieldValue,
+            }) => {
               const { data: originSuggestions } = useQuery({
                 queryKey: ["origin", values.origin],
                 queryFn: () => fetchCoordinatesFromHere(values.origin),
@@ -119,16 +138,97 @@ export default function HomeScreen() {
               const { data: destinationSuggestions } = useQuery({
                 queryKey: ["origin", values.destination],
                 queryFn: () => fetchCoordinatesFromHere(values.destination),
-                enabled: values.destination.length > 2 && showDestinationSuggestions,
+                enabled:
+                  values.destination.length > 2 && showDestinationSuggestions,
                 staleTime: 5000,
               });
+
+              const getCurrentLocation = async () => {
+                try {
+                  setIsLoadingLocation(true);
+                  const { status } =
+                    await Location.requestForegroundPermissionsAsync();
+                  if (status !== "granted") {
+                    showMessage({
+                      message: "Permission to access location was denied",
+                      type: "danger",
+                      style: { alignItems: "center" },
+                    });
+                    return;
+                  }
+
+                  const location = await Location.getCurrentPositionAsync({
+                    accuracy: Location.Accuracy.High,
+                  });
+
+                  const { latitude, longitude } = location.coords;
+
+                  const reverseGeocode = await Location.reverseGeocodeAsync({
+                    latitude,
+                    longitude,
+                  });
+
+                  if (reverseGeocode && reverseGeocode[0]) {
+                    const address = reverseGeocode[0];
+                    const formattedAddress = `${address.street || ""} ${address.name || ""
+                      }, ${address.city || ""}, ${address.region || ""}`
+                      .trim()
+                      .replace(/\s+/g, " ");
+
+                    setFieldValue("origin", formattedAddress);
+                    setOriginCoords([Number(latitude.toFixed(5)), Number(longitude.toFixed(5))]);
+                    setFieldValue("originPoints", [latitude, longitude]);
+                    setShowOriginSuggestions(false);
+
+                    showMessage({
+                      message: "Location set successfully",
+                      type: "success",
+                      style: { alignItems: "center" },
+                    });
+                  }
+                } catch (error) {
+                  showMessage({
+                    message: "Error getting location",
+                    type: "danger",
+                    style: { alignItems: "center" },
+                  });
+                } finally {
+                  setIsLoadingLocation(false);
+                }
+              };
 
               return (
                 <>
                   <View style={styles.container}>
                     <View style={{ flex: 1, paddingHorizontal: 5 }}>
-                      <CustomTextInput
+                      <TouchableOpacity
+                        style={[
+                          {
+                            backgroundColor: activeColor.inputBackground,
+                            flexDirection: "row",
+                            paddingVertical: 10,
+                            alignItems: "center",
+                            gap: 5,
+                            width: "70%",
+                            justifyContent: "center",
+                            borderRadius: 25,
 
+                          },
+                        ]}
+                        onPress={getCurrentLocation}
+                      >
+                        {isLoadingLocation ? (<>
+                          <ActivityIndicator size={24} color={activeColor.icon} />
+                          <Text style={{ fontFamily: 'Poppins-Regular', color: activeColor.text }}>Fetching Location...</Text>
+                        </>) : (<>
+                          <MaterialIcons
+                            name="my-location"
+                            size={24}
+                            color={activeColor.icon}
+                          />
+                          <Text style={{ fontFamily: 'Poppins-Regular', color: activeColor.text }}>Use current location</Text></>)}
+                      </TouchableOpacity>
+                      <CustomTextInput
                         onChangeText={(text) => {
                           handleChange("origin")(text);
                           setShowOriginSuggestions(true);
@@ -142,22 +242,33 @@ export default function HomeScreen() {
                       {showOriginSuggestions &&
                         originSuggestions &&
                         originSuggestions.length > 0 && (
-                          <ScrollView style={[styles.suggestionContainer, {
-                            zIndex: 999,
-                            position: 'absolute',
-                            top: 100,
-                            borderColor: activeColor.profileCard
-                          }]} nestedScrollEnabled>
+                          <ScrollView
+                            style={[
+                              styles.suggestionContainer,
+                              {
+                                zIndex: 999,
+                                position: "absolute",
+                                top: 140,
+                                borderColor: activeColor.profileCard,
+                              },
+                            ]}
+                            nestedScrollEnabled
+                          >
                             {originSuggestions.map((item) => (
                               <TouchableOpacity
                                 key={item.id}
                                 onPress={() => {
-
                                   handleChange("origin")(item.title);
-                                  setOriginCoords([item.position.lat, item.position.lng] as [number, number]);
-                                  handleChange("originPoints")(`${[item.position.lat, item.position.lng]}`);
+                                  const newOriginCoords: [number, number] = [
+                                    item.position.lat,
+                                    item.position.lng,
+                                  ];
+                                  setOriginCoords(newOriginCoords);
+                                  setFieldValue(
+                                    "originPoints",
+                                    newOriginCoords
+                                  );
                                   setShowOriginSuggestions(false);
-
                                 }}
                               >
                                 <Text
@@ -193,28 +304,50 @@ export default function HomeScreen() {
                       {showDestinationSuggestions &&
                         destinationSuggestions &&
                         destinationSuggestions.length > 0 && (
-                          <ScrollView style={[styles.suggestionContainer, {
-                            zIndex: 999,
-                            position: 'absolute',
-                            top: 190,
-                            borderColor: activeColor.profileCard
-                          }]} nestedScrollEnabled>
+                          <ScrollView
+                            style={[
+                              styles.suggestionContainer,
+                              {
+                                zIndex: 999,
+                                position: "absolute",
+                                top: 240,
+                                borderColor: activeColor.profileCard,
+                              },
+                            ]}
+                            nestedScrollEnabled
+                          >
                             {destinationSuggestions.map((item) => (
                               <TouchableOpacity
                                 key={item.id}
                                 onPress={() => {
-
                                   handleChange("destination")(item.title);
-                                  setDestinationCoords([item.position.lat, item.position.lng] as [number, number]);
-                                  handleChange("destinationPoints")(`${[item.position.lat, item.position.lng]}`);
+                                  const newDestCoords: [number, number] = [
+                                    item.position.lat,
+                                    item.position.lng,
+                                  ];
+                                  setDestinationCoords(newDestCoords);
+                                  setFieldValue(
+                                    "destinationPoints",
+                                    newDestCoords
+                                  );
                                   setShowDestinationSuggestions(false);
 
                                   if (originCoords) {
-                                    getDistanceAndDuration(originCoords, [item.position.lat, item.position.lng] as [number, number])
-                                      .then((calc) => {
-                                        handleChange('distance')(Number(Number(calc?.distance) / 1000).toFixed(2))
-                                        handleChange('duration')(Number(Number(calc?.duration) / 60).toFixed(0))
-                                      })
+                                    getDistanceAndDuration(originCoords, [
+                                      item.position.lat,
+                                      item.position.lng,
+                                    ] as [number, number]).then((calc) => {
+                                      handleChange("distance")(
+                                        Number(
+                                          Number(calc?.distance) / 1000
+                                        ).toFixed(2)
+                                      );
+                                      handleChange("duration")(
+                                        Number(
+                                          Number(calc?.duration) / 60
+                                        ).toFixed(0)
+                                      );
+                                    });
                                   }
                                 }}
                               >
@@ -236,71 +369,82 @@ export default function HomeScreen() {
                       {touched.destination && errors.destination && (
                         <InputErrorMessage error={errors.destination} />
                       )}
-                      {(values.distance || values.duration) && <View style={{ flexDirection: 'row', gap: 10, }}>
-                        <View style={{ flex: 1 }}>
-                          <CustomTextInput
-                            onChangeText={handleChange("distance")}
-                            value={values.distance}
-                            labelColor={activeColor.text}
-                            label="Distance"
-                            editable={false}
-                            inputBackgroundColor={activeColor.inputBackground}
-                            inputTextColor={activeColor.text}
-                          />
-                          {touched.distance && errors.distance && (
-                            <InputErrorMessage error={errors.distance} />
-                          )}
+                      {(values.distance || values.duration) && (
+                        <View style={{ flexDirection: "row", gap: 10 }}>
+                          <View style={{ flex: 1 }}>
+                            <CustomTextInput
+                              onChangeText={handleChange("distance")}
+                              value={values.distance}
+                              labelColor={activeColor.text}
+                              label="Distance"
+                              editable={false}
+                              inputBackgroundColor={activeColor.inputBackground}
+                              inputTextColor={activeColor.text}
+                            />
+                            {touched.distance && errors.distance && (
+                              <InputErrorMessage error={errors.distance} />
+                            )}
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            <CustomTextInput
+                              onChangeText={handleChange("duration")}
+                              value={values.duration}
+                              labelColor={activeColor.text}
+                              label="Duration"
+                              editable={false}
+                              inputBackgroundColor={activeColor.inputBackground}
+                              inputTextColor={activeColor.text}
+                            />
+                            {touched.duration && errors.duration && (
+                              <InputErrorMessage error={errors.duration} />
+                            )}
+                          </View>
                         </View>
-                        <View style={{ flex: 1 }}>
-                          <CustomTextInput
-                            onChangeText={handleChange("duration")}
-                            value={values.duration}
-                            labelColor={activeColor.text}
-                            label="Duration"
-                            editable={false}
-                            inputBackgroundColor={activeColor.inputBackground}
-                            inputTextColor={activeColor.text}
-                          />
-                          {touched.duration && errors.duration && (
-                            <InputErrorMessage error={errors.duration} />
-                          )}
-                        </View>
-                      </View>
-                      }
+                      )}
 
-                      {originCoords && destinationCoords && <View style={{ flexDirection: 'row', gap: 10, }}>
-                        <View style={{ flex: 1 }}>
-                          <CustomTextInput
-                            onChangeText={handleChange("originPoints")}
-                            // onChangeText={() => handleChange("originPoints")(originCoords ? `${originCoords[0]},${originCoords[1]}` : "0,0")}
-                            value={originCoords ? `${originCoords[0]},${originCoords[1]}` : "0,0"}
-                            labelColor={activeColor.text}
-                            label="Origin Points"
-                            editable={false}
-                            inputBackgroundColor={activeColor.inputBackground}
-                            inputTextColor={activeColor.text}
-                          />
-                          {touched.originPoints && errors.originPoints && (
-                            <InputErrorMessage error={errors.originPoints} />
-                          )}
+                      {originCoords && destinationCoords && (
+                        <View style={{ flexDirection: "row", gap: 10 }}>
+                          <View style={{ flex: 1 }}>
+                            <CustomTextInput
+                              onChangeText={handleChange("originPoints")}
+                              value={
+                                originCoords
+                                  ? `${originCoords[0]},${originCoords[1]}`
+                                  : "0,0"
+                              }
+                              labelColor={activeColor.text}
+                              label="Origin Points"
+                              editable={false}
+                              inputBackgroundColor={activeColor.inputBackground}
+                              inputTextColor={activeColor.text}
+                            />
+                            {touched.originPoints && errors.originPoints && (
+                              <InputErrorMessage error={errors.originPoints} />
+                            )}
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            <CustomTextInput
+                              onChangeText={handleChange("destinationPoints")}
+                              value={
+                                destinationCoords
+                                  ? `${destinationCoords[0]},${destinationCoords[1]}`
+                                  : "0,0"
+                              }
+                              labelColor={activeColor.text}
+                              label="Destination Points"
+                              editable={false}
+                              inputBackgroundColor={activeColor.inputBackground}
+                              inputTextColor={activeColor.text}
+                            />
+                            {touched.destinationPoints &&
+                              errors.destinationPoints && (
+                                <InputErrorMessage
+                                  error={errors.destinationPoints}
+                                />
+                              )}
+                          </View>
                         </View>
-                        <View style={{ flex: 1 }}>
-                          <CustomTextInput
-                            onChangeText={handleChange("destinationPoints")}
-                            // onChangeText={() => handleChange("destinationPoints")(destinationCoords ? `${destinationCoords[0]},${destinationCoords[1]}` : "0,0")}
-                            value={destinationCoords ? `${destinationCoords[0]},${destinationCoords[1]}` : "0,0"}
-                            labelColor={activeColor.text}
-                            label="Destination Points"
-                            editable={false}
-                            inputBackgroundColor={activeColor.inputBackground}
-                            inputTextColor={activeColor.text}
-                          />
-                          {touched.destinationPoints && errors.destinationPoints && (
-                            <InputErrorMessage error={errors.destinationPoints} />
-                          )}
-                        </View>
-                      </View>
-                      }
+                      )}
                     </View>
                   </View>
                   <View style={styles.container}>
@@ -342,12 +486,12 @@ export default function HomeScreen() {
                     </View>
                   </View>
                 </>
-              )
+              );
             }}
           </Formik>
         </ScrollView>
       </View>
-    </View >
+    </View>
   );
 }
 
@@ -377,12 +521,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginBottom: 10,
-    width: '100%',
-    alignSelf: 'center'
+    width: "100%",
+    alignSelf: "center",
   },
   suggestion: {
     padding: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    fontFamily: "Poppins-Light"
+    fontFamily: "Poppins-Light",
   },
 });
