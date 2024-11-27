@@ -108,11 +108,11 @@ export default function HomeScreen() {
               duration: "",
               distance: "",
               originPoints: originCoords
-                ? [originCoords[0], originCoords[1]]
-                : [0, 0],
+                ? `${originCoords[0], originCoords[1]}`
+                : '0, 0',
               destinationPoints: destinationCoords
-                ? [destinationCoords[0], destinationCoords[1]]
-                : [0, 0],
+                ? `${destinationCoords[0], destinationCoords[1]}`
+                : '0, 0',
               orderPhotoUrl: "",
             }}
             onSubmit={(values, { resetForm }) =>
