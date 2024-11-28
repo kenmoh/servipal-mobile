@@ -79,11 +79,12 @@ const OrderCard = ({
       style={[styles.container, { backgroundColor: activeColor.profileCard }]}
     >
       <View style={styles.topWrapper}>
-        <View>
+        <View style={{ flex: 1.5 }}>
           <Text
             style={[
               styles.titleText,
               { color: activeColor.text, fontSize: 12 },
+
             ]}
           >
             {order.package_name || order.order_owner_username}
@@ -106,7 +107,7 @@ const OrderCard = ({
           </View>
         </View>
         {order?.order_type === "delivery" ? (
-          <View>
+          <View style={{ flex: 1, alignItems: 'flex-end' }}>
             <Image
               source={order?.image_url}
               placeholder={{ blurhash }}
@@ -198,8 +199,8 @@ const styles = StyleSheet.create({
 
   topWrapper: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 10,
+    // justifyContent: "space-between",
+
   },
 
   bottomContainer: {

@@ -238,14 +238,26 @@ const createOrder = async (item: CreateOrderType) => {
   data.append("origin", item.origin);
   data.append("destination", item.destination);
   data.append("duration", item.duration);
-  data.append("origin_coords", JSON.stringify(item.originPoints));
-  data.append("destination_coords", JSON.stringify(item.destinationPoints));
+  // data.append("origin_coords", JSON.stringify(item.originPoints));
+  // data.append("destination_coords", JSON.stringify(item.destinationPoints));
   data.append("distance", item.distance!);
   data.append("image", {
     type: "image/jpeg",
     uri: item.orderPhotoUrl,
     name: item.orderPhotoUrl.split("/").slice(-1)[0],
   } as any);
+
+  if (Array.isArray(item.originPoints)) {
+    item.originPoints.forEach((coordonate) => {
+      data.append("origin_coords", coordonate);
+    });
+  }
+
+  if (Array.isArray(item.originPoints)) {
+    item.originPoints.forEach((coordonate) => {
+      data.append("destination_coords", coordonate);
+    });
+  }
 
   const response = await client.post(`${endpoint}/send-items`, data, {
     headers: {
