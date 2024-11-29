@@ -110,6 +110,20 @@ export const fetchCoordinatesFromHere = async (
   return response?.data?.items ?? [];
 };
 
+export const getDirections = async (
+  origin: [number, number],
+  destination: [number, number]
+) => {
+  const response = await mapboxClient.get(
+    `/directions/v5/driving/${(origin[0], origin[1])};${
+      (destination[0], destination[1])
+    }`
+  );
+  return response?.data?.routes[0].geometry.coordinates;
+};
+
+// https://api.mapbox.com/directions/v5/{profile}/{coordinates}
+
 // const geocodePlace = async (
 //   placeName: string
 // ): Promise<PositionData | undefined> => {
@@ -152,7 +166,7 @@ export const getDistanceAndDuration = async (
   }
 };
 
-const getCurrentLocation = async (item) => {
+export const getCurrentLocation = async (item) => {
   // Request permission to access location
   let { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {

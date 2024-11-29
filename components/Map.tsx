@@ -1,12 +1,13 @@
+import { getDirections } from '@/api/maps';
 import { Colors } from '@/constants/Colors';
 import { ThemeContext } from '@/context/themeContext';
 import Mapbox, { Camera, LocationPuck, MapView, MarkerView } from '@rnmapbox/maps';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
 
-export default function Map() {
+export default function Map({ originCoords, destinationCoords }: { originCoords: [number, number], destinationCoords: [number, number] }) {
 
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
@@ -17,26 +18,28 @@ export default function Map() {
 
     };
 
-    const originCoords = {
-        latitude: 6.46801,
-        longitude: 3.56485,
-    };
 
-    const destinationCoords = {
-        latitude: 6.4619294,
-        longitude: 3.6783286,
-    };
 
+    // const originCoords = [
+    //     6.4619294,
+    //     3.6783286,
+    // ];
+    // const destinationCoords = [
+    //     6.4619294,
+    //     3.6783286,
+    // ];
+
+    useEffect(() => {
+        const [originLat, originLng] = originCoords as [number, number];
+        const [destLat, destLng] = destinationCoords as [number, number];
+        getDirections([originLat, originLng], [destLat, destLng])
+    }, [])
 
 
     return (
         <MapView style={{ flex: 1 }} styleURL={theme.mode === 'dark' ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/dark-v11"}>
             <Camera zoomLevel={5} centerCoordinate={[nigeriaCoordinates.longitude, nigeriaCoordinates.latitude]} />
-            {/* Marker for Origin */}
-            <MarkerView coordinate={[originCoords.longitude, originCoords.latitude]} />
 
-            {/* Marker for Destination */}
-            <MarkerView coordinate={[destinationCoords.longitude, destinationCoords.latitude]} />
         </MapView>
 
     );

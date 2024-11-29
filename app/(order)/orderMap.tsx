@@ -15,6 +15,16 @@ const orderMap = () => {
   let activeColor = Colors[theme.mode];
   const { distance, cost, origin, destination, destinationCoords, originCoords } = params;
 
+
+  console.log(destinationCoords, originCoords, 'COORDS')
+
+  const parseCoords = (coords: string | undefined): [number, number] => {
+    if (coords) {
+      const [lat, lng] = coords.split(',').map(Number);
+      return [lat, lng];
+    }
+    return [0, 0];
+  };
   return (
     <>
       <Stack.Screen options={{
@@ -27,7 +37,10 @@ const orderMap = () => {
 
       />
       <View style={styles.mapContainer}>
-        <Map />
+        <Map
+          originCoords={parseCoords(Array.isArray(originCoords) ? originCoords[0] : originCoords)}
+          destinationCoords={parseCoords(Array.isArray(destinationCoords) ? destinationCoords[0] : destinationCoords)}
+        />
       </View>
       <View
         style={[
