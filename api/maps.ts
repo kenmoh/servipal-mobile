@@ -113,14 +113,32 @@ export const fetchCoordinatesFromHere = async (
 export const getDirections = async (
   origin: [number, number],
   destination: [number, number]
-) => {
-  const response = await mapboxClient.get(
-    `/directions/v5/driving/${(origin[0], origin[1])};${
-      (destination[0], destination[1])
-    }`
-  );
-  return response?.data?.routes[0].geometry.coordinates;
+): Promise<number[][]> => {
+  try {
+    const response = await mapboxClient.get(
+      `/directions/v5/mapbox/driving/${origin[1]},${origin[0]};${destination[1]},${destination[0]}?access_token=${process.env.EXPO_PUBLIC_MAPBOX_KEY}&geometries=geojson`
+    );
+    console.log(response.data?.routes[0]?.geometry?.coordinates, "FROM API");
+    return response?.data?.routes[0]?.geometry?.coordinates || [];
+  } catch (error) {
+    console.error("Error fetching directionss:", error);
+    return [];
+  }
 };
+
+// GET: https://api.mapbox.com/directions/v5/mapbox/driving/5.105184%2C10.682484%3B6.466009%2C6.950963?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=pk.eyJ1Ijoia2VubW9oIiwiYSI6ImNsZnpqaG05aDEyMXgzaHF5bzZmM20zeTUifQ.s49M_iu9qk3Gt8lexnDSEw
+
+// export const getDirections = async (
+//   origin: [number, number],
+//   destination: [number, number]
+// ) => {
+//   const response = await mapboxClient.get(
+//     `/directions/v5/driving/${(origin[0], origin[1])};${
+//       (destination[0], destination[1])
+//     }`
+//   );
+//   return response?.data?.routes[0].geometry.coordinates;
+// };
 
 // https://api.mapbox.com/directions/v5/{profile}/{coordinates}
 

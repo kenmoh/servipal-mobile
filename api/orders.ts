@@ -156,14 +156,6 @@ const orderFood = async (redtaurantId: string, item: OrderData) => {
     destination_coords: item.destinationPoints,
   };
 
-  // if (Array.isArray(item.originPoints)) {
-  //   data.origin_coords = item.originPoints.join(",");
-  // }
-
-  // if (Array.isArray(item.destinationPoints)) {
-  //   data.destination_coords = item.destinationPoints.join(",");
-  // }
-
   const response = await client.post(
     `${endpoint}/${redtaurantId}/order-food`,
     data
@@ -263,7 +255,7 @@ const createOrder = async (item: CreateOrderType) => {
   }
 
   if (Array.isArray(item.originPoints)) {
-    item.originPoints.forEach((coordonate) => {
+    item.destinationPoints.forEach((coordonate) => {
       data.append("destination_coords", coordonate);
     });
   }

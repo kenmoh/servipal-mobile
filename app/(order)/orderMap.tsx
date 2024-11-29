@@ -16,8 +16,6 @@ const orderMap = () => {
   const { distance, cost, origin, destination, destinationCoords, originCoords } = params;
 
 
-  console.log(destinationCoords, originCoords, 'COORDS')
-
   const parseCoords = (coords: string | undefined): [number, number] => {
     if (coords) {
       const [lat, lng] = coords.split(',').map(Number);
