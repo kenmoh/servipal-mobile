@@ -58,6 +58,8 @@ const Cart = () => {
 
     const { cart, getTotalPrice, clearCart, clearDeliveryInfo, getServerOrderData } = useCart();
 
+    console.log(cart)
+
     const { mutate: submitOrder, isPending, data } = useMutation({
         mutationFn: (orderData: ServerOrderData) => {
             if (cart.orderType === 'food') {
@@ -123,7 +125,7 @@ const Cart = () => {
             <ScrollView
                 style={[styles.container, { backgroundColor: activeColor.background }]}
             >
-                {cart.items.length > 0 ? (
+                {cart.items && cart.items.length > 0 ? (
                     <CartItem />
                 ) : (
                     <View

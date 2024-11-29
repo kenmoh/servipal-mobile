@@ -150,8 +150,19 @@ const orderFood = async (redtaurantId: string, item: OrderData) => {
     origin: item.origin,
     destination: item.destination,
     distance: item.distance,
+    duration: item.duration,
     additional_info: item.additional_info,
+    origin_coords: item.originPoints,
+    destination_coords: item.destinationPoints,
   };
+
+  // if (Array.isArray(item.originPoints)) {
+  //   data.origin_coords = item.originPoints.join(",");
+  // }
+
+  // if (Array.isArray(item.destinationPoints)) {
+  //   data.destination_coords = item.destinationPoints.join(",");
+  // }
 
   const response = await client.post(
     `${endpoint}/${redtaurantId}/order-food`,
@@ -238,8 +249,6 @@ const createOrder = async (item: CreateOrderType) => {
   data.append("origin", item.origin);
   data.append("destination", item.destination);
   data.append("duration", item.duration);
-  // data.append("origin_coords", JSON.stringify(item.originPoints));
-  // data.append("destination_coords", JSON.stringify(item.destinationPoints));
   data.append("distance", item.distance!);
   data.append("image", {
     type: "image/jpeg",

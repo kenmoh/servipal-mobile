@@ -13,7 +13,9 @@ const orderMap = () => {
   const params = useLocalSearchParams();
   const { theme } = useContext(ThemeContext);
   let activeColor = Colors[theme.mode];
-  const { distance, cost, origin, destination } = params;
+  const { distance, cost, origin, destination, destinationCoords, originCoords } = params;
+
+  console.log(destinationCoords, originCoords, '===============')
 
   return (
     <>
@@ -36,17 +38,14 @@ const orderMap = () => {
       >
         <View
           style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
             marginBottom: 20,
           }}
         >
           <Text style={[styles.text, { color: activeColor.text }]}>
-            {origin}
+            From: {origin}
           </Text>
           <Text style={[styles.text, { color: activeColor.text }]}>
-            {destination}
+            To: {destination}
           </Text>
         </View>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>

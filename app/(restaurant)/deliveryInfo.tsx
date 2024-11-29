@@ -6,11 +6,14 @@ import {
     FlatList,
     TouchableOpacity,
     Text,
+    ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Formik } from "formik";
 import { router, useLocalSearchParams } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import { showMessage } from "react-native-flash-message";
+import * as Location from "expo-location";
 
 import CustomBtn from "@/components/CustomBtn";
 import { Colors } from "@/constants/Colors";
@@ -19,7 +22,8 @@ import { DeliverySchema } from "@/utils/orderValidation";
 import InputErrorMessage from "@/components/InputErrorMessage";
 import { ThemeContext } from "@/context/themeContext";
 import { useCart } from "@/components/CartProvider";
-import { fetchCoordinatesFromHere, fetchSuggestions, fetchTravelTime } from "@/api/maps";
+import { fetchCoordinatesFromHere, fetchSuggestions, fetchTravelTime, getDistanceAndDuration } from "@/api/maps";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const DliveryInfo = () => {
     const { theme } = useContext(ThemeContext);
@@ -29,7 +33,7 @@ const DliveryInfo = () => {
         useState(false);
     const [originCoords, setOriginCoords] = useState<[number, number] | null>(null);
     const [destinationCoords, setDestinationCoords] = useState<[number, number] | null>(null);
-
+    const [isLoadingLocation, setIsLoadingLocation] = useState(false)
     const { storeId } = useLocalSearchParams();
 
     const { setDeliveryInfo } = useCart();
@@ -52,11 +56,19 @@ const DliveryInfo = () => {
                             additional_info: "",
                             distance: "",
                             duration: "",
+                            originPoints: originCoords
+                                ? `${originCoords[0], originCoords[1]}`
+                                : '0, 0',
+                            destinationPoints: destinationCoords
+                                ? `${destinationCoords[0], destinationCoords[1]}`
+                                : '0, 0',
                         }}
                         onSubmit={(values) => {
+
                             setDeliveryInfo({
                                 ...values,
                                 distance: Number(values.distance),
+
                             });
                             router.push({ pathname: "/cart", params: { storeId } });
                         }}
@@ -68,6 +80,7 @@ const DliveryInfo = () => {
                             values,
                             errors,
                             touched,
+                            setFieldValue
                         }) => {
                             const { data: originSuggestions } = useQuery({
                                 queryKey: ["origin", values.origin],
@@ -75,19 +88,7 @@ const DliveryInfo = () => {
                                 enabled: values.origin.length > 2 && showOriginSuggestions,
                                 staleTime: 5000,
                             });
-                            // const { data: originSuggestions } = useQuery({
-                            //     queryKey: ["origin", values.origin],
-                            //     queryFn: () => fetchSuggestions(values.origin),
-                            //     enabled: values.origin.length > 2 && showOriginSuggestions,
-                            //     staleTime: 5000,
-                            // });
-                            // const { data: destinationSuggestions } = useQuery({
-                            //     queryKey: ["destination", values.destination],
-                            //     queryFn: () => fetchSuggestions(values.destination),
-                            //     enabled:
-                            //         values.destination.length > 2 && showDestinationSuggestions,
-                            //     staleTime: 5000,
-                            // });
+
                             const { data: destinationSuggestions } = useQuery({
                                 queryKey: ["destination", values.destination],
                                 queryFn: () => fetchCoordinatesFromHere(values.destination),
@@ -97,10 +98,92 @@ const DliveryInfo = () => {
                             });
 
 
+                            const getCurrentLocation = async () => {
+                                try {
+                                    setIsLoadingLocation(true);
+                                    const { status } =
+                                        await Location.requestForegroundPermissionsAsync();
+                                    if (status !== "granted") {
+                                        showMessage({
+                                            message: "Permission to access location was denied",
+                                            type: "danger",
+                                            style: { alignItems: "center" },
+                                        });
+                                        return;
+                                    }
+
+                                    const location = await Location.getCurrentPositionAsync({
+                                        accuracy: Location.Accuracy.High,
+                                    });
+
+                                    const { latitude, longitude } = location.coords;
+
+                                    const reverseGeocode = await Location.reverseGeocodeAsync({
+                                        latitude,
+                                        longitude,
+                                    });
+
+                                    if (reverseGeocode && reverseGeocode[0]) {
+                                        const address = reverseGeocode[0];
+                                        const formattedAddress = `${address.street || ""} ${address.name || ""
+                                            }, ${address.city || ""}, ${address.region || ""}`
+                                            .trim()
+                                            .replace(/\s+/g, " ");
+
+                                        setFieldValue("origin", formattedAddress);
+                                        setOriginCoords([Number(latitude.toFixed(5)), Number(longitude.toFixed(5))]);
+                                        setFieldValue("originPoints", [latitude, longitude]);
+                                        setShowOriginSuggestions(false);
+
+                                        showMessage({
+                                            message: "Location set successfully",
+                                            type: "success",
+                                            style: { alignItems: "center" },
+                                        });
+                                    }
+                                } catch (error) {
+                                    showMessage({
+                                        message: "Error getting location",
+                                        type: "danger",
+                                        style: { alignItems: "center" },
+                                    });
+                                } finally {
+                                    setIsLoadingLocation(false);
+                                }
+                            };
+
+
                             return (
                                 <>
                                     <View style={styles.container}>
                                         <View style={{ flex: 1, paddingHorizontal: 5 }}>
+                                            <TouchableOpacity
+                                                style={[
+                                                    {
+                                                        backgroundColor: activeColor.inputBackground,
+                                                        flexDirection: "row",
+                                                        paddingVertical: 10,
+                                                        alignItems: "center",
+                                                        gap: 5,
+                                                        width: "70%",
+                                                        justifyContent: "center",
+                                                        borderRadius: 25,
+
+                                                    },
+                                                ]}
+                                                onPress={getCurrentLocation}
+                                            >
+                                                {isLoadingLocation ? (<>
+                                                    <ActivityIndicator size={24} color={activeColor.icon} />
+                                                    <Text style={{ fontFamily: 'Poppins-Regular', color: activeColor.text }}>Fetching Location...</Text>
+                                                </>) : (<>
+                                                    <MaterialIcons
+                                                        name="my-location"
+                                                        size={24}
+                                                        color={activeColor.icon}
+                                                    />
+                                                    <Text style={{ fontFamily: 'Poppins-Regular', color: activeColor.text }}>Use current location</Text></>)}
+                                            </TouchableOpacity>
                                             <CustomTextInput
                                                 onChangeText={(text) => {
                                                     handleChange("origin")(text);
@@ -115,16 +198,32 @@ const DliveryInfo = () => {
                                             {showOriginSuggestions &&
                                                 originSuggestions &&
                                                 originSuggestions.length > 0 && (
-                                                    <ScrollView style={styles.suggestionContainer}>
+                                                    <ScrollView
+                                                        style={[
+                                                            styles.suggestionContainer,
+                                                            {
+                                                                zIndex: 999,
+                                                                position: "absolute",
+                                                                top: 140,
+                                                                borderColor: activeColor.profileCard,
+                                                            },
+                                                        ]}
+                                                        nestedScrollEnabled
+                                                    >
                                                         {originSuggestions.map((item) => (
                                                             <TouchableOpacity
                                                                 key={item.id}
                                                                 onPress={() => {
-
-                                                                    handleChange("origin")(
-                                                                        item.place_name
+                                                                    handleChange("origin")(item.title);
+                                                                    const newOriginCoords: [number, number] = [
+                                                                        item.position.lat,
+                                                                        item.position.lng,
+                                                                    ];
+                                                                    setOriginCoords(newOriginCoords);
+                                                                    setFieldValue(
+                                                                        "originPoints",
+                                                                        newOriginCoords
                                                                     );
-                                                                    setOriginCoords(item.geometry.coordinates as [number, number]);
                                                                     setShowOriginSuggestions(false);
                                                                 }}
                                                             >
@@ -137,7 +236,7 @@ const DliveryInfo = () => {
                                                                         },
                                                                     ]}
                                                                 >
-                                                                    {item.place_name}
+                                                                    {item.title}
                                                                 </Text>
                                                             </TouchableOpacity>
                                                         ))}
@@ -163,26 +262,47 @@ const DliveryInfo = () => {
                                                     <ScrollView
                                                         style={[
                                                             styles.suggestionContainer,
-                                                            { borderColor: activeColor.borderColor },
+                                                            {
+                                                                zIndex: 999,
+                                                                position: "absolute",
+                                                                top: 240,
+                                                                borderColor: activeColor.profileCard,
+                                                            },
                                                         ]}
+                                                        nestedScrollEnabled
                                                     >
                                                         {destinationSuggestions.map((item) => (
                                                             <TouchableOpacity
                                                                 key={item.id}
                                                                 onPress={() => {
-                                                                    handleChange("destination")(item.place_name);
-                                                                    setDestinationCoords(item.geometry.coordinates as [number, number]);
+                                                                    handleChange("destination")(item.title);
+                                                                    const newDestCoords: [number, number] = [
+                                                                        item.position.lat,
+                                                                        item.position.lng,
+                                                                    ];
+                                                                    setDestinationCoords(newDestCoords);
+                                                                    setFieldValue(
+                                                                        "destinationPoints",
+                                                                        newDestCoords
+                                                                    );
                                                                     setShowDestinationSuggestions(false);
 
                                                                     if (originCoords) {
-
-
-                                                                        fetchTravelTime(originCoords, item.geometry.coordinates as [number, number])
-                                                                            .then((duration) => {
-
-                                                                                handleChange('duration')(Number(duration[0].duration / 60).toFixed(0));
-                                                                                handleChange('distance')(Number(duration[0].distance / 1000).toFixed(2));
-                                                                            });
+                                                                        getDistanceAndDuration(originCoords, [
+                                                                            item.position.lat,
+                                                                            item.position.lng,
+                                                                        ] as [number, number]).then((calc) => {
+                                                                            handleChange("distance")(
+                                                                                Number(
+                                                                                    Number(calc?.distance) / 1000
+                                                                                ).toFixed(2)
+                                                                            );
+                                                                            handleChange("duration")(
+                                                                                Number(
+                                                                                    Number(calc?.duration) / 60
+                                                                                ).toFixed(0)
+                                                                            );
+                                                                        });
                                                                     }
                                                                 }}
                                                             >
@@ -192,53 +312,93 @@ const DliveryInfo = () => {
                                                                         {
                                                                             color: activeColor.text,
                                                                             backgroundColor: activeColor.background,
-                                                                            borderBottomColor:
-                                                                                activeColor.borderColor,
                                                                         },
                                                                     ]}
                                                                 >
-                                                                    {item.place_name}
+                                                                    {item.title}
                                                                 </Text>
                                                             </TouchableOpacity>
                                                         ))}
                                                     </ScrollView>
                                                 )}
-
                                             {touched.destination && errors.destination && (
                                                 <InputErrorMessage error={errors.destination} />
                                             )}
-                                            <View style={{ flexDirection: 'row', gap: 20 }}>
-                                                <View style={{ flex: 1 }}>
-                                                    <CustomTextInput
-                                                        onChangeText={handleChange("distance")}
-                                                        value={values.distance}
-                                                        labelColor={activeColor.text}
-                                                        label="distance"
-                                                        inputBackgroundColor={activeColor.inputBackground}
-                                                        inputTextColor={activeColor.text}
-                                                        editable={false}
-
-                                                    />
-                                                    {touched.distance && errors.distance && (
-                                                        <InputErrorMessage error={errors.distance} />
-                                                    )}
+                                            {(values.distance || values.duration) && (
+                                                <View style={{ flexDirection: "row", gap: 10 }}>
+                                                    <View style={{ flex: 1 }}>
+                                                        <CustomTextInput
+                                                            onChangeText={handleChange("distance")}
+                                                            value={values.distance}
+                                                            labelColor={activeColor.text}
+                                                            label="Distance"
+                                                            editable={false}
+                                                            inputBackgroundColor={activeColor.inputBackground}
+                                                            inputTextColor={activeColor.text}
+                                                        />
+                                                        {touched.distance && errors.distance && (
+                                                            <InputErrorMessage error={errors.distance} />
+                                                        )}
+                                                    </View>
+                                                    <View style={{ flex: 1 }}>
+                                                        <CustomTextInput
+                                                            onChangeText={handleChange("duration")}
+                                                            value={values.duration}
+                                                            labelColor={activeColor.text}
+                                                            label="Duration"
+                                                            editable={false}
+                                                            inputBackgroundColor={activeColor.inputBackground}
+                                                            inputTextColor={activeColor.text}
+                                                        />
+                                                        {touched.duration && errors.duration && (
+                                                            <InputErrorMessage error={errors.duration} />
+                                                        )}
+                                                    </View>
                                                 </View>
-                                                <View style={{ flex: 1 }}>
-                                                    <CustomTextInput
-                                                        onChangeText={handleChange("duration")}
-                                                        value={values.duration}
-                                                        labelColor={activeColor.text}
-                                                        label="duration"
-                                                        inputBackgroundColor={activeColor.inputBackground}
-                                                        inputTextColor={activeColor.text}
-                                                        editable={false}
-
-                                                    />
-
+                                            )}
+                                            {originCoords && destinationCoords && (
+                                                <View style={{ flexDirection: "row", gap: 10 }}>
+                                                    <View style={{ flex: 1 }}>
+                                                        <CustomTextInput
+                                                            onChangeText={handleChange("originPoints")}
+                                                            value={
+                                                                originCoords
+                                                                    ? `${originCoords[0]},${originCoords[1]}`
+                                                                    : "0,0"
+                                                            }
+                                                            labelColor={activeColor.text}
+                                                            label="Origin Points"
+                                                            editable={false}
+                                                            inputBackgroundColor={activeColor.inputBackground}
+                                                            inputTextColor={activeColor.text}
+                                                        />
+                                                        {touched.originPoints && errors.originPoints && (
+                                                            <InputErrorMessage error={errors.originPoints} />
+                                                        )}
+                                                    </View>
+                                                    <View style={{ flex: 1 }}>
+                                                        <CustomTextInput
+                                                            onChangeText={handleChange("destinationPoints")}
+                                                            value={
+                                                                destinationCoords
+                                                                    ? `${destinationCoords[0]},${destinationCoords[1]}`
+                                                                    : "0,0"
+                                                            }
+                                                            labelColor={activeColor.text}
+                                                            label="Destination Points"
+                                                            editable={false}
+                                                            inputBackgroundColor={activeColor.inputBackground}
+                                                            inputTextColor={activeColor.text}
+                                                        />
+                                                        {touched.destinationPoints &&
+                                                            errors.destinationPoints && (
+                                                                <InputErrorMessage
+                                                                    error={errors.destinationPoints}
+                                                                />
+                                                            )}
+                                                    </View>
                                                 </View>
-
-
-                                            </View>
+                                            )}
 
                                         </View>
                                     </View>

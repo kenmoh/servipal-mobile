@@ -124,6 +124,9 @@ export type OrderResponseType = {
   origin: string;
   destination: string;
   distance: string;
+  duration: string;
+  destination_coords: [number, number];
+  origin_coords: [number, number];
   order_owner_phone_number: string;
   dispatch_company_name: string;
   rider_phone_number: string;
