@@ -1,6 +1,6 @@
 import { Colors } from '@/constants/Colors';
 import { ThemeContext } from '@/context/themeContext';
-import Mapbox, { Camera, LocationPuck, MapView } from '@rnmapbox/maps';
+import Mapbox, { Camera, LocationPuck, MapView, MarkerView } from '@rnmapbox/maps';
 import { useContext } from 'react';
 
 
@@ -10,10 +10,21 @@ export default function Map() {
 
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
+
     const nigeriaCoordinates = {
         latitude: 9.0820,
         longitude: 8.6753,
 
+    };
+
+    const originCoords = {
+        latitude: 6.46801,
+        longitude: 3.56485,
+    };
+
+    const destinationCoords = {
+        latitude: 6.4619294,
+        longitude: 3.6783286,
     };
 
 
@@ -21,6 +32,11 @@ export default function Map() {
     return (
         <MapView style={{ flex: 1 }} styleURL={theme.mode === 'dark' ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/dark-v11"}>
             <Camera zoomLevel={5} centerCoordinate={[nigeriaCoordinates.longitude, nigeriaCoordinates.latitude]} />
+            {/* Marker for Origin */}
+            <MarkerView coordinate={[originCoords.longitude, originCoords.latitude]} />
+
+            {/* Marker for Destination */}
+            <MarkerView coordinate={[destinationCoords.longitude, destinationCoords.latitude]} />
         </MapView>
 
     );

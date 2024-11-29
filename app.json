@@ -23,7 +23,8 @@
         "backgroundColor": "#18191c"
         
       },
-      "package": "com.servipal"
+      "package": "com.servipal",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",

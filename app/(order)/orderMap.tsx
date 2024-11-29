@@ -15,8 +15,6 @@ const orderMap = () => {
   let activeColor = Colors[theme.mode];
   const { distance, cost, origin, destination, destinationCoords, originCoords } = params;
 
-  console.log(destinationCoords, originCoords, '===============')
-
   return (
     <>
       <Stack.Screen options={{
