@@ -15,6 +15,7 @@ import { getTheme, storeTheme } from "@/auth/storage";
 import AuthProvider from "@/components/AuthProvider";
 import CartProvider from "@/components/CartProvider";
 import { Colors } from "@/constants/Colors";
+import LocationProvider from "@/components/LocationProvider";
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -109,18 +110,46 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
         <AuthProvider>
-          <CartProvider>
-            <Stack
-              screenOptions={{
-                contentStyle: { backgroundColor: activeColor.background },
-              }}
-            >
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="cart"
-                options={{
-                  title: "Cart",
-                  animation: "fade_from_bottom",
+          <LocationProvider>
+            <CartProvider>
+              <Stack
+                screenOptions={{
+                  contentStyle: { backgroundColor: activeColor.background },
+                }}
+              >
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="cart"
+                  options={{
+                    title: "Cart",
+                    animation: "fade_from_bottom",
+                    headerShadowVisible: false,
+                    headerStyle: {
+                      backgroundColor: activeColor.background,
+                    },
+
+                    headerTintColor: activeColor.text,
+
+                    contentStyle: {
+                      backgroundColor: activeColor.background,
+                    },
+                  }}
+                />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(restaurant)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(laundry)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="(p2p)" options={{ headerShown: false }} />
+                <Stack.Screen name="(order)" options={{ headerShown: false }} />
+                <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+                <Stack.Screen name="sendItem" options={{ headerShown: false }} />
+                <Stack.Screen name="payment" options={{
+                  title: "Make Payment",
                   headerShadowVisible: false,
                   headerStyle: {
                     backgroundColor: activeColor.background,
@@ -131,113 +160,87 @@ export default function RootLayout() {
                   contentStyle: {
                     backgroundColor: activeColor.background,
                   },
-                }}
-              />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(restaurant)"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="(laundry)"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="(p2p)" options={{ headerShown: false }} />
-              <Stack.Screen name="(order)" options={{ headerShown: false }} />
-              <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-              <Stack.Screen name="sendItem" options={{ headerShown: false }} />
-              <Stack.Screen name="payment" options={{
-                title: "Make Payment",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
+                }} />
+                <Stack.Screen name="searchResult" options={{
+                  title: "Search Result",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
 
-                headerTintColor: activeColor.text,
+                  headerTintColor: activeColor.text,
 
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
-              <Stack.Screen name="searchResult" options={{
-                title: "Search Result",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+                }} />
 
-                headerTintColor: activeColor.text,
+                <Stack.Screen name="paymentStatus" options={{
+                  title: "Payment Status",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
 
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
+                  headerTintColor: activeColor.text,
 
-              <Stack.Screen name="paymentStatus" options={{
-                title: "Payment Status",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+                }} />
 
-                headerTintColor: activeColor.text,
+                <Stack.Screen name="setupCompanyProfile" options={{
+                  title: "Profile",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
 
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
+                  headerTintColor: activeColor.text,
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+                }} />
+                <Stack.Screen name="reviews" options={{
+                  title: "Reviews",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
 
-              <Stack.Screen name="setupCompanyProfile" options={{
-                title: "Profile",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
+                  headerTintColor: activeColor.text,
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+                }} />
+                <Stack.Screen name="disputeNotification" options={{
+                  title: "Notifications",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
 
-                headerTintColor: activeColor.text,
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
-              <Stack.Screen name="reviews" options={{
-                title: "Reviews",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
+                  headerTintColor: activeColor.text,
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+                }} />
+                <Stack.Screen name="addReview" options={{
+                  title: "Add Review",
+                  headerShadowVisible: false,
+                  headerStyle: {
+                    backgroundColor: activeColor.background,
+                  },
 
-                headerTintColor: activeColor.text,
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
-              <Stack.Screen name="disputeNotification" options={{
-                title: "Notifications",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
+                  headerTintColor: activeColor.text,
+                  contentStyle: {
+                    backgroundColor: activeColor.background,
+                  },
+                }} />
 
-                headerTintColor: activeColor.text,
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
-              <Stack.Screen name="addReview" options={{
-                title: "Add Review",
-                headerShadowVisible: false,
-                headerStyle: {
-                  backgroundColor: activeColor.background,
-                },
-
-                headerTintColor: activeColor.text,
-                contentStyle: {
-                  backgroundColor: activeColor.background,
-                },
-              }} />
-
-            </Stack>
-          </CartProvider>
+              </Stack>
+            </CartProvider>
+          </LocationProvider>
         </AuthProvider>
 
         <FlashMessage

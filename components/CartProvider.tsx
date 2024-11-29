@@ -32,7 +32,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const getTotalPrice = () => {
-        return state.items.reduce(
+        return (state.items || []).reduce(
             (total, item) => total + item.price * item.quantity,
             0
         );
@@ -62,8 +62,11 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const getServerOrderData = (): ServerOrderData => {
-        const { orderType, ...serverData } = state;
-        return serverData;
+        const { orderType, items = [], ...serverData } = state;
+        return { ...serverData, items };
+
+        // const { orderType, ...serverData } = state;
+        // return serverData;
     };
 
     const contextValue: CartContextType = {

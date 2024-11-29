@@ -92,7 +92,10 @@ export default function Map({ originCoords, destinationCoords }: { originCoords:
                         }}
                     />
                 </ShapeSource>
+
+
             )}
+
         </MapView>
 
     );
