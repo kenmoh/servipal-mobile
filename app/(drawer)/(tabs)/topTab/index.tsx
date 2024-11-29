@@ -12,7 +12,7 @@ import {
   AppStateStatus,
   AppState,
 } from "react-native";
-import ordersApi from "@/api/orders";
+import ordersApi, { getDistance } from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { StatusBar } from "expo-status-bar";
@@ -41,40 +41,16 @@ const index = () => {
     ),
   });
 
-  const getDistance = (riderLat: number, riderLng: number, orderLat: number, orderLng: number): number => {
-    const R = 6371; // Radius of the Earth in km
-    const dLat = (orderLat - riderLat) * (Math.PI / 180);
-    const dLon = (orderLng - riderLng) * (Math.PI / 180);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(riderLat * (Math.PI / 180)) * Math.cos(orderLat * (Math.PI / 180)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
-  };
 
-
-  // const orders: OrderResponseType[] = data?.filter(order => {
-  //   if (currentLocation) {
-  //     const distance = getDistance(
-  //       currentLocation.latitude,
-  //       currentLocation?.longitude,
-  //       Number(order?.origin_coords[0]),
-  //       Number(order?.origin_coords[1])
-  //     );
-  //     return distance <= 100; // Within 100km
-  //   }
-  // });
 
   const orders = useMemo(() => {
     if (!data || !currentLocation) return [];
 
     return data.filter(order => {
-      // Safely handle potential undefined or invalid coordinates
       const originLat = Number(order?.origin_coords[0]);
       const originLon = Number(order?.origin_coords[1]);
 
-      // Additional validation
+
       if (isNaN(originLat) || isNaN(originLon)) return false;
 
       const distance = getDistance(

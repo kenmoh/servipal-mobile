@@ -6,9 +6,10 @@ import { useContext, useEffect, useState } from 'react';
 import { FeatureCollection } from 'geojson';
 
 
+
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
 
-export default function Map({ originCoords, destinationCoords }: { originCoords: [number, number], destinationCoords: [number, number] }) {
+export default function Map({ originCoords, destinationCoords, distance }: { originCoords: [number, number], destinationCoords: [number, number], distance: number }) {
 
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
@@ -60,8 +61,13 @@ export default function Map({ originCoords, destinationCoords }: { originCoords:
                         (minLat + maxLat) / 2,
                     ];
 
+                    let zoom
+                    if (distance <= 6) {
+                        zoom = 15;
+                    } else {
+                        zoom = 11.75
+                    }
 
-                    const zoom = 11.75;
                     if (Array.isArray(center) && center.length === 2) {
 
                         setCameraPosition({ center: center as [number, number], zoom });

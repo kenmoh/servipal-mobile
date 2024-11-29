@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import OrderCard from "@/components/OrderCard";
 import { Colors } from "@/constants/Colors";
 import { focusManager, useQuery } from "@tanstack/react-query";
@@ -12,17 +12,20 @@ import {
     AppStateStatus,
     AppState,
 } from "react-native";
-import ordersApi from "@/api/orders";
+import ordersApi, { getDistance } from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
 import Empty from "@/components/Empty";
+import { OrderResponseType } from "@/utils/types";
+import { useLocation } from "@/auth/locationContext";
 
 const food = () => {
     const { theme } = useContext(ThemeContext);
     let activeColor = Colors[theme.mode];
     const [isHomeScreen, setIsHomeScreen] = useState(true);
+    const { currentLocation } = useLocation()
     const {
         data,
         error,
@@ -32,7 +35,7 @@ const food = () => {
     } = useQuery({
         queryKey: ["foodOrders"],
         queryFn: ordersApi.getFoodOrders,
-        select: (data) => data?.data?.filter((order: any) =>
+        select: (data) => (data as { data: OrderResponseType[] })?.data?.filter((order: any) =>
             (order.order_status === 'pending' && order.payment_status === 'paid' && order.order_type === 'food')
 
         ),
@@ -49,6 +52,27 @@ const food = () => {
 
         return () => subscription.remove();
     }, []);
+
+    const orders = useMemo(() => {
+        if (!data || !currentLocation) return [];
+
+        return data.filter(order => {
+            const originLat = Number(order?.origin_coords[0]);
+            const originLon = Number(order?.origin_coords[1]);
+
+
+            if (isNaN(originLat) || isNaN(originLon)) return false;
+
+            const distance = getDistance(
+                currentLocation.latitude,
+                currentLocation.longitude,
+                originLat,
+                originLon
+            );
+
+            return distance <= 100;
+        });
+    }, [data, currentLocation]);
 
     const handleRefresch = () => refetch();
 
@@ -88,17 +112,16 @@ const food = () => {
                 style={theme.mode === "dark" ? "light" : "dark"}
             />
             <FlatList
-                data={data}
+                data={orders}
                 keyExtractor={(item) => item?.id.toString()}
                 renderItem={({ item }) => (<OrderCard order={item} isHomeScreen={isHomeScreen} />)
                 }
-                estimatedItemSize={200}
+
                 showsHorizontalScrollIndicator={false}
                 showsVerticalScrollIndicator={false}
-                vertical
                 refreshing={isFetching}
                 onRefresh={handleRefresch}
-                ListEmptyComponent={() => <Empty />}
+                ListEmptyComponent={() => <Empty label="No orders yet!" />}
 
             />
         </View>
