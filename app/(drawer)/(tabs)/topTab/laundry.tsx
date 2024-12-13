@@ -15,7 +15,6 @@ import {
 import ordersApi, { getDistance } from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
-import { useAuth } from "@/auth/authContext";
 import { StatusBar } from "expo-status-bar";
 import Empty from "@/components/Empty";
 import { OrderResponseType } from "@/utils/types";
@@ -126,7 +125,7 @@ const laundry = () => {
                 style={theme.mode === "dark" ? "light" : "dark"}
             />
             <FlatList
-                data={data}
+                data={orders}
                 keyExtractor={(item) => item?.id}
                 renderItem={({ item }) => (<OrderCard order={item} isHomeScreen={isHomeScreen} />)
                 }

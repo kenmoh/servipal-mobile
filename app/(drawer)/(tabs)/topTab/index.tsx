@@ -16,7 +16,6 @@ import ordersApi, { getDistance } from "@/api/orders";
 import { ThemeContext } from "@/context/themeContext";
 import { useRefreshOnFocus } from "@/hooks/useRefreshOnFocus";
 import { StatusBar } from "expo-status-bar";
-import RenderBtn from "@/components/RenderBtn";
 import Empty from "@/components/Empty";
 import { OrderResponseType } from "@/utils/types";
 import { useLocation } from "@/auth/locationContext";

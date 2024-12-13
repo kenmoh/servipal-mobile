@@ -24,7 +24,7 @@
         
       },
       "package": "com.servipal",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./servipal-app-firebase-adminsdk-la5jf-bdf3cba471.json"
     },
     "web": {
       "bundler": "metro",

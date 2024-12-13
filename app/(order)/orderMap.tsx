@@ -36,7 +36,7 @@ const orderMap = () => {
       />
       <View style={styles.mapContainer}>
         <Map
-          distance={distance}
+          distance={Number(distance)}
           originCoords={parseCoords(Array.isArray(originCoords) ? originCoords[0] : originCoords)}
           destinationCoords={parseCoords(Array.isArray(destinationCoords) ? destinationCoords[0] : destinationCoords)}
         />
